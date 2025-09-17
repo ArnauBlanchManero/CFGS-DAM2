@@ -1,2 +1,2 @@
-# Programacion-multimedia
-Este es el repositorio para vincular con Android Studio
+# Segundo de DAM
+Voy a subir todos mis trabajos y proyectos de este curso
