@@ -2,7 +2,7 @@
 set -e
 if [ -z "$*" ]; then
   COMMIT_MSG="Añado ficheros"
-  echo "No se proporcionó mensaje de commit. Usando mensaje por defecto: '$COMMIT_MSG'"
+  echo "\nNo se proporcionó mensaje de commit. Usando mensaje por defecto: '$COMMIT_MSG'\n"
 else
   COMMIT_MSG="$*"
 fi
@@ -10,10 +10,10 @@ git status
 
 git add .
 
-git commit -m "$COMMIT_MSG" || echo "No hay cambios para añadir."
+git commit -m "$COMMIT_MSG" || echo "\nNo hay cambios para añadir.\n"
 
-git pull || {echo "Error en el git pull."; exit 1;}
+git pull || { echo "\nError en el git pull.\n"; exit 1; }
 
-git push || {echo "Error en el git push."; exit 2;}
+git push || { echo "\nError en el git push.\n"; exit 2; }
 
-echo "Operacion completada con éxito"
+echo "\nOperacion completada con éxito"
