@@ -8,12 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -29,10 +31,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -110,18 +114,35 @@ fun Cajas(){
 fun Imagen() {
     var colorFondo by remember { mutableStateOf(Color.Blue) }
     var posicionTexto by remember { mutableStateOf(Offset(40f,0f)) }
+    var posicionImg by remember { mutableStateOf(Offset(40f,0f)) }
     Box(modifier = Modifier.fillMaxSize().padding(top = 40.dp).background(colorFondo)) {
         Image(
             painter = painterResource(id = R.drawable.turtle),
             contentDescription = "Dibujo de una tortuga",
-            modifier = Modifier.align(Alignment.Center).fillMaxSize()
+            modifier = Modifier.align(Alignment.Center).fillMaxSize().offset {
+                IntOffset(x = posicionImg.x.toInt(), y = posicionImg.y.toInt())
+            }.pointerInput(key1 = Unit) {
+                detectDragGestures {
+                    change, dragAmount ->
+                    change.consume()
+                    posicionImg += Offset(x = dragAmount.x, y = dragAmount.y)
+                }
+            }
         )
         Text(
-            text = "La característica más importante del esqueleto de las tortugas es que una gran parte de su columna vertebral está soldada a la parte dorsal del caparazón. El esqueleto hace que la respiración sea imposible por movimiento de la caja torácica; se realiza principalmente por la contracción de los músculos abdominales modificados que funcionan de modo análogo al diafragma de los mamíferos y por movimientos de bombeo de la faringe. Aunque carecen de dientes, tienen un pico córneo que recubre su mandíbula, parecido al pico de las aves.",
+            text = "La característica más importante del esqueleto de las tortugas es que una gran parte de su columna vertebral está soldada a la parte dorsal del caparazón.",
             fontSize = 22.sp,
             color = Color.Green,
             textAlign = TextAlign.Center,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.Center).offset {
+                IntOffset(x = posicionTexto.x.toInt(), y = posicionTexto.y.toInt())
+            }.pointerInput(key1 = Unit) {
+                detectDragGestures {
+                        change, dragAmount ->
+                    change.consume()
+                    posicionTexto += Offset(x = dragAmount.x, y = dragAmount.y)
+                }
+            }
         )
         Button(
             onClick = {colorFondo = colorRandom()},
@@ -130,6 +151,7 @@ fun Imagen() {
             Text(text = "Cambia el fondo")
         }
     }
+
 }
 
 fun colorRandom(): Color{
