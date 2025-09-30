@@ -3,7 +3,7 @@ package ConsultarFicheros;
 import java.io.File;
 import java.util.Scanner;
 
-public class Ejercicoi4 {
+public class Ejercicio4 {
 
 	public static void main(String[] args) {
 		Scanner entrada = new Scanner(System.in);
