@@ -1,4 +1,4 @@
-git pull
+git pull > salida_pull.txt
 clear
 cd ~/GitHub/CFGS-DAM2
 cat << "EOF"
