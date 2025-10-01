@@ -26,10 +26,13 @@ public class Ejercicio3 {
 						vuelta++;
 					}
 					for (String frase : frases) {
-						List<String> valores = new ArrayList<String>();
-						valores = dividir(frase);
-						for (String valor : valores) {
-							System.out.println("Campo: "+valor);
+						if (frase != null) {
+							List<String> valores = new ArrayList<String>();
+							valores = dividir(frase);
+							for (String valor : valores) {
+								System.out.println("Campo: "+valor);
+							}
+							System.out.println("");
 						}
 					}
 				} catch (IOException e) {
@@ -56,6 +59,7 @@ public class Ejercicio3 {
 				}
 				retval.add(valor);
 				valor = "";
+				i++;
 			} else if (caracter == ','){
 				retval.add(valor);
 				valor = "";
