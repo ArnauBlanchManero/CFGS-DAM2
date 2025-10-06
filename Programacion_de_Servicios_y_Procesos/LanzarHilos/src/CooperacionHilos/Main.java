@@ -3,10 +3,10 @@ package CooperacionHilos;
 public class Main {
 
 	private static final int NUM_HILOS = 9;
-	private static final int CUENTA_TOTAL = 900;
+	private static final int CUENTA_TOTAL = 90;
 
 	public static void main(String[] args) {
-		Contador cont = new Contador(0);
+		Contador cont = new Contador();
 		Thread[] hilos = new Thread[NUM_HILOS];
 		
 		for (int i = 0; i < NUM_HILOS; i++) {
@@ -22,6 +22,7 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Contador final: "+cont.getContador());
 		/*// Esta es mi versión mal hecha porque no sabía que para el contador fuera compartido lo tenía que pasar en el constructor del hilo.
 		Thread h1 = new Thread(new Hilo("H1"));
 		Thread h2 = new Thread(new Hilo("H2"));
