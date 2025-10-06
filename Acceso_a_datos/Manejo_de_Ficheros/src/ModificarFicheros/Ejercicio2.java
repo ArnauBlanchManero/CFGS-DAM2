@@ -27,7 +27,7 @@ public class Ejercicio2 {
 			try {
 				FileWriter escribir = new FileWriter(fichero);
 				BufferedWriter bw = new BufferedWriter(escribir);
-				while (!frase.equals("fin")) {
+				while (!frase.equalsIgnoreCase("fin")) {
 					bw.write(frase+'\n');
 					System.out.println("La frase que se ha añadido al fichero: "+frase);
 					System.out.print("Escribe: ");
