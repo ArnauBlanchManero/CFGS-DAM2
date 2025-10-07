@@ -1,4 +1,4 @@
-package CooperacionHilos;
+package SincronizarHilos;
 
 
 public class Hilo implements Runnable{
@@ -19,14 +19,21 @@ public class Hilo implements Runnable{
 		this.contador = cont;
 		this.miCuenta = 0;
 	}
-	
+
+	public int getMiCuenta() {
+		return miCuenta;
+	}
 	@Override
 	public void run() {
 		for (int i = 0; i < vueltas; i++) {
-			contador.incrementar(); // Esto lo tenía dentro de un System.out.println() y como es de E/S me daba el resultado esperado. Ahora da una respuesta inesperada porque los hilos se interponen unos con otros.
+			/*System.out.println(nombre+": "+contador.incrementar());
 			miCuenta++;
 		}
-		System.out.println(nombre+" final: "+miCuenta);
+		System.out.println(nombre+" final: "+miCuenta);*/
+			contador.incrementar(); // Incremento el contador compartido
+			miCuenta++;
+		}
+		System.out.println("Hilo "+nombre+" lo damos por terminado y la cuenta de " +getMiCuenta());
 	}
 
 }

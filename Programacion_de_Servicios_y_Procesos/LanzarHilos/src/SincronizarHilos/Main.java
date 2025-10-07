@@ -1,4 +1,4 @@
-package CooperacionHilos;
+package SincronizarHilos;
 
 public class Main {
 
