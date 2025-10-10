@@ -48,5 +48,39 @@ fun main (args: Array<String>){
         7 -> println("Domingo")
         else -> println("Ningún día")
     }
+    print("Escribe el lado del cuadrado ")
+    var lado = readln().toInt()
+    println("El área del cuadrado es ${areaCuadrado(lado)}")
+    datosCurso("Salesianos")
+    datosCurso("Salesianas", "DAW")
 
+    costeKilometros("CJW 2468", 3.4, 256.56)
+    costeKilometros(numeroKm = 20000.02, costeKm = 2.9, matricula = "RKD 9842")
+
+    var notaAlumnos: IntArray
+    notaAlumnos = IntArray(4)
+    for (i in 0..3){
+        print("Mete numero: ")
+        notaAlumnos[i] = readln().toInt()
+    }
+    for (i in 0..3)
+        println(notaAlumnos[i])
+
+    val profe1 = Profesor("Pepe", 60)
+    print(profe1.toString())
+}
+
+fun areaRectangulo(alto:Int, ancho:Int):Int{
+    return alto * ancho
+}
+
+fun areaCuadrado(lado:Int) = lado * lado
+
+fun datosCurso (centro:String, titulacion:String = "DAM"){
+    println(centro+": "+ titulacion)
+}
+
+fun costeKilometros(matricula: String, costeKm: Double, numeroKm: Double){
+    var costeTotal=costeKm * numeroKm
+    println("El coste total del coche $matricula es $costeTotal€")
 }
