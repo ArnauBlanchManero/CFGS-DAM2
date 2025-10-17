@@ -15,6 +15,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import java.awt.Color;
+import javax.swing.JPanel;
 
 public class Ejemplo1 {
 
@@ -78,7 +79,7 @@ public class Ejemplo1 {
 		
 		JButton botonNo = new JButton("No pulses!");
 		botonNo.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-		botonNo.setBounds(121, 109, 127, 23);
+		botonNo.setBounds(139, 95, 127, 23);
 		frame.getContentPane().add(botonNo);
 		
 		JTextArea textArea = new JTextArea();
@@ -120,5 +121,9 @@ public class Ejemplo1 {
 		JSpinner numeros = new JSpinner();
 		numeros.setBounds(261, 140, 55, 20);
 		frame.getContentPane().add(numeros);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(20, 109, 109, 110);
+		frame.getContentPane().add(panel);
 	}
 }
