@@ -17,7 +17,7 @@ import javax.swing.JSpinner;
 import java.awt.Color;
 import javax.swing.JPanel;
 
-public class Ejemplo1 {
+public class Ejemplo1y2 {
 
 	private JFrame frame;
 	private JTextField textNombre;
@@ -31,7 +31,7 @@ public class Ejemplo1 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Ejemplo1 window = new Ejemplo1();
+					Ejemplo1y2 window = new Ejemplo1y2();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +43,7 @@ public class Ejemplo1 {
 	/**
 	 * Create the application.
 	 */
-	public Ejemplo1() {
+	public Ejemplo1y2() {
 		initialize();
 	}
 

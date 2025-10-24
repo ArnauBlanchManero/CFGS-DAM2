@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-public class Ejemplo2 {
+public class Ejemplo3 {
 
 	private JFrame frame;
 	private JTextField textField;
@@ -33,7 +33,7 @@ public class Ejemplo2 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Ejemplo2 window = new Ejemplo2();
+					Ejemplo3 window = new Ejemplo3();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +45,7 @@ public class Ejemplo2 {
 	/**
 	 * Create the application.
 	 */
-	public Ejemplo2() {
+	public Ejemplo3() {
 		initialize();
 	}
 
