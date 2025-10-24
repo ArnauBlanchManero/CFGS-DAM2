@@ -54,10 +54,8 @@ public class Ejemplo3 {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		int ancho = frame.getWidth()/2;
-		int alto = frame.getHeight()/2;
-		frame.setLocationRelativeTo(null);
 		frame.setBounds(100, 100, 450, 300);
+		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
 		
