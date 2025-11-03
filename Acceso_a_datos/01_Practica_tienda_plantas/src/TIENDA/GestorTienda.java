@@ -16,8 +16,8 @@ public class GestorTienda {
 		if(crear_jerarquía_ficheros()) {
 			plantas = cargar_datos_plantas();
 			empleados = cargar_datos_empleados();
-			if (plantas == null || empleados == null) {
-				System.out.println("No se han podido cargar los datos");
+			if (empleados == null) {
+				System.out.println("No se hay empleados para trabajar.");
 			}
 			// TODO iniciar por empleado
 			// TODO funciones menus empleado
