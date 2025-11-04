@@ -18,8 +18,7 @@ public class Planta {
 	}
 	@Override
 	public String toString() {
-		return "Planta [codigo=" + codigo + ", nombre=" + nombre + ", foto=" + foto + ", descripcion=" + descripcion
-				+ ", precio=" + precio + ", stock=" + stock + "]";
+		return "Código planta " + codigo + "\n\tNombre: " + nombre + "\n\tFoto: " + foto + "\n\tDescripcion: " + descripcion + "\n\tPrecio: " + precio + "\n\tStock: " + stock + "\n";
 	}
 	public int getCodigo() {
 		return codigo;
