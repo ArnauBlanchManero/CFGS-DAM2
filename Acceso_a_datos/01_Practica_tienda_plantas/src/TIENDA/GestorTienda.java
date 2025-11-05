@@ -34,13 +34,19 @@ public class GestorTienda {
 	static Scanner read = new Scanner(System.in);
 
 	public static void main(String[] args) {
+		System.out.println("┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ");
+		System.out.println("┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─");
 		System.out.println("BIENBENIDO AL GESTOR DE LA TIENDA DE PLANTAS");
-		System.out.println("============================================");
+		System.out.println("┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ");
+		System.out.println("┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─");
 
 		List<Planta> plantas = new ArrayList<Planta>();
+		List<Planta> plantasBaja = new ArrayList<Planta>();
 		List<Empleado> empleados = new ArrayList<Empleado>();
+		List<Empleado> empleadosBaja = new ArrayList<Empleado>();
 		if (crear_jerarquía_ficheros()) {
-			empleados = cargar_datos_empleados();
+			File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
+			empleados = cargar_datos_empleados(listaEmpleadosFichero);
 			if (empleados != null) {
 				// iniciar sesión por empleado
 				int intentos = 3;
@@ -52,13 +58,18 @@ public class GestorTienda {
 				}
 				if (intentos > 0) {
 					System.out.println("\nSesión iniciada correctamente " + empleado.getNombre());
-					plantas = cargar_datos_plantas();
+					File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
+					plantas = cargar_datos_plantas(listaPlantasFicheroXml);
 					if (plantas != null) {
 						// TODO funciones menus empleado
+						File listaPlantasBajaFicheroXml = new File("PLANTAS/plantasBaja.xml");
+						plantasBaja = cargar_datos_plantas(listaPlantasBajaFicheroXml);
 						if (empleado.getCargo().equals("Vendedor")) {
-							menu_vendedor(empleado, plantas);
+							menu_vendedor(empleado, plantas, plantasBaja);
 						} else if (empleado.getCargo().equals("Gestor")) {
-							menu_gestor(empleado, plantas, empleados);
+							File listaEmpleadosBajaFichero = new File("EMPLEADOS/empleados.dat");
+							empleadosBaja = cargar_datos_empleados(listaEmpleadosBajaFichero);
+							menu_gestor(empleado, plantas, plantasBaja, empleados, empleadosBaja);
 						} else {
 							System.out.println("No se ha encontrado el cargo del empleado.");
 						}
@@ -88,14 +99,85 @@ public class GestorTienda {
 		File ficheroEscribirXml = new File("PLANTAS/plantas.xml");
 		File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
 		ArrayList<Planta> plantas = new ArrayList<Planta>();
-		Planta plantaEjemplo1 = new Planta(1, "Cactus", "cactus.jpg", "Planta suculenta del desierto");
 		// TODO tengo que hacer que escriba bien los precios y el stock
-		//plantaEjemplo1.setPrecio(1, ficheroEscribirDat, 30.5f);
-		//plantaEjemplo1.setStock(1, ficheroEscribirDat, 4);
+		// plantaEjemplo1.setPrecio(1, ficheroEscribirDat, 30.5f);
+		// plantaEjemplo1.setStock(1, ficheroEscribirDat, 4);
+		Planta plantaEjemplo1 = new Planta(1, "Cactus", "cactus.jpg", "Planta suculenta del desierto");
 		Planta plantaEjemplo2 = new Planta(2, "Geranio", "geranio.jpg", "Flor común de jardín con colores vivos");
+		Planta plantaEjemplo3 = new Planta(3, "Helecho", "helecho.jpg", "Planta de sombra con hojas verdes largas");
+		Planta plantaEjemplo4 = new Planta(4, "Rosa", "rosa.jpg", "Flor ornamental con espinas");
+		Planta plantaEjemplo5 = new Planta(5, "Lavanda", "lavanda.jpg", "Planta aromática de color violeta");
+		Planta plantaEjemplo6 = new Planta(6, "Aloe Vera", "aloe_vera.jpg", "Planta medicinal con hojas carnosas");
+		Planta plantaEjemplo7 = new Planta(7, "Menta", "menta.jpg", "Planta aromática usada en infusiones");
+		Planta plantaEjemplo8 = new Planta(8, "Bambú", "bambu.jpg",
+				"Planta de tallo alto y hueco, de rápido crecimiento");
+		Planta plantaEjemplo9 = new Planta(9, "Orquídea", "orquidea.jpg", "Flor exótica de gran valor ornamental");
+		Planta plantaEjemplo10 = new Planta(10, "Hortensia", "hortensia.jpg", "Planta de flores grandes y coloridas");
+		Planta plantaEjemplo11 = new Planta(11, "Palmera", "palmera.jpg",
+				"Árbol tropical con hojas largas en forma de abanico");
+		Planta plantaEjemplo12 = new Planta(12, "Clavel", "clavel.jpg", "Flor de colores vivos y aroma agradable");
+		Planta plantaEjemplo13 = new Planta(13, "Jacinto", "jacinto.jpg", "Planta bulbosa de flores perfumadas");
+		Planta plantaEjemplo14 = new Planta(14, "Petunia", "petunia.jpg", "Flor de jardín muy colorida");
+		Planta plantaEjemplo15 = new Planta(15, "Begonia", "begonia.jpg", "Planta ornamental con hojas decorativas");
+		Planta plantaEjemplo16 = new Planta(16, "Poto", "poto.jpg", "Planta colgante de interior muy resistente");
+		Planta plantaEjemplo17 = new Planta(17, "Crisantemo", "crisantemo.jpg",
+				"Flor típica de otoño en muchos colores");
+		Planta plantaEjemplo18 = new Planta(18, "Romero", "romero.jpg",
+				"Planta aromática usada en la cocina mediterránea");
+		Planta plantaEjemplo19 = new Planta(19, "Ficus", "ficus.jpg", "Árbol o arbusto de interior muy popular");
+		Planta plantaEjemplo20 = new Planta(20, "Jazmín", "jazmin.jpg", "Planta trepadora de flores fragantes");
 		plantas.add(plantaEjemplo1);
 		plantas.add(plantaEjemplo2);
+		plantas.add(plantaEjemplo3);
+		plantas.add(plantaEjemplo4);
+		plantas.add(plantaEjemplo5);
+		plantas.add(plantaEjemplo6);
+		plantas.add(plantaEjemplo7);
+		plantas.add(plantaEjemplo8);
+		plantas.add(plantaEjemplo9);
+		plantas.add(plantaEjemplo10);
+		plantas.add(plantaEjemplo11);
+		plantas.add(plantaEjemplo12);
+		plantas.add(plantaEjemplo13);
+		plantas.add(plantaEjemplo14);
+		plantas.add(plantaEjemplo15);
+		plantas.add(plantaEjemplo16);
+		plantas.add(plantaEjemplo17);
+		plantas.add(plantaEjemplo18);
+		plantas.add(plantaEjemplo19);
+		plantas.add(plantaEjemplo20);
 		int flag = 0;
+		flag += guardar_plantas(plantas, ficheroEscribirXml);
+
+		try {
+			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
+			raf.seek(0);
+			for (int i = 1; i <= plantas.size(); i++) {
+				raf.writeInt(i);
+				float numero = numeroAleatorioPrecio();
+				raf.writeFloat(numero);
+				int numero1 = numeroAleatorioStock();
+				raf.writeInt(numero1);
+			}
+			/*
+			 * raf.writeInt(plantaEjemplo.getCodigo()); // TODO esto esta mal porque lo
+			 * escribo con el .setPrecio y .setStock
+			 * raf.writeFloat(plantaEjemplo.getPrecio(1, ficheroEscribirDat));
+			 * raf.writeInt(plantaEjemplo.getStock(1, ficheroEscribirDat)); //
+			 * raf.getFilePointer() = 12
+			 */
+			raf.close();
+			flag++;
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+			e.printStackTrace();
+		}
+		if (flag == 2) {
+			System.out.println("Plantas añadidas.");
+		}
+	}
+
+	private static int guardar_plantas(ArrayList<Planta> plantas, File ficheroEscribirXml) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -132,44 +214,20 @@ public class GestorTienda {
 			StreamResult result = new StreamResult(ficheroEscribirXml);
 			transformer.transform(source, result);
 
-			flag++;
 		} catch (TransformerConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
+			return 0;
 		} catch (TransformerException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
+			return 0;
 		} catch (ParserConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
+			return 0;
 		}
-
-		try {
-			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
-			raf.seek(0);
-			for (int i = 1; i < 21; i++) {
-				raf.writeInt(i);
-				float numero = numeroAleatorioPrecio();
-				raf.writeFloat(numero);
-				int numero1 = numeroAleatorioStock();
-				raf.writeInt(numero1);
-			}
-			/*
-			raf.writeInt(plantaEjemplo.getCodigo());
-			// TODO esto esta mal porque lo escribo con el .setPrecio y .setStock
-			raf.writeFloat(plantaEjemplo.getPrecio(1, ficheroEscribirDat));
-			raf.writeInt(plantaEjemplo.getStock(1, ficheroEscribirDat));
-			// raf.getFilePointer() = 12
-			 */
-			raf.close();
-			flag++;
-		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
-			e.printStackTrace();
-		}
-		if (flag == 2) {
-			System.out.println("Planta añadida.");
-		}
+		return 1;
 	}
 
 	public static float numeroAleatorioPrecio() {
@@ -183,21 +241,27 @@ public class GestorTienda {
 		return ThreadLocalRandom.current().nextInt(1, 100);
 	}
 
-
 	private static void guardar_datos(List<Planta> plantas, List<Empleado> empleados) {
 		// TODO Auto-generated method stub
 
 	}
 
-	private static void menu_gestor(Empleado empleado, List<Planta> plantas, List<Empleado> empleados) {
+	private static void menu_gestor(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja,
+			List<Empleado> empleados, List<Empleado> empleadosBaja) {
+
+		System.out.println("\n═══════════");
+		System.out.println("Menú gestor");
+		System.out.println("═══════════");
 		// TODO menú gestor
 
 	}
 
-	private static void menu_vendedor(Empleado empleado, List<Planta> plantas) {
+	private static void menu_vendedor(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja) {
 		String respuesta;
 		do {
-			System.out.println("\nManú vendedor");
+			System.out.println("\n─────────────");
+			System.out.println("Menú vendedor");
+			System.out.println("─────────────");
 			System.out.println("1. Catálogo de plantas");
 			System.out.println("2. Vender plantas");
 			System.out.println("3. Buscar ticket");
@@ -211,13 +275,13 @@ public class GestorTienda {
 				respuesta = read.next();
 				read.nextLine();
 			}
-
+			System.out.println("");
 			switch (respuesta) {
 			case "1":
-				mostrar_catalogo_plantas(plantas);
+				mostrar_catalogo_plantas(plantas, empleado, plantasBaja);
 				break;
 			case "2":
-				venta_plantas(empleado, plantas);
+				venta_plantas(empleado, plantas, plantasBaja);
 				break;
 			case "3":
 				buscar_tiket();
@@ -240,38 +304,108 @@ public class GestorTienda {
 
 	}
 
-	private static void venta_plantas(Empleado empleado, List<Planta> plantas) {
+	private static void venta_plantas(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja) {
 		// TODO vender
+		String codigo;
+		System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
+		codigo = read.next();
+		read.nextLine();
+		while (!codigo.matches("[0-9]*")) {
+			System.out.print("Introduce un número válido: ");
+			codigo = read.next();
+			read.nextLine();
+		}
+		if (codigo.equals("0")) {
+			System.out.println("Proceso cancelado.");
+		} else {
+			int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
+			if(posicion!=-1) {
+				Planta planta = plantas.get(posicion);
+				vender_planta(empleado, planta);
+			}else {
+				System.out.println("Planta no encontrada");
+			}
+		}
+		//System.out.println("Información de la planta que quieres vender");
 		// TODO devolver
 
 	}
 
-	private static void mostrar_catalogo_plantas(List<Planta> plantas) {
+	private static void vender_planta(Empleado empleado, Planta planta) {
+		// TODO Auto-generated method stub
+		String cantidad;
+		System.out.print("¿Cuántas plantas quieres vender? ");
+		cantidad = read.next();
+		read.nextLine();
+		while (!cantidad.matches("[0-9]*") || planta.getStock(planta.getCodigo(), new File("PLANTAS/plantas.dat"))<Integer.valueOf(cantidad)) {
+			System.out.print("Introduce otro número: ");
+			cantidad = read.next();
+			read.nextLine();
+		}
+		System.out.println("Esta es la información de la planta seleccionada");
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		RandomAccessFile raf;
+		
+		try {
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			raf.seek(planta.getCodigo() * 12);
+			int codigo = raf.readInt();
+			// plantas.get(i).setCodigo(codigo);
+			float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
+			// precio = raf.readFloat();
+			// plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
+			int stock = planta.getStock(planta.getCodigo(), listaPlantasFicheroDat);
+			// stock = raf.readInt();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		System.out.println(planta.toString());
+	}
+
+	private static int posicion_planta_por_codigo(Integer codigo, List<Planta> plantas) {
+		for (int i = 0; i < plantas.size(); i++) {
+			if (plantas.get(i).getCodigo() == codigo) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private static void mostrar_catalogo_plantas(List<Planta> plantas, Empleado empleado, List<Planta> plantasBaja) {
 		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta
 		// directamente
 		float precio;
 		int stock;
 		int codigo;
+		int puntero = 0;
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		RandomAccessFile raf;
+		
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
 			int i = 0;
-			int puntero=0;
-			while (raf.getFilePointer() < raf.length() && i<plantas.size()) {
+			while (raf.getFilePointer() < raf.length() && i < plantas.size()) {
+				if (i != 0) {
+					System.out.println("································\n");
+				}
 				do {
-					raf.seek(puntero*12);
+					raf.seek(puntero * 12);
 					codigo = raf.readInt();
-					//plantas.get(i).setCodigo(codigo);
+					// plantas.get(i).setCodigo(codigo);
 					precio = plantas.get(i).getPrecio(codigo, listaPlantasFicheroDat);
-					//precio = raf.readFloat();
-					//plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
+					// precio = raf.readFloat();
+					// plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
 					stock = plantas.get(i).getStock(codigo, listaPlantasFicheroDat);
-					//stock = raf.readInt();
+					// stock = raf.readInt();
 					puntero++;
 				} while (precio == 0 && stock == 0);
 				System.out.println(plantas.get(i).toString());
 				i++;
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 			raf.close();
 		} catch (FileNotFoundException e) {
@@ -281,12 +415,13 @@ public class GestorTienda {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
+		venta_plantas(empleado, plantas, plantasBaja);
 	}
 
 	private static Empleado iniciar_sesión(List<Empleado> empleados) {
 		Empleado seleccionado = null;
-		System.out.println("\nIniciar sesión\n");
+		System.out.println("\nIniciar sesión");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		System.out.print("Id: ");
 		String id = read.nextLine();
 		System.out.print("Contraseña: ");
@@ -321,8 +456,7 @@ public class GestorTienda {
 		}
 	}
 
-	private static List<Empleado> cargar_datos_empleados() {
-		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
+	private static List<Empleado> cargar_datos_empleados(File listaEmpleadosFichero) {
 		ArrayList<Empleado> listaEmpleados = new ArrayList<Empleado>();
 		ObjectInputStream ois;
 		FileInputStream fis;
@@ -348,13 +482,12 @@ public class GestorTienda {
 		return listaEmpleados;
 	}
 
-	private static List<Planta> cargar_datos_plantas() {
-		File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
+	private static List<Planta> cargar_datos_plantas(File listaPlantasFichero) {
 		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder docB = dbf.newDocumentBuilder();
-			Document doc = docB.parse(listaPlantasFicheroXml.getPath());
+			Document doc = docB.parse(listaPlantasFichero.getPath());
 			doc.getDocumentElement().normalize();
 			NodeList lista = doc.getElementsByTagName("planta");
 
@@ -373,15 +506,18 @@ public class GestorTienda {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
 			e.printStackTrace();
 			return null;
 		} catch (ParserConfigurationException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
 			e.printStackTrace();
 			return null;
 		} catch (SAXException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
 			e.printStackTrace();
 			return null;
 		}
@@ -410,7 +546,7 @@ public class GestorTienda {
 		ficheros.add(new File(directorios.get(1).getPath(), "empleados.dat"));
 		ficheros.add(new File(directorios.get(2).getPath(), "empleadosBaja.dat"));
 		ficheros.add(new File(directorios.get(3).getPath(), "0.txt"));
-		//ficheros.add(new File(directorios.get(4).getPath()));
+		// ficheros.add(new File(directorios.get(4).getPath()));
 
 		for (File fichero : ficheros) {
 			if (!fichero.exists()) {
