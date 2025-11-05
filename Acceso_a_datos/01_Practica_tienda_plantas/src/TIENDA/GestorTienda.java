@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,7 +87,14 @@ public class GestorTienda {
 	private static void crear_plantas_por_defecto() {
 		File ficheroEscribirXml = new File("PLANTAS/plantas.xml");
 		File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
-		Planta plantaEjemplo = new Planta(1, "Cactus", "cactus.jpg", "Ninguna", (float) 30.5, 4);
+		ArrayList<Planta> plantas = new ArrayList<Planta>();
+		Planta plantaEjemplo1 = new Planta(1, "Cactus", "cactus.jpg", "Planta suculenta del desierto");
+		// TODO tengo que hacer que escriba bien los precios y el stock
+		//plantaEjemplo1.setPrecio(1, ficheroEscribirDat, 30.5f);
+		//plantaEjemplo1.setStock(1, ficheroEscribirDat, 4);
+		Planta plantaEjemplo2 = new Planta(2, "Geranio", "geranio.jpg", "Flor común de jardín con colores vivos");
+		plantas.add(plantaEjemplo1);
+		plantas.add(plantaEjemplo2);
 		int flag = 0;
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -95,20 +103,22 @@ public class GestorTienda {
 
 			Element root = doc.createElement("plantas");
 			doc.appendChild(root);
-			Element planta = doc.createElement("planta");
-			root.appendChild(planta);
-			Element codigo = doc.createElement("codigo");
-			codigo.appendChild(doc.createTextNode(plantaEjemplo.getCodigo() + ""));
-			planta.appendChild(codigo);
-			Element nombre = doc.createElement("nombre");
-			nombre.appendChild(doc.createTextNode(plantaEjemplo.getNombre()));
-			planta.appendChild(nombre);
-			Element foto = doc.createElement("foto");
-			foto.appendChild(doc.createTextNode(plantaEjemplo.getFoto()));
-			planta.appendChild(foto);
-			Element descripcion = doc.createElement("descripcion");
-			descripcion.appendChild(doc.createTextNode(plantaEjemplo.getDescripcion()));
-			planta.appendChild(descripcion);
+			for (Planta añadeplanta : plantas) {
+				Element planta = doc.createElement("planta");
+				root.appendChild(planta);
+				Element codigo = doc.createElement("codigo");
+				codigo.appendChild(doc.createTextNode(añadeplanta.getCodigo() + ""));
+				planta.appendChild(codigo);
+				Element nombre = doc.createElement("nombre");
+				nombre.appendChild(doc.createTextNode(añadeplanta.getNombre()));
+				planta.appendChild(nombre);
+				Element foto = doc.createElement("foto");
+				foto.appendChild(doc.createTextNode(añadeplanta.getFoto()));
+				planta.appendChild(foto);
+				Element descripcion = doc.createElement("descripcion");
+				descripcion.appendChild(doc.createTextNode(añadeplanta.getDescripcion()));
+				planta.appendChild(descripcion);
+			}
 
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -133,13 +143,24 @@ public class GestorTienda {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
 		}
+
 		try {
 			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
+			raf.seek(0);
+			for (int i = 1; i < 21; i++) {
+				raf.writeInt(i);
+				float numero = numeroAleatorioPrecio();
+				raf.writeFloat(numero);
+				int numero1 = numeroAleatorioStock();
+				raf.writeInt(numero1);
+			}
+			/*
 			raf.writeInt(plantaEjemplo.getCodigo());
-			raf.writeFloat(plantaEjemplo.getPrecio());
-			raf.writeInt(plantaEjemplo.getStock());
+			// TODO esto esta mal porque lo escribo con el .setPrecio y .setStock
+			raf.writeFloat(plantaEjemplo.getPrecio(1, ficheroEscribirDat));
+			raf.writeInt(plantaEjemplo.getStock(1, ficheroEscribirDat));
 			// raf.getFilePointer() = 12
-
+			 */
 			raf.close();
 			flag++;
 		} catch (IOException e) {
@@ -150,6 +171,18 @@ public class GestorTienda {
 			System.out.println("Planta añadida.");
 		}
 	}
+
+	public static float numeroAleatorioPrecio() {
+
+		float numero = ThreadLocalRandom.current().nextFloat(10, 50);
+		return Math.round(numero * 100f) / 100f;
+
+	}
+
+	public static int numeroAleatorioStock() {
+		return ThreadLocalRandom.current().nextInt(1, 100);
+	}
+
 
 	private static void guardar_datos(List<Planta> plantas, List<Empleado> empleados) {
 		// TODO Auto-generated method stub
@@ -214,11 +247,41 @@ public class GestorTienda {
 	}
 
 	private static void mostrar_catalogo_plantas(List<Planta> plantas) {
-		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta directamente
-		for (Planta planta : plantas) {
-			System.out.println(planta.toString());
+		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta
+		// directamente
+		float precio;
+		int stock;
+		int codigo;
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		RandomAccessFile raf;
+		try {
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			int i = 0;
+			int puntero=0;
+			while (raf.getFilePointer() < raf.length() && i<plantas.size()) {
+				do {
+					raf.seek(puntero*12);
+					codigo = raf.readInt();
+					//plantas.get(i).setCodigo(codigo);
+					precio = plantas.get(i).getPrecio(codigo, listaPlantasFicheroDat);
+					//precio = raf.readFloat();
+					//plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
+					stock = plantas.get(i).getStock(codigo, listaPlantasFicheroDat);
+					//stock = raf.readInt();
+					puntero++;
+				} while (precio == 0 && stock == 0);
+				System.out.println(plantas.get(i).toString());
+				i++;
+			}
+			raf.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
 	}
 
 	private static Empleado iniciar_sesión(List<Empleado> empleados) {
@@ -287,7 +350,6 @@ public class GestorTienda {
 
 	private static List<Planta> cargar_datos_plantas() {
 		File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
-		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
@@ -295,49 +357,31 @@ public class GestorTienda {
 			Document doc = docB.parse(listaPlantasFicheroXml.getPath());
 			doc.getDocumentElement().normalize();
 			NodeList lista = doc.getElementsByTagName("planta");
-			int i = 0;
-			int codigo;
 
-			RandomAccessFile raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			raf.seek(0);
-			while (raf.getFilePointer() < raf.length() || i < lista.getLength()) {
+			for (int i = 0; i < lista.getLength(); i++) {
 				Node nodo = lista.item(i);
 				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-					float precio;
-					int stock;
-					int codigo1;
-					do {
-						codigo1 = raf.readInt();
-						precio = raf.readFloat();
-						stock = raf.readInt();
-					} while (precio == 0 && stock == 0);
-
 					Planta plantaTmp;
 					Element planta = (Element) nodo;
-					int codigo2 = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
+					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
 					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
 					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
 					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
-					if (codigo1 == codigo2)
-						codigo = codigo1;
-					else
-						codigo = codigo2;
-					plantaTmp = new Planta(codigo, nombre, foto, descripcion, precio, stock);
+
+					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
 					listaPlantas.add(plantaTmp);
 				}
-				i++;
 			}
-			raf.close();
 		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml' o 'plantas.dat'.");
+			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
 			e.printStackTrace();
 			return null;
 		} catch (ParserConfigurationException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml' o 'plantas.dat'.");
+			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
 			e.printStackTrace();
 			return null;
 		} catch (SAXException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml' o 'plantas.dat'.");
+			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.xml'.");
 			e.printStackTrace();
 			return null;
 		}
@@ -366,7 +410,7 @@ public class GestorTienda {
 		ficheros.add(new File(directorios.get(1).getPath(), "empleados.dat"));
 		ficheros.add(new File(directorios.get(2).getPath(), "empleadosBaja.dat"));
 		ficheros.add(new File(directorios.get(3).getPath(), "0.txt"));
-		ficheros.add(new File(directorios.get(4).getPath()));
+		//ficheros.add(new File(directorios.get(4).getPath()));
 
 		for (File fichero : ficheros) {
 			if (!fichero.exists()) {

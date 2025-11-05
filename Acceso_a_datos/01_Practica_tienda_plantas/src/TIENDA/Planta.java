@@ -1,5 +1,8 @@
 package TIENDA;
 
+import java.io.File;
+import java.io.RandomAccessFile;
+
 public class Planta {
 	int codigo;
 	String nombre;
@@ -7,14 +10,13 @@ public class Planta {
 	String descripcion;
 	float precio;
 	int stock;
-	public Planta(int codigo, String nombre, String foto, String descripcion, float precio, int stock) {
+	
+	public Planta(int codigo, String nombre, String foto, String descripcion) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.foto = foto;
 		this.descripcion = descripcion;
-		this.precio = precio;
-		this.stock = stock;
 	}
 	@Override
 	public String toString() {
@@ -44,17 +46,49 @@ public class Planta {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	public float getPrecio() {
+	public float getPrecio(int codigo, File fichero) {
+		RandomAccessFile raf;
+		try {
+			raf = new RandomAccessFile(fichero, "r");
+			raf.seek(((codigo-1)*12)+4);
+			precio = raf.readFloat();
+		} catch (Exception e) {
+			System.out.println("Se ha producido un error al leer el precio.");
+		}
 		return precio;
 	}
-	public void setPrecio(float precio) {
-		this.precio = precio;
+	public void setPrecio(int codigo, File fichero, float precionuevo) {
+		RandomAccessFile raf;
+		try {
+			raf = new RandomAccessFile(fichero, "rw");
+			raf.seek(((codigo-1)*12)+4);
+			raf.writeFloat(precionuevo);
+		} catch (Exception e) {
+			System.out.println("Se ha producido un error al guardar el precio.");
+		}
+		this.precio = precionuevo;
 	}
-	public int getStock() {
+	public int getStock(int codigo, File fichero) {
+		RandomAccessFile raf;
+		try {
+			raf = new RandomAccessFile(fichero, "r");
+			raf.seek(((codigo-1)*12)+8);
+			stock = raf.readInt();
+		} catch (Exception e) {
+			System.out.println("Se ha producido un error al leer el stock.");
+		}
 		return stock;
 	}
-	public void setStock(int stock) {
-		this.stock = stock;
+	public void setStock(int codigo, File fichero, int stocknuevo) {
+		RandomAccessFile raf;
+		try {
+			raf = new RandomAccessFile(fichero, "rw");
+			raf.seek(((codigo-1)*12)+8);
+			raf.writeInt(stocknuevo);
+		} catch (Exception e) {
+			System.out.println("Se ha producido un error al guardar el stock.");
+		}
+		this.stock = stocknuevo;
 	}
 	
 }
