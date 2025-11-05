@@ -214,6 +214,7 @@ public class GestorTienda {
 	}
 
 	private static void mostrar_catalogo_plantas(List<Planta> plantas) {
+		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta directamente
 		for (Planta planta : plantas) {
 			System.out.println(planta.toString());
 		}
