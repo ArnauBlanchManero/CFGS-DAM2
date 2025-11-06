@@ -34,11 +34,9 @@ public class GestorTienda {
 	static Scanner read = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		System.out.println("┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ");
-		System.out.println("┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─");
+		System.out.println("┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ");
+		System.out.println("┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ");
 		System.out.println("BIENBENIDO AL GESTOR DE LA TIENDA DE PLANTAS");
-		System.out.println("┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ");
-		System.out.println("┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─");
 
 		List<Planta> plantas = new ArrayList<Planta>();
 		List<Planta> plantasBaja = new ArrayList<Planta>();
