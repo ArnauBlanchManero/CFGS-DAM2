@@ -341,23 +341,31 @@ public class GestorTienda {
 			read.nextLine();
 		}
 		System.out.println("Esta es la información de la planta seleccionada");
+		imprimir_planta(planta);
+		
+	}
+
+	private static void imprimir_planta(Planta planta) {
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		RandomAccessFile raf;
-		
+		float precio=0;
+		int stock=0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
 			raf.seek(planta.getCodigo() * 12);
 			int codigo = raf.readInt();
 			// plantas.get(i).setCodigo(codigo);
-			float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
-			// precio = raf.readFloat();
+			//float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
+			//raf.seek(((codigo-1)*12)+4);
+			precio = raf.readFloat();
 			// plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
-			int stock = planta.getStock(planta.getCodigo(), listaPlantasFicheroDat);
-			// stock = raf.readInt();
+			//int stock = planta.getStock(planta.getCodigo(), listaPlantasFicheroDat);
+			stock = raf.readInt();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		System.out.println(planta.toString());
+		System.out.println("\tPrecio: "+precio+"\n\tStock: "+stock);
 	}
 
 	private static int posicion_planta_por_codigo(Integer codigo, List<Planta> plantas) {
