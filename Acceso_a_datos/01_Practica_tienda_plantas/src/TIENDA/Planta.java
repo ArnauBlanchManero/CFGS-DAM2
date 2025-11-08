@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.RandomAccessFile;
 
 public class Planta {
-	int codigo;
-	String nombre;
-	String foto;
-	String descripcion;
-	float precio;
-	int stock;
+	private int codigo;
+	private String nombre;
+	private String foto;
+	private String descripcion;
+	//float precio;
+	//int stock;
 	
 	public Planta(int codigo, String nombre, String foto, String descripcion) {
 		super();
@@ -20,7 +20,7 @@ public class Planta {
 	}
 	@Override
 	public String toString() {
-		return "Código planta " + codigo + "\n\tNombre: " + nombre + "\n\tFoto: " + foto + "\n\tDescripcion: " + descripcion + "\n\tPrecio: " + precio + "\n\tStock: " + stock + "\n";
+		return "Código planta " + codigo + "\n\tNombre: " + nombre + "\n\tFoto: " + foto + "\n\tDescripcion: " + descripcion;
 	}
 	public int getCodigo() {
 		return codigo;
@@ -46,6 +46,7 @@ public class Planta {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	/*
 	public float getPrecio(int codigo, File fichero) {
 		RandomAccessFile raf;
 		try {
@@ -89,6 +90,16 @@ public class Planta {
 			System.out.println("Se ha producido un error al guardar el stock.");
 		}
 		this.stock = stocknuevo;
+	}
+	*/
+	public String getCodigoCeros() {
+		String codigo = this.codigo+"";
+		String codigoCeros = "";
+		for (int i = 0; i < 2-codigo.length(); i++) {
+			codigoCeros += "0";
+		}
+		codigoCeros += codigo;
+		return codigoCeros;
 	}
 	
 }

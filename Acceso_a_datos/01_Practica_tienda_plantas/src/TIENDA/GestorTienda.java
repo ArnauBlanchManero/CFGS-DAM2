@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class GestorTienda {
 	static Scanner read = new Scanner(System.in);
@@ -304,44 +308,113 @@ public class GestorTienda {
 
 	private static void venta_plantas(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja) {
 		// TODO vender
-		String codigo;
-		System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
-		codigo = read.next();
-		read.nextLine();
-		while (!codigo.matches("[0-9]*")) {
-			System.out.print("Introduce un número válido: ");
+		boolean otraPlanta=true;
+		List<Planta> plantasVendidas = new ArrayList<Planta>();
+		List<Integer> cantidades = new ArrayList<Integer>();
+		do {
+			String codigo;
+			System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
 			codigo = read.next();
 			read.nextLine();
-		}
-		if (codigo.equals("0")) {
-			System.out.println("Proceso cancelado.");
-		} else {
-			int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
-			if(posicion!=-1) {
-				Planta planta = plantas.get(posicion);
-				vender_planta(empleado, planta);
-			}else {
-				System.out.println("Planta no encontrada");
+			while (!codigo.matches("[0-9]*")) {
+				System.out.print("Introduce un número válido: ");
+				codigo = read.next();
+				read.nextLine();
 			}
+			if (codigo.equals("0")) {
+				System.out.println("Proceso cancelado.");
+				otraPlanta=false;
+			} else {
+				int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
+				if(posicion!=-1) {
+					Planta planta = plantas.get(posicion);
+					plantasVendidas.add(planta);
+					cantidades.add(vender_planta(empleado, planta));
+					System.out.print("¿Quieres añadir otra planta a la venta? (si o no): ");
+					String seguir = read.next();
+					read.nextLine();
+					if (seguir.equalsIgnoreCase("si")) {
+						otraPlanta = true;
+					} else {
+						otraPlanta = false;
+					}
+				}else {
+					System.out.println("Planta no encontrada");
+				}
+			}
+		}while(otraPlanta);
+		if (plantasVendidas.size()!=0 && cantidades.size()!=0 && plantasVendidas.size()==cantidades.size()) {
+			System.out.println("");
+			Ticket venta = new Ticket(numero_ticket());
+			ArrayList<String> contenidoTicket = venta.escribirTicket(plantasVendidas, cantidades, empleado);
+			for (String linea : contenidoTicket) {
+				System.out.println(linea);
+			}
+			System.out.print("Escribe 'Aceptar' para confirmar la venta y producir el ticket: ");
+			String acepta = read.nextLine();
+			if (acepta.equals("Aceptar")) {
+				if(venta.crearTicket(contenidoTicket)) {
+					restar_cantidades(plantasVendidas, cantidades);
+				}
+			} else {
+				System.out.println("Venta cancelada.");
+			}
+		} else {
+			System.out.println("Algo no se ha calculado correctamente.");
 		}
 		//System.out.println("Información de la planta que quieres vender");
 		// TODO devolver
 
 	}
 
-	private static void vender_planta(Empleado empleado, Planta planta) {
+	private static void restar_cantidades(List<Planta> plantasVendidas, List<Integer> cantidades) {
+		//dar_de_baja(planta);
+		
+	}
+
+	private static int numero_ticket() {
+		int num = 0;
+		Path tickets = Path.of("TICKETS");
+		Path devoluciones = Path.of("DEVOLUCIONES");
+		try {
+			Stream<Path> flujo= Files.list(tickets);
+			Stream<Path> flujo2= Files.list(devoluciones);
+			num = (int) (flujo.count()+flujo2.count());
+			num++;
+			//System.out.println(num);
+			//flujo.forEach(archivo->System.out.println(archivo.getFileName()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return num;
+	}
+
+	private static Integer vender_planta(Empleado empleado, Planta planta) {
 		// TODO Auto-generated method stub
+		System.out.println("Esta es la información de la planta seleccionada");
+		imprimir_planta(planta);
 		String cantidad;
 		System.out.print("¿Cuántas plantas quieres vender? ");
 		cantidad = read.next();
 		read.nextLine();
-		while (!cantidad.matches("[0-9]*") || planta.getStock(planta.getCodigo(), new File("PLANTAS/plantas.dat"))<Integer.valueOf(cantidad)) {
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		RandomAccessFile raf;
+		int stockPlanta=0;
+		try {
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			raf.seek(((planta.getCodigo()-1) * 12)+8);
+			stockPlanta = raf.readInt();
+		} catch (Exception e) {
+			stockPlanta=100;
+		}
+		while (!cantidad.matches("[0-9]*") || stockPlanta<Integer.valueOf(cantidad)) {
 			System.out.print("Introduce otro número: ");
 			cantidad = read.next();
 			read.nextLine();
 		}
-		System.out.println("Esta es la información de la planta seleccionada");
-		imprimir_planta(planta);
+		return Integer.valueOf(cantidad);
 		
 	}
 
@@ -352,7 +425,7 @@ public class GestorTienda {
 		int stock=0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			raf.seek(planta.getCodigo() * 12);
+			raf.seek((planta.getCodigo()-1) * 12);
 			int codigo = raf.readInt();
 			// plantas.get(i).setCodigo(codigo);
 			//float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
@@ -365,7 +438,7 @@ public class GestorTienda {
 			// TODO: handle exception
 		}
 		System.out.println(planta.toString());
-		System.out.println("\tPrecio: "+precio+"\n\tStock: "+stock);
+		System.out.println("\tPrecio: "+precio+"€\n\tStock: "+stock);
 	}
 
 	private static int posicion_planta_por_codigo(Integer codigo, List<Planta> plantas) {
@@ -380,6 +453,11 @@ public class GestorTienda {
 	private static void mostrar_catalogo_plantas(List<Planta> plantas, Empleado empleado, List<Planta> plantasBaja) {
 		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta
 		// directamente
+		for (Planta planta : plantas) {
+			imprimir_planta(planta);
+			System.out.println("\n································\n");
+		}
+		/*
 		float precio;
 		int stock;
 		int codigo;
@@ -421,6 +499,7 @@ public class GestorTienda {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		venta_plantas(empleado, plantas, plantasBaja);
 	}
 
@@ -433,7 +512,7 @@ public class GestorTienda {
 		System.out.print("Contraseña: ");
 		String passwd = read.nextLine();
 		for (int i = 0; i < empleados.size(); i++) {
-			if (id.compareToIgnoreCase(Integer.toString(empleados.get(i).getId())) == 0) {
+			if (empleados.get(i).getId() == Integer.valueOf(id)) {
 				if (passwd.compareTo(empleados.get(i).getPasswd()) == 0) {
 					seleccionado = empleados.get(i);
 				}
@@ -551,7 +630,7 @@ public class GestorTienda {
 		ficheros.add(new File(directorios.get(0).getPath(), "plantasbaja.dat"));
 		ficheros.add(new File(directorios.get(1).getPath(), "empleados.dat"));
 		ficheros.add(new File(directorios.get(2).getPath(), "empleadosBaja.dat"));
-		ficheros.add(new File(directorios.get(3).getPath(), "0.txt"));
+		//ficheros.add(new File(directorios.get(3).getPath(), "0.txt"));
 		// ficheros.add(new File(directorios.get(4).getPath()));
 
 		for (File fichero : ficheros) {

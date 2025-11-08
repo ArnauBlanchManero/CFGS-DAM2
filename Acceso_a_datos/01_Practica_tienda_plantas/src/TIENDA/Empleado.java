@@ -7,10 +7,10 @@ public class Empleado implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	int id;
-	String nombre;
-	String passwd;
-	String cargo;
+	private int id;
+	private String nombre;
+	private String passwd;
+	private String cargo;
 	public Empleado(int id, String nombre, String passwd, String cargo) {
 		super();
 		this.id = id;
@@ -45,6 +45,15 @@ public class Empleado implements Serializable{
 	}
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
+	}
+	public String getIdCeros() {
+		String codigo = this.id+"";
+		String codigoCeros = "";
+		for (int i = 0; i < 4-codigo.length(); i++) {
+			codigoCeros += "0";
+		}
+		codigoCeros += codigo;
+		return codigoCeros;
 	}
 	
 }
