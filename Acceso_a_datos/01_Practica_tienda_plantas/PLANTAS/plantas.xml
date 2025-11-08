@@ -79,12 +79,6 @@
     <descripcion>Planta bulbosa de flores perfumadas</descripcion>
   </planta>
   <planta>
-    <codigo>14</codigo>
-    <nombre>Petunia</nombre>
-    <foto>petunia.jpg</foto>
-    <descripcion>Flor de jardín muy colorida</descripcion>
-  </planta>
-  <planta>
     <codigo>15</codigo>
     <nombre>Begonia</nombre>
     <foto>begonia.jpg</foto>
@@ -113,11 +107,5 @@
     <nombre>Ficus</nombre>
     <foto>ficus.jpg</foto>
     <descripcion>Árbol o arbusto de interior muy popular</descripcion>
-  </planta>
-  <planta>
-    <codigo>20</codigo>
-    <nombre>Jazmín</nombre>
-    <foto>jazmin.jpg</foto>
-    <descripcion>Planta trepadora de flores fragantes</descripcion>
   </planta>
 </plantas>

@@ -1,0 +1,15 @@
+TIENDA DE PLANTAS DE ARNAU
+══════════════════════════
+
+Número de ticket: 10
+Fecha: 08/11/2025
+····················································
+Venta realizada por Teresa
+Código de empleado: 1452
+
+Código planta        Cantidad        Precio unitario
+06                   01              26.87€
+
+····················································
+Total: 26.87€
+

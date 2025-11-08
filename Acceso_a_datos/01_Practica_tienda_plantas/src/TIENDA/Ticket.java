@@ -5,8 +5,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Ticket {
 	private String nombre;
@@ -18,13 +23,20 @@ public class Ticket {
 		this.nombre = numero+".txt";
 		this.numero = numero;
 	}
-
+	/*
+	public Ticket(String nombre) {
+		super();
+		this.nombre = nombre;
+		this.numero = Integer.valueOf(nombre.substring(0, nombre.lastIndexOf('.')));
+	}
+	 */
 	public ArrayList<String> escribirTicket(List<Planta> plantasVendidas, List<Integer> cantidades, Empleado empleado) {
 		ArrayList<String> lineas = new ArrayList<String>();
 		lineas.add("TIENDA DE PLANTAS DE ARNAU");
 		lineas.add("══════════════════════════");
 		lineas.add("");
 		lineas.add("Número de ticket: "+numero);
+		lineas.add("Fecha: "+LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		lineas.add("····················································");
 		lineas.add("Venta realizada por "+empleado.getNombre());
 		lineas.add("Código de empleado: "+empleado.getIdCeros());
@@ -32,25 +44,30 @@ public class Ticket {
 		lineas.add("Código planta        Cantidad        Precio unitario");
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		RandomAccessFile raf;
-		int precioPlanta=0;
+		float precioPlanta=0f;
 		String cero ="";
-		int total=0;
+		float total=0f;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
 			for (int i=0;i<plantasVendidas.size();i++) {
-				raf.seek(((plantasVendidas.get(i).getCodigo()-1) * 12)+8);
-				precioPlanta = raf.readInt();
+				raf.seek(((plantasVendidas.get(i).getCodigo()-1) * 12)+4);
+				precioPlanta = raf.readFloat();
+				if (precioPlanta == 0f) {
+					return null;
+				}
 				cero ="";
 				if(cantidades.get(i)<10)
 					cero="0";
 				lineas.add(plantasVendidas.get(i).getCodigoCeros()+"                   "+cero+cantidades.get(i)+"              "+precioPlanta+"€");
-				total+=cantidades.get(i)*precioPlanta;
+				total+=(float)cantidades.get(i)*precioPlanta;
 			}
 		} catch (Exception e) {
 			lineas.add("00                   00              0€");
+			e.printStackTrace();
 		}
 		lineas.add("");
 		lineas.add("····················································");
+		total = Math.round(total * 100f) / 100f;
 		lineas.add("Total: "+total+"€");
 		lineas.add("");
 		return lineas;
@@ -77,6 +94,16 @@ public class Ticket {
 			}
 		}
 		return false;
+	}
+	public void mostrarContenido() {
+		Path directorio = Path.of("TICKETS");
+		try {
+			Stream<Path> flujo= Files.list(directorio);
+			flujo.forEach(archivo->System.out.println(archivo.getFileName()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -40,12 +41,13 @@ public class GestorTienda {
 	public static void main(String[] args) {
 		System.out.println("┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ┌♣┐ ");
 		System.out.println("┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ┘ └ ");
-		System.out.println("BIENBENIDO AL GESTOR DE LA TIENDA DE PLANTAS");
+		System.out.println("BIENVENIDO AL GESTOR DE LA TIENDA DE PLANTAS");
 
-		List<Planta> plantas = new ArrayList<Planta>();
-		List<Planta> plantasBaja = new ArrayList<Planta>();
+		ArrayList<Planta> plantas = new ArrayList<Planta>();
+		ArrayList<Planta> plantasBaja = new ArrayList<Planta>();
 		List<Empleado> empleados = new ArrayList<Empleado>();
 		List<Empleado> empleadosBaja = new ArrayList<Empleado>();
+		File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
 		if (crear_jerarquía_ficheros()) {
 			File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
 			empleados = cargar_datos_empleados(listaEmpleadosFichero);
@@ -60,21 +62,21 @@ public class GestorTienda {
 				}
 				if (intentos > 0) {
 					System.out.println("\nSesión iniciada correctamente " + empleado.getNombre());
-					File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
 					plantas = cargar_datos_plantas(listaPlantasFicheroXml);
 					if (plantas != null) {
 						// TODO funciones menus empleado
-						File listaPlantasBajaFicheroXml = new File("PLANTAS/plantasBaja.xml");
-						plantasBaja = cargar_datos_plantas(listaPlantasBajaFicheroXml);
 						if (empleado.getCargo().equals("Vendedor")) {
-							menu_vendedor(empleado, plantas, plantasBaja);
+							plantas = menu_vendedor(empleado, plantas);
 						} else if (empleado.getCargo().equals("Gestor")) {
-							File listaEmpleadosBajaFichero = new File("EMPLEADOS/empleados.dat");
+							File listaPlantasBajaFicheroXml = new File("PLANTAS/plantasBaja.xml");
+							plantasBaja = (ArrayList<Planta>) cargar_datos_plantas(listaPlantasBajaFicheroXml);
+							File listaEmpleadosBajaFichero = new File("EMPLEADOS/BAJA/empleadosBaja.dat");
 							empleadosBaja = cargar_datos_empleados(listaEmpleadosBajaFichero);
-							menu_gestor(empleado, plantas, plantasBaja, empleados, empleadosBaja);
+							plantas = menu_gestor(empleado, plantas, plantasBaja, empleados, empleadosBaja);
 						} else {
 							System.out.println("No se ha encontrado el cargo del empleado.");
 						}
+						guardar_plantas(plantas, listaPlantasFicheroXml);					
 					} else {
 						System.out.print("¿Quieres añadir las plantas por defecto? (si o no): ");
 						if (read.next().equalsIgnoreCase("si")) {
@@ -95,6 +97,9 @@ public class GestorTienda {
 				read.nextLine();
 			}
 		}
+		//guardar_empleados(empleados, listaEmpleadosFichero);
+		//mostrar_catalogo_plantas(plantasBaja, empleados.get(0), plantasBaja);
+		System.out.println("Aplicación cerrada.");
 	}
 
 	private static void crear_plantas_por_defecto() {
@@ -248,17 +253,18 @@ public class GestorTienda {
 
 	}
 
-	private static void menu_gestor(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja,
+	private static ArrayList<Planta> menu_gestor(Empleado empleado, ArrayList<Planta> plantas, List<Planta> plantasBaja,
 			List<Empleado> empleados, List<Empleado> empleadosBaja) {
 
 		System.out.println("\n═══════════");
 		System.out.println("Menú gestor");
 		System.out.println("═══════════");
 		// TODO menú gestor
+		return plantas;
 
 	}
 
-	private static void menu_vendedor(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja) {
+	private static ArrayList<Planta> menu_vendedor(Empleado empleado, ArrayList<Planta> plantas) {
 		String respuesta;
 		do {
 			System.out.println("\n─────────────");
@@ -280,10 +286,10 @@ public class GestorTienda {
 			System.out.println("");
 			switch (respuesta) {
 			case "1":
-				mostrar_catalogo_plantas(plantas, empleado, plantasBaja);
+				plantas = mostrar_catalogo_plantas(plantas, empleado);
 				break;
 			case "2":
-				venta_plantas(empleado, plantas, plantasBaja);
+				plantas = menu_ventas(empleado, plantas);
 				break;
 			case "3":
 				buscar_tiket();
@@ -299,18 +305,73 @@ public class GestorTienda {
 			// Buscar por el número de ticket
 			// Salir
 		} while (!respuesta.equals("4"));
+		return plantas;
+	}
+
+	private static ArrayList<Planta> menu_ventas(Empleado empleado, ArrayList<Planta> plantas) {
+		String respuesta;
+		do {
+			System.out.println("\n-------------");
+			System.out.println("Menú ventas");
+			System.out.println("-------------");
+			System.out.println("1. Vender plantas");
+			System.out.println("2. Devolver plantas");
+			System.out.println("3. Volver al menú");
+			System.out.print("Opción: ");
+			respuesta = read.next();
+			read.nextLine();
+
+			while (!respuesta.matches("[1-3]")) {
+				System.out.print("Introduce un número del 1 al 3: ");
+				respuesta = read.next();
+				read.nextLine();
+			}
+			System.out.println("");
+			switch (respuesta) {
+			case "1":
+				plantas = venta_plantas(empleado, plantas);
+				break;
+			case "2":
+				plantas = devolver_plantas(plantas);
+				break;
+			case "3":
+				break;
+			default:
+				System.out.println("Opción inválida, vulva a intentarlo.");
+				break;
+			}
+			// Visualizar catálogo de plantas
+			// Generar ventas
+			// Buscar por el número de ticket
+			// Salir
+		} while (!respuesta.equals("3"));
+		return plantas;
+	}
+
+	private static ArrayList<Planta> devolver_plantas(ArrayList<Planta> plantas) {
+		// TODO Auto-generated method stub
+		return plantas;
 	}
 
 	private static void buscar_tiket() {
-		// TODO tickets
-
+		String numBuscar;
+		System.out.print("Introduce el número de ticket que quieres buscar: ");
+		numBuscar = read.next();
+		read.nextLine();
+		if (Integer.valueOf(numBuscar) < numero_ticket()) {
+			Ticket ticketBuscar = new Ticket(Integer.valueOf(numBuscar));
+			ticketBuscar.mostrarContenido();
+		} else {
+			System.out.println("No se ha encontrado el ticket pedido.");
+		}
 	}
 
-	private static void venta_plantas(Empleado empleado, List<Planta> plantas, List<Planta> plantasBaja) {
+	private static ArrayList<Planta> venta_plantas(Empleado empleado, ArrayList<Planta> plantas) {
 		// TODO vender
 		boolean otraPlanta=true;
 		List<Planta> plantasVendidas = new ArrayList<Planta>();
 		List<Integer> cantidades = new ArrayList<Integer>();
+		List<Integer> codigosPlantasVendidas = new ArrayList<Integer>();
 		do {
 			String codigo;
 			System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
@@ -322,14 +383,19 @@ public class GestorTienda {
 				read.nextLine();
 			}
 			if (codigo.equals("0")) {
-				System.out.println("Proceso cancelado.");
+				//System.out.println("Proceso cancelado.");
 				otraPlanta=false;
 			} else {
 				int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
+				codigosPlantasVendidas.add(posicion);
 				if(posicion!=-1) {
-					Planta planta = plantas.get(posicion);
-					plantasVendidas.add(planta);
-					cantidades.add(vender_planta(empleado, planta));
+					if (Collections.frequency(codigosPlantasVendidas, posicion)>=2) {
+						System.out.println("No puedes volver a añadir la misma planta.");
+					} else {
+						Planta planta = plantas.get(posicion);
+						plantasVendidas.add(planta);
+						cantidades.add(vender_planta(empleado, planta));
+					}
 					System.out.print("¿Quieres añadir otra planta a la venta? (si o no): ");
 					String seguir = read.next();
 					read.nextLine();
@@ -347,29 +413,116 @@ public class GestorTienda {
 			System.out.println("");
 			Ticket venta = new Ticket(numero_ticket());
 			ArrayList<String> contenidoTicket = venta.escribirTicket(plantasVendidas, cantidades, empleado);
-			for (String linea : contenidoTicket) {
-				System.out.println(linea);
-			}
-			System.out.print("Escribe 'Aceptar' para confirmar la venta y producir el ticket: ");
-			String acepta = read.nextLine();
-			if (acepta.equals("Aceptar")) {
-				if(venta.crearTicket(contenidoTicket)) {
-					restar_cantidades(plantasVendidas, cantidades);
+			if (contenidoTicket!=null) {
+				for (String linea : contenidoTicket) {
+					System.out.println(linea);
+				}
+				System.out.print("Escribe 'Aceptar' para confirmar la venta y producir el ticket: ");
+				String acepta = read.nextLine();
+				if (acepta.equals("Aceptar")) {
+					if(venta.crearTicket(contenidoTicket)) {
+						plantas = restar_cantidades(plantasVendidas, cantidades, plantas);
+					}
+				} else {
+					System.out.println("Venta cancelada.");
 				}
 			} else {
-				System.out.println("Venta cancelada.");
+				System.out.println("No es posible vender esta planta.");
 			}
 		} else {
-			System.out.println("Algo no se ha calculado correctamente.");
+			System.out.println("Proceso de venta cancelado.");
 		}
+		return plantas;
 		//System.out.println("Información de la planta que quieres vender");
 		// TODO devolver
 
 	}
 
-	private static void restar_cantidades(List<Planta> plantasVendidas, List<Integer> cantidades) {
-		//dar_de_baja(planta);
-		
+	private static ArrayList<Planta> restar_cantidades(List<Planta> plantasVendidas, List<Integer> cantidades, ArrayList<Planta> plantas) {
+		int codigo=0;
+		int cantidadResta=0;
+		int cantidadAnterior=0;
+		int cantidadFinal=0;
+		int puntero=0;
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		RandomAccessFile raf;
+		for (int i = 0; i < plantasVendidas.size(); i++) {
+			codigo = plantasVendidas.get(i).getCodigo();
+			cantidadResta = cantidades.get(i);
+			puntero = ((codigo-1) * 12)+8;
+			try {
+				raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+				raf.seek(puntero);
+				cantidadAnterior = raf.readInt();
+				cantidadFinal = cantidadAnterior-cantidadResta;
+			} catch (Exception e) {
+				cantidadFinal=0;
+			}
+			if (cantidadFinal==0) {
+				System.out.println("Se han comprado todas las unidades de "+ plantasVendidas.get(i).getNombre()+", se dará de baja automáticamente.");
+				boolean eliminarPlanta = dar_de_baja(plantasVendidas.get(i));
+				if (eliminarPlanta) {
+					plantas.remove(plantasVendidas.get(i));
+				}
+			}
+		}
+		try {
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
+			raf.seek(puntero);
+			raf.writeInt(cantidadFinal);
+			raf.close();
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+			e.printStackTrace();
+		}
+		return plantas;
+	}
+
+	private static boolean dar_de_baja(Planta planta) {
+
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		File listaPlantasBajaFicheroDat = new File("PLANTAS/plantasbaja.dat");
+		RandomAccessFile raf;
+		float precioPlanta = 0f;
+		int puntero = ((planta.getCodigo()-1) * 12)+4;
+		try {
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			raf.seek(puntero);
+			precioPlanta = raf.readFloat();
+			try {
+				raf = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
+				raf.seek(raf.length());
+				//System.out.println(raf.readInt());
+				/*
+				while (raf.getFilePointer() < raf.length()) {
+					raf.readInt();
+				}
+				*/
+				raf.writeInt(planta.getCodigo());
+				raf.writeFloat(precioPlanta);
+				raf.writeInt(0);
+				raf.close();
+				ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
+				if (plantasBaja==null) {
+					plantasBaja = new ArrayList<Planta>();
+				}
+				plantasBaja.add(planta);
+				guardar_plantas(plantasBaja, new File("PLANTAS/plantasBaja.xml"));
+				raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
+				raf.seek(puntero);
+				raf.writeFloat(0f);
+				raf.close();
+			} catch (IOException e) {
+				System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+				e.printStackTrace();
+				return false;
+			}
+		} catch (Exception e) {
+			System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.dat'.");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	private static int numero_ticket() {
@@ -450,7 +603,7 @@ public class GestorTienda {
 		return -1;
 	}
 
-	private static void mostrar_catalogo_plantas(List<Planta> plantas, Empleado empleado, List<Planta> plantasBaja) {
+	private static ArrayList<Planta> mostrar_catalogo_plantas(ArrayList<Planta> plantas, Empleado empleado) {
 		// TODO hacerlo un pco mas bonito con guiones y redirigir a la venta
 		// directamente
 		for (Planta planta : plantas) {
@@ -500,7 +653,7 @@ public class GestorTienda {
 			e.printStackTrace();
 		}
 		*/
-		venta_plantas(empleado, plantas, plantasBaja);
+		return venta_plantas(empleado, plantas);
 	}
 
 	private static Empleado iniciar_sesión(List<Empleado> empleados) {
@@ -567,7 +720,7 @@ public class GestorTienda {
 		return listaEmpleados;
 	}
 
-	private static List<Planta> cargar_datos_plantas(File listaPlantasFichero) {
+	private static ArrayList<Planta> cargar_datos_plantas(File listaPlantasFichero) {
 		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
