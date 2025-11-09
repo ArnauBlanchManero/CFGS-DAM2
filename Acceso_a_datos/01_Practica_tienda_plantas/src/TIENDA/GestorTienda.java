@@ -237,14 +237,14 @@ public class GestorTienda {
 		return 1;
 	}
 
-	public static float numeroAleatorioPrecio() {
+	private static float numeroAleatorioPrecio() {
 
 		float numero = ThreadLocalRandom.current().nextFloat(10, 50);
 		return Math.round(numero * 100f) / 100f;
 
 	}
 
-	public static int numeroAleatorioStock() {
+	private static int numeroAleatorioStock() {
 		return ThreadLocalRandom.current().nextInt(1, 100);
 	}
 
@@ -271,9 +271,9 @@ public class GestorTienda {
 			System.out.println("Menú vendedor");
 			System.out.println("─────────────");
 			System.out.println("1. Catálogo de plantas");
-			System.out.println("2. Vender plantas");
+			System.out.println("2. Vender/devolver plantas");
 			System.out.println("3. Buscar ticket");
-			System.out.println("4. Salir");
+			System.out.println("4. Guardar y salir");
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
@@ -292,7 +292,16 @@ public class GestorTienda {
 				plantas = menu_ventas(empleado, plantas);
 				break;
 			case "3":
-				buscar_tiket();
+				String numBuscar;
+				System.out.print("Introduce el número de ticket que quieres buscar: ");
+				numBuscar = read.next();
+				read.nextLine();
+				while (!numBuscar.matches("[0-9]*")) {
+					System.out.print("Introduce un número válido: ");
+					numBuscar = read.next();
+					read.nextLine();
+				}
+				buscar_tiket(numBuscar);
 				break;
 			case "4":
 				break;
@@ -349,18 +358,35 @@ public class GestorTienda {
 	}
 
 	private static ArrayList<Planta> devolver_plantas(ArrayList<Planta> plantas) {
-		// TODO Auto-generated method stub
+		System.out.println("Esta es toda la lista de tickets");
+		for (int i = 0; i < numero_ticket(); i++) {
+			System.out.println("////////////////////////////////////////////////////");
+			buscar_tiket(String.valueOf(i));
+		}
+		String numTicket;
+		System.out.print("Escribe el número de ticket que quieras devolver (0 para cancelar): ");
+		numTicket = read.next();
+		read.nextLine();
+		while (!numTicket.matches("[0-9]*")) {
+			System.out.print("Introduce un número válido: ");
+			numTicket = read.next();
+			read.nextLine();
+		}
+		if (!numTicket.equals("0")) {
+			System.out.println("Esta es la información del ticket que vas a cancelar");
+			Ticket ticketDevolver = new Ticket(Integer.valueOf(numTicket));
+			System.out.println("\n"+ticketDevolver.devolverContenido());
+			plantas = ticketDevolver.marcarDevuelto(plantas);
+		} else {
+			System.out.println("Proceso de devolución cancelado.");
+		}
 		return plantas;
 	}
 
-	private static void buscar_tiket() {
-		String numBuscar;
-		System.out.print("Introduce el número de ticket que quieres buscar: ");
-		numBuscar = read.next();
-		read.nextLine();
+	private static void buscar_tiket(String numBuscar) {
 		if (Integer.valueOf(numBuscar) < numero_ticket()) {
 			Ticket ticketBuscar = new Ticket(Integer.valueOf(numBuscar));
-			ticketBuscar.mostrarContenido();
+			System.out.println("\n"+ticketBuscar.devolverContenido());
 		} else {
 			System.out.println("No se ha encontrado el ticket pedido.");
 		}
@@ -479,7 +505,6 @@ public class GestorTienda {
 	}
 
 	private static boolean dar_de_baja(Planta planta) {
-
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		File listaPlantasBajaFicheroDat = new File("PLANTAS/plantasbaja.dat");
 		RandomAccessFile raf;
@@ -720,7 +745,7 @@ public class GestorTienda {
 		return listaEmpleados;
 	}
 
-	private static ArrayList<Planta> cargar_datos_plantas(File listaPlantasFichero) {
+	public static ArrayList<Planta> cargar_datos_plantas(File listaPlantasFichero) {
 		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {

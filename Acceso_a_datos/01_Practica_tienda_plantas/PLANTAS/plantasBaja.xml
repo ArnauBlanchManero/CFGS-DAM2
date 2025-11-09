@@ -12,4 +12,10 @@
     <foto>petunia.jpg</foto>
     <descripcion>Flor de jardín muy colorida</descripcion>
   </planta>
+  <planta>
+    <codigo>3</codigo>
+    <nombre>Helecho</nombre>
+    <foto>helecho.jpg</foto>
+    <descripcion>Planta de sombra con hojas verdes largas</descripcion>
+  </planta>
 </plantas>
