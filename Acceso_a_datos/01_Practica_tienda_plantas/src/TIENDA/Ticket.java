@@ -17,6 +17,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 public class Ticket {
 	private String nombre;
 	private int numero;
@@ -112,9 +129,9 @@ public class Ticket {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "Ticket no encontrado.";
+			return "Ticket "+numero+" no encontrado.";
 		}
-		return "Ticket no encontrado.";
+		return "Ticket "+numero+" no encontrado.";
 	}
 
 	public ArrayList<Planta> marcarDevuelto(ArrayList<Planta> plantas) {
@@ -136,10 +153,13 @@ public class Ticket {
 					StandardOpenOption.APPEND);
 			ArrayList<String> codigos = new ArrayList<String>();
 			ArrayList<String> cantidades = new ArrayList<String>();
+			ArrayList<String> precios = new ArrayList<String>();
 			for (int i = 10; i < lineasContenido.size() - 14 + 10; i++) {
-				String[] infoPlantas = lineasContenido.get(i).split("                   ");
+				String[] infoPlantas = lineasContenido.get(i).split(" ");
 				codigos.add(infoPlantas[0]);
-				cantidades.add(infoPlantas[1]);
+				cantidades.add(infoPlantas[19]);
+				String [] precio = infoPlantas[33].split("€");
+				precios.add(precio[0]);
 			}
 			// ArrayList<Planta> plantasBaja = cargar_datos_plantas(new
 			// File("PLANTAS/plantasBaja.xml"));
@@ -159,52 +179,165 @@ public class Ticket {
 					int nuevaCantidad = cantidadAnterior + Integer.valueOf(cantidades.get(j));
 					if (precioPlanta == 0f) {
 						try {
+							RandomAccessFile raf2;
 							File listaPlantasBajaFicheroDat = new File("PLANTAS/plantasbaja.dat");
-							raf = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
-							raf.seek(raf.length());
-							// System.out.println(raf.readInt());
-							/*
-							 * while (raf.getFilePointer() < raf.length()) { raf.readInt(); }
-							 */
-							raf.writeInt(planta.getCodigo());
-							raf.writeFloat(precioPlanta);
-							raf.writeInt(0);
-							raf.close();
-							ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
-							if (plantasBaja == null) {
-								plantasBaja = new ArrayList<Planta>();
+							raf2 = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
+							raf2.seek(0);
+							int buscaCodigo = raf2.readInt();
+							raf2.seek(raf2.getFilePointer()+8);
+							while (raf2.getFilePointer() < raf2.length() && Integer.valueOf(codigos.get(j)) == buscaCodigo) {
+								buscaCodigo = raf2.readInt();
+								raf2.seek(raf2.getFilePointer()+8);
 							}
-							plantasBaja.add(planta);
-							guardar_plantas(plantasBaja, new File("PLANTAS/plantasBaja.xml"));
-							raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
-							raf.seek(puntero);
-							raf.writeFloat(0f);
-							raf.close();
+							if (Integer.valueOf(codigos.get(j)) != buscaCodigo) {
+								System.out.println("No se ha encontrado el código de la planta "+codigos.get(j)+" en el fichero "+ listaPlantasBajaFicheroDat.getName());
+							} else {
+								raf2.seek(raf2.getFilePointer()-8);
+								precioPlanta = raf2.readFloat();
+							}
+							/*
+							if (precioPlanta != Float.valueOf(precios.get(j))){
+								precioPlanta = Float.valueOf(precios.get(j));
+							}
+							*/
+							//raf.writeFloat(precioPlanta);
+							ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
+							Planta planta = null;
+							for (int i = 0; i < plantasBaja.size(); i++) {
+								if (plantasBaja.get(i).getCodigo() == Integer.valueOf(codigos.get(j))) {
+									planta = plantasBaja.get(i);
+								}
+							}
+							if (planta!=null) {
+								plantas.add(planta);
+								plantasBaja.remove(planta);
+							} else {
+								System.out.println("Error. Comprueba que la planta con código "+codigos.get(j)+" exista.");
+							}
+							int bien = guardar_plantas(plantasBaja, new File("PLANTAS/plantasBaja.xml"));
+							if (bien == 1) {
+								System.out.println("La planta con código "+ planta.getCodigo()+" ya no está de baja.");
+							}
+							try {
+								Files.deleteIfExists(fichero1);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							raf2.close();
 						} catch (IOException e) {
-							System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+							System.out.println("Ha ocurrido un error.");
 							e.printStackTrace();
-							return false;
 						}
 					}
 					raf.writeFloat(precioPlanta);
 					raf.writeInt(nuevaCantidad);
+					raf.close();
 				}
 			} catch (Exception e) {
-				System.out.println("Ha ocurrido un error en la lectura del fichero 'plantas.dat'.");
+				System.out.println("Error. No se ha encontrado el código de la planta a devolver.");
 				e.printStackTrace();
-				return false;
 			}
-			/*
-			 * for (int i = 0; i < plantas.size(); i++) { if (plantas.get(i).getCodigo() ==
-			 * codigo) { return i; } } return -1;
-			 */
-			// Files.deleteIfExists(fichero1);
-			System.out.println("Ticket devuelto correctamente.");
 		} catch (IOException e) {
-			System.out.println("Error en la devolucion.");
+			System.out.println("Error. No se ha devuelto el ticket.");
 			e.printStackTrace();
 		}
 		return plantas;
+	}
+
+	private int guardar_plantas(ArrayList<Planta> plantasBaja, File file) {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.newDocument();
+
+			Element root = doc.createElement("plantas");
+			doc.appendChild(root);
+			for (Planta añadeplanta : plantasBaja) {
+				Element planta = doc.createElement("planta");
+				root.appendChild(planta);
+				Element codigo = doc.createElement("codigo");
+				codigo.appendChild(doc.createTextNode(añadeplanta.getCodigo() + ""));
+				planta.appendChild(codigo);
+				Element nombre = doc.createElement("nombre");
+				nombre.appendChild(doc.createTextNode(añadeplanta.getNombre()));
+				planta.appendChild(nombre);
+				Element foto = doc.createElement("foto");
+				foto.appendChild(doc.createTextNode(añadeplanta.getFoto()));
+				planta.appendChild(foto);
+				Element descripcion = doc.createElement("descripcion");
+				descripcion.appendChild(doc.createTextNode(añadeplanta.getDescripcion()));
+				planta.appendChild(descripcion);
+			}
+
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			// transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+			// transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(file);
+			transformer.transform(source, result);
+
+		} catch (TransformerConfigurationException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			e.printStackTrace();
+			return 0;
+		} catch (TransformerException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			e.printStackTrace();
+			return 0;
+		} catch (ParserConfigurationException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			e.printStackTrace();
+			return 0;
+		}
+		return 1;		
+	}
+
+	private ArrayList<Planta> cargar_datos_plantas(File file) {
+		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder docB = dbf.newDocumentBuilder();
+			Document doc = docB.parse(file.getPath());
+			doc.getDocumentElement().normalize();
+			NodeList lista = doc.getElementsByTagName("planta");
+
+			for (int i = 0; i < lista.getLength(); i++) {
+				Node nodo = lista.item(i);
+				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+					Planta plantaTmp;
+					Element planta = (Element) nodo;
+					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
+					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
+					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
+					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
+
+					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
+					listaPlantas.add(plantaTmp);
+				}
+			}
+		} catch (IOException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		}
+		return listaPlantas;
 	}
 
 }

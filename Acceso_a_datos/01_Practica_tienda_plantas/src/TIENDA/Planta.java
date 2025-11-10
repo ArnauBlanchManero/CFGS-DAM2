@@ -1,8 +1,5 @@
 package TIENDA;
 
-import java.io.File;
-import java.io.RandomAccessFile;
-
 public class Planta {
 	private int codigo;
 	private String nombre;
