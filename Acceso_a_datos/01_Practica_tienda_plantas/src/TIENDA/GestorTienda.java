@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -44,8 +45,8 @@ public class GestorTienda {
 
 		ArrayList<Planta> plantas = new ArrayList<Planta>();
 		ArrayList<Planta> plantasBaja = new ArrayList<Planta>();
-		List<Empleado> empleados = new ArrayList<Empleado>();
-		List<Empleado> empleadosBaja = new ArrayList<Empleado>();
+		ArrayList<Empleado> empleados = new ArrayList<Empleado>();
+		ArrayList<Empleado> empleadosBaja = new ArrayList<Empleado>();
 		File listaPlantasFicheroXml = new File("PLANTAS/plantas.xml");
 		if (crear_jerarquía_ficheros()) {
 			File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
@@ -75,7 +76,7 @@ public class GestorTienda {
 						} else {
 							System.out.println("No se ha encontrado el cargo del empleado.");
 						}
-						guardar_plantas(plantas, listaPlantasFicheroXml);					
+						guardar_plantas(plantas, listaPlantasFicheroXml);
 					} else {
 						System.out.print("¿Quieres añadir las plantas por defecto? (si o no): ");
 						if (read.next().equalsIgnoreCase("si")) {
@@ -96,8 +97,8 @@ public class GestorTienda {
 				read.nextLine();
 			}
 		}
-		//guardar_empleados(empleados, listaEmpleadosFichero);
-		//mostrar_catalogo_plantas(plantasBaja, empleados.get(0), plantasBaja);
+		// guardar_empleados(empleados, listaEmpleadosFichero);
+		// mostrar_catalogo_plantas(plantasBaja, empleados.get(0), plantasBaja);
 		System.out.println("Aplicación cerrada.");
 	}
 
@@ -109,20 +110,20 @@ public class GestorTienda {
 		directorios.add(new File(directorios.get(1).getPath(), "BAJA"));
 		directorios.add(new File("TICKETS"));
 		directorios.add(new File("DEVOLUCIONES"));
-	
+
 		for (File directorio : directorios) {
 			if (!directorio.exists()) {
 				directorio.mkdir();
 			}
 		}
-	
+
 		ficheros.add(new File(directorios.get(0).getPath(), "plantas.xml"));
 		ficheros.add(new File(directorios.get(0).getPath(), "plantasBaja.xml"));
 		ficheros.add(new File(directorios.get(0).getPath(), "plantas.dat"));
 		ficheros.add(new File(directorios.get(0).getPath(), "plantasbaja.dat"));
 		ficheros.add(new File(directorios.get(1).getPath(), "empleados.dat"));
 		ficheros.add(new File(directorios.get(2).getPath(), "empleadosBaja.dat"));
-	
+
 		for (File fichero : ficheros) {
 			if (!fichero.exists()) {
 				try {
@@ -137,7 +138,7 @@ public class GestorTienda {
 		return true;
 	}
 
-	private static Empleado iniciar_sesión(List<Empleado> empleados) {
+	private static Empleado iniciar_sesión(ArrayList<Empleado> empleados) {
 		Empleado seleccionado = null;
 		System.out.println("\nIniciar sesión");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
@@ -168,7 +169,7 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-4]")) {
 				System.out.print("Introduce un número del 1 al 4: ");
 				respuesta = read.next();
@@ -176,29 +177,29 @@ public class GestorTienda {
 			}
 			System.out.println("");
 			switch (respuesta) {
-				case "1":
-					plantas = mostrar_catalogo_plantas(plantas, empleado);
-					break;
-				case "2":
-					plantas = menu_ventas(empleado, plantas);
-					break;
-				case "3":
-					String numBuscar;
-					System.out.print("Introduce el número de ticket que quieres buscar: ");
+			case "1":
+				plantas = mostrar_catalogo_plantas(plantas, empleado);
+				break;
+			case "2":
+				plantas = menu_ventas(empleado, plantas);
+				break;
+			case "3":
+				String numBuscar;
+				System.out.print("Introduce el número de ticket que quieres buscar: ");
+				numBuscar = read.next();
+				read.nextLine();
+				while (!numBuscar.matches("[0-9]*")) {
+					System.out.print("Introduce un número válido: ");
 					numBuscar = read.next();
 					read.nextLine();
-					while (!numBuscar.matches("[0-9]*")) {
-						System.out.print("Introduce un número válido: ");
-						numBuscar = read.next();
-						read.nextLine();
-					}
-					buscar_tiket(numBuscar);
-					break;
-				case "4":
-					break;
-				default:
-					System.out.println("Opción inválida, vulva a intentarlo.");
-					break;
+				}
+				buscar_tiket(numBuscar);
+				break;
+			case "4":
+				break;
+			default:
+				System.out.println("Opción inválida, vulva a intentarlo.");
+				break;
 			}
 			// Visualizar catálogo de plantas
 			// Generar ventas
@@ -220,7 +221,7 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-3]")) {
 				System.out.print("Introduce un número del 1 al 3: ");
 				respuesta = read.next();
@@ -245,7 +246,7 @@ public class GestorTienda {
 	}
 
 	private static ArrayList<Planta> menu_gestor(Empleado empleado, ArrayList<Planta> plantas, List<Planta> plantasBaja,
-			List<Empleado> empleados, List<Empleado> empleadosBaja) {
+			ArrayList<Empleado> empleados, ArrayList<Empleado> empleadosBaja) {
 		// TODO menú gestor
 		String respuesta;
 		do {
@@ -259,7 +260,7 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-4]")) {
 				System.out.print("Introduce un número del 1 al 4: ");
 				respuesta = read.next();
@@ -267,25 +268,26 @@ public class GestorTienda {
 			}
 			System.out.println("");
 			plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
+			empleadosBaja = cargar_datos_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"));
 			switch (respuesta) {
-				case "1":
-					plantas = menu_plantas(plantas, plantasBaja);
-					break;
-				case "2":
-					empleados = menu_empleados(empleados);
-					break;
-				case "3":
-					menu_tickets(plantas);
-					break;
-				case "4":
-					break;
-				default:
-					System.out.println("Opción inválida, vulva a intentarlo.");
-					break;
+			case "1":
+				plantas = menu_plantas(plantas, plantasBaja);
+				break;
+			case "2":
+				empleados = menu_empleados(empleados, empleadosBaja);
+				break;
+			case "3":
+				menu_tickets(plantas);
+				break;
+			case "4":
+				break;
+			default:
+				System.out.println("Opción inválida, vulva a intentarlo.");
+				break;
 			}
 		} while (!respuesta.equals("4"));
 		return plantas;
-	
+
 	}
 
 	private static ArrayList<Planta> menu_plantas(ArrayList<Planta> plantas, List<Planta> plantasBaja) {
@@ -301,13 +303,14 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-4]")) {
 				System.out.print("Introduce un número del 1 al 4: ");
 				respuesta = read.next();
 				read.nextLine();
 			}
 			System.out.println("");
+			plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
 			switch (respuesta) {
 			case "1":
 				plantas = nueva_planta(plantas);
@@ -328,7 +331,8 @@ public class GestorTienda {
 		return plantas;
 	}
 
-	private static List<Empleado> menu_empleados(List<Empleado> empleados) {
+	private static ArrayList<Empleado> menu_empleados(ArrayList<Empleado> empleados,
+			ArrayList<Empleado> empleadosBaja) {
 		String respuesta;
 		do {
 			System.out.println("\n-------------");
@@ -341,22 +345,23 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-4]")) {
 				System.out.print("Introduce un número del 1 al 4: ");
 				respuesta = read.next();
 				read.nextLine();
 			}
 			System.out.println("");
+			empleadosBaja = cargar_datos_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"));
 			switch (respuesta) {
 			case "1":
 				empleados = pedir_datos_empleado_nuevo(empleados);
 				break;
 			case "2":
-				empleados = seleccion_empleado_baja(empleados);
+				empleados = dar_empleado_baja(empleados, empleadosBaja);
 				break;
 			case "3":
-				empleados = seleccion_empleado_alta();
+				empleados = dar_empleado_alta(empleados, empleadosBaja);
 				break;
 			case "4":
 				break;
@@ -380,7 +385,7 @@ public class GestorTienda {
 			System.out.print("Opción: ");
 			respuesta = read.next();
 			read.nextLine();
-	
+
 			while (!respuesta.matches("[1-3]")) {
 				System.out.print("Introduce un número del 1 al 3: ");
 				respuesta = read.next();
@@ -401,7 +406,7 @@ public class GestorTienda {
 				break;
 			}
 		} while (!respuesta.equals("3"));
-		
+
 	}
 
 	private static ArrayList<Planta> mostrar_catalogo_plantas(ArrayList<Planta> plantas, Empleado empleado) {
@@ -413,54 +418,31 @@ public class GestorTienda {
 			System.out.println("\n································\n");
 		}
 		/*
-		float precio;
-		int stock;
-		int codigo;
-		int puntero = 0;
-		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
-		RandomAccessFile raf;
-		
-		try {
-			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			int i = 0;
-			while (raf.getFilePointer() < raf.length() && i < plantas.size()) {
-				if (i != 0) {
-					System.out.println("································\n");
-				}
-				do {
-					raf.seek(puntero * 12);
-					codigo = raf.readInt();
-					// plantas.get(i).setCodigo(codigo);
-					precio = plantas.get(i).getPrecio(codigo, listaPlantasFicheroDat);
-					// precio = raf.readFloat();
-					// plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
-					stock = plantas.get(i).getStock(codigo, listaPlantasFicheroDat);
-					// stock = raf.readInt();
-					puntero++;
-				} while (precio == 0 && stock == 0);
-				System.out.println(plantas.get(i).toString());
-				i++;
-				try {
-					Thread.sleep(300);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			raf.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+		 * float precio; int stock; int codigo; int puntero = 0; File
+		 * listaPlantasFicheroDat = new File("PLANTAS/plantas.dat"); RandomAccessFile
+		 * raf;
+		 * 
+		 * try { raf = new RandomAccessFile(listaPlantasFicheroDat, "r"); int i = 0;
+		 * while (raf.getFilePointer() < raf.length() && i < plantas.size()) { if (i !=
+		 * 0) { System.out.println("································\n"); } do {
+		 * raf.seek(puntero * 12); codigo = raf.readInt(); //
+		 * plantas.get(i).setCodigo(codigo); precio = plantas.get(i).getPrecio(codigo,
+		 * listaPlantasFicheroDat); // precio = raf.readFloat(); //
+		 * plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio); stock =
+		 * plantas.get(i).getStock(codigo, listaPlantasFicheroDat); // stock =
+		 * raf.readInt(); puntero++; } while (precio == 0 && stock == 0);
+		 * System.out.println(plantas.get(i).toString()); i++; try { Thread.sleep(300);
+		 * } catch (InterruptedException e) { e.printStackTrace(); } } raf.close(); }
+		 * catch (FileNotFoundException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } catch (IOException e) { // TODO Auto-generated catch
+		 * block e.printStackTrace(); }
+		 */
 		return venta_plantas(empleado, plantas);
 	}
 
 	private static ArrayList<Planta> venta_plantas(Empleado empleado, ArrayList<Planta> plantas) {
 		// TODO vender
-		boolean otraPlanta=true;
+		boolean otraPlanta = true;
 		List<Planta> cestaPlantas = new ArrayList<Planta>();
 		List<Integer> cantidades = new ArrayList<Integer>();
 		List<Integer> codigosPlantasVendidas = new ArrayList<Integer>();
@@ -475,13 +457,13 @@ public class GestorTienda {
 				read.nextLine();
 			}
 			if (codigo.equals("0")) {
-				//System.out.println("Proceso cancelado.");
-				otraPlanta=false;
+				// System.out.println("Proceso cancelado.");
+				otraPlanta = false;
 			} else {
 				int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
 				codigosPlantasVendidas.add(posicion);
-				if(posicion!=-1) {
-					if (Collections.frequency(codigosPlantasVendidas, posicion)>=2) {
+				if (posicion != -1) {
+					if (Collections.frequency(codigosPlantasVendidas, posicion) >= 2) {
 						System.out.println("No puedes volver a añadir la misma planta.");
 					} else {
 						Planta planta = plantas.get(posicion);
@@ -496,23 +478,23 @@ public class GestorTienda {
 					} else {
 						otraPlanta = false;
 					}
-				}else {
+				} else {
 					System.out.println("Planta no encontrada");
 				}
 			}
-		}while(otraPlanta);
-		if (cestaPlantas.size()!=0 && cantidades.size()!=0 && cestaPlantas.size()==cantidades.size()) {
+		} while (otraPlanta);
+		if (cestaPlantas.size() != 0 && cantidades.size() != 0 && cestaPlantas.size() == cantidades.size()) {
 			System.out.println("");
-			Ticket venta = new Ticket(numero_ticket());
+			Ticket venta = new Ticket(cantidad_tickets()+1);
 			ArrayList<String> contenidoTicket = venta.escribirTicket(cestaPlantas, cantidades, empleado);
-			if (contenidoTicket!=null) {
+			if (contenidoTicket != null) {
 				for (String linea : contenidoTicket) {
 					System.out.println(linea);
 				}
 				System.out.print("Escribe 'Aceptar' para confirmar la venta y producir el ticket: ");
 				String acepta = read.nextLine();
 				if (acepta.equals("Aceptar")) {
-					if(venta.crearTicket(contenidoTicket)) {
+					if (venta.crearTicket(contenidoTicket)) {
 						plantas = restar_cantidades(cestaPlantas, cantidades, plantas);
 					}
 				} else {
@@ -529,7 +511,7 @@ public class GestorTienda {
 
 	private static ArrayList<Planta> devolver_plantas(ArrayList<Planta> plantas) {
 		System.out.println("Esta es toda la lista de tickets");
-		for (int i = 1; i < numero_ticket(); i++) {
+		for (int i = 1; i <= cantidad_tickets(); i++) {
 			System.out.println("////////////////////////////////////////////////////");
 			buscar_tiket(String.valueOf(i));
 		}
@@ -545,7 +527,7 @@ public class GestorTienda {
 		if (!numTicket.equals("0")) {
 			System.out.println("Esta es la información del ticket que vas a cancelar");
 			Ticket ticketDevolver = new Ticket(Integer.valueOf(numTicket));
-			System.out.println("\n"+ticketDevolver.devolverContenido());
+			System.out.println("\n" + ticketDevolver.devolverContenido());
 			plantas = ticketDevolver.marcarDevuelto(plantas);
 		} else {
 			System.out.println("Proceso de devolución cancelado.");
@@ -554,120 +536,120 @@ public class GestorTienda {
 	}
 
 	private static void buscar_tiket(String numBuscar) {
-		if (Integer.valueOf(numBuscar) < numero_ticket()) {
+		if (Integer.valueOf(numBuscar) <= cantidad_tickets()) {
 			Ticket ticketBuscar = new Ticket(Integer.valueOf(numBuscar));
-			System.out.println("\n"+ticketBuscar.devolverContenido());
+			System.out.println("\n" + ticketBuscar.devolverContenido());
 		} else {
 			System.out.println("No se ha encontrado el ticket pedido.");
 		}
 	}
 
 	/*
-		private static void guardar_datos(List<Planta> plantas, List<Empleado> empleados) {
-			// TODO Auto-generated method stub
-	
-		}
-	*/
-		private static ArrayList<Planta> nueva_planta(ArrayList<Planta> plantas) {
-			System.out.println("Datos de la nueva planta");
-			int maxId = plantas.get(0).getCodigo();
-			for (int i = 0; i < plantas.size(); i++) {
-				if (plantas.get(i).getCodigo() > maxId) {
-					maxId = plantas.get(i).getCodigo();
-				}
+	 * private static void guardar_datos(List<Planta> plantas, ArrayList<Empleado>
+	 * empleados) { // TODO Auto-generated method stub
+	 * 
+	 * }
+	 */
+	private static ArrayList<Planta> nueva_planta(ArrayList<Planta> plantas) {
+		System.out.println("Datos de la nueva planta");
+		int maxId = plantas.get(0).getCodigo();
+		for (int i = 0; i < plantas.size(); i++) {
+			if (plantas.get(i).getCodigo() > maxId) {
+				maxId = plantas.get(i).getCodigo();
 			}
-			System.out.println("Código generado automáticamente: "+ maxId);
-			System.out.print("Nombre: ");
-			String nombre = read.nextLine();
-			System.out.print("Foto: ");
-			String foto = read.nextLine();
-			System.out.print("Descripcion: ");
-			String descripcion = read.nextLine();
-			boolean repetir1 = true;
-			System.out.print("Precio: ");
-			String precio = read.next();
+		}
+		System.out.println("Código generado automáticamente: " + maxId);
+		System.out.print("Nombre: ");
+		String nombre = read.nextLine();
+		System.out.print("Foto: ");
+		String foto = read.nextLine();
+		System.out.print("Descripcion: ");
+		String descripcion = read.nextLine();
+		boolean repetir1 = true;
+		System.out.print("Precio: ");
+		String precio = read.next();
+		read.nextLine();
+		float preciof = 0;
+		try {
+			preciof = Float.valueOf(precio);
+			repetir1 = false;
+		} catch (Exception e) {
+			repetir1 = true;
+		}
+		while (repetir1) {
+			System.out.print("Escribe un precio válido: ");
+			precio = read.next();
 			read.nextLine();
-			float preciof = 0;
 			try {
 				preciof = Float.valueOf(precio);
 				repetir1 = false;
 			} catch (Exception e) {
 				repetir1 = true;
 			}
-			while (repetir1) {
-				System.out.print("Escribe un precio válido: ");
-				precio = read.next();
-				read.nextLine();
-				try {
-					preciof = Float.valueOf(precio);
-					repetir1 = false;
-				} catch (Exception e) {
-					repetir1 = true;
-				}
-			}
-			boolean repetir2 = true;
-			System.out.print("Cantidad: ");
-			String cantidad = read.next();
+		}
+		boolean repetir2 = true;
+		System.out.print("Cantidad: ");
+		String cantidad = read.next();
+		read.nextLine();
+		int cantidadi = 0;
+		try {
+			cantidadi = Integer.valueOf(precio);
+			repetir2 = false;
+		} catch (Exception e) {
+			repetir2 = true;
+		}
+		while (repetir2) {
+			System.out.print("Escribe una cantidad válida: ");
+			cantidad = read.next();
 			read.nextLine();
-			int cantidadi = 0;
 			try {
-				cantidadi = Integer.valueOf(precio);
+				cantidadi = Integer.valueOf(cantidad);
 				repetir2 = false;
 			} catch (Exception e) {
 				repetir2 = true;
 			}
-			while (repetir2) {
-				System.out.print("Escribe una cantidad válida: ");
-				cantidad = read.next();
-				read.nextLine();
-				try {
-					cantidadi = Integer.valueOf(cantidad);
-					repetir2 = false;
-				} catch (Exception e) {
-					repetir2 = true;
-				}
-			}
-			File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
-			try {
-				RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
-				raf.seek(raf.length());
-				raf.writeInt(maxId);
-				raf.writeFloat(preciof);
-				raf.writeInt(cantidadi);
-				raf.close();
-			} catch (IOException e) {
-				System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
-				e.printStackTrace();
-				return plantas;
-			}
-			plantas.add(new Planta(maxId, nombre, foto, descripcion));
+		}
+		File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
+		try {
+			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
+			raf.seek(raf.length());
+			raf.writeInt(maxId);
+			raf.writeFloat(preciof);
+			raf.writeInt(cantidadi);
+			raf.close();
+		} catch (IOException e) {
+			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+			e.printStackTrace();
 			return plantas;
 		}
+		plantas.add(new Planta(maxId, nombre, foto, descripcion));
+		return plantas;
+	}
 
 	private static ArrayList<Planta> seleccion_planta_baja(ArrayList<Planta> plantas) {
-			System.out.println("Esta es toda la lista de plantas");
-			File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
-			for (Planta planta : plantas) {
-				imprimir_planta(planta, listaPlantasFicheroDat);
-				System.out.println("\n································\n");
-			}
-			System.out.print("Escribe el código de la planta que quieras dar de baja: ");
-			String codigoBuscar = read.next();
-			read.nextLine();
-			int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
-			while (!codigoBuscar.matches("[0-9]*") || posicion==-1) {
-				System.out.print("Introduce un código válido: ");
-				codigoBuscar = read.next();
-				read.nextLine();
-				posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
-			}
-			if (dar_de_baja(plantas.get(posicion))) {
-				plantas.remove(plantas.get(posicion));
-			} else {
-				System.out.println("No se ha podido dar de baja la planta con código "+plantas.get(posicion).getCodigo());
-			}
-			return plantas;
+		System.out.println("Esta es toda la lista de plantas");
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		for (Planta planta : plantas) {
+			imprimir_planta(planta, listaPlantasFicheroDat);
+			System.out.println("\n································\n");
 		}
+		System.out.print("Escribe el código de la planta que quieras dar de baja: ");
+		String codigoBuscar = read.next();
+		read.nextLine();
+		int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
+		while (!codigoBuscar.matches("[0-9]*") || posicion == -1) {
+			System.out.print("Introduce un código válido: ");
+			codigoBuscar = read.next();
+			read.nextLine();
+			posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
+		}
+		if (dar_de_baja(plantas.get(posicion))) {
+			plantas.remove(plantas.get(posicion));
+		} else {
+			System.out.println("No se ha podido dar de baja la planta con código " + plantas.get(posicion).getCodigo());
+		}
+		return plantas;
+	}
 
 	private static ArrayList<Planta> seleccion_planta_reponer(List<Planta> plantasBaja, ArrayList<Planta> plantas) {
 		System.out.println("Lista de plantas dadas de baja");
@@ -685,7 +667,7 @@ public class GestorTienda {
 		String codigoBuscar = read.next();
 		read.nextLine();
 		int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
-		while (!codigoBuscar.matches("[0-9]*") || posicion==-1) {
+		while (!codigoBuscar.matches("[0-9]*") || posicion == -1) {
 			System.out.print("Introduce un código válido: ");
 			codigoBuscar = read.next();
 			read.nextLine();
@@ -694,34 +676,109 @@ public class GestorTienda {
 		if (dar_de_baja(plantas.get(posicion))) {
 			plantas.remove(plantas.get(posicion));
 		} else {
-			System.out.println("No se ha podido dar de baja la planta con código "+plantas.get(posicion).getCodigo());
+			System.out.println("No se ha podido dar de baja la planta con código " + plantas.get(posicion).getCodigo());
 		}
 		return plantas;
 	}
 
-	private static List<Empleado> pedir_datos_empleado_nuevo(List<Empleado> empleados) {
-		// TODO Auto-generated method stub
-		return null;
+	private static ArrayList<Empleado> pedir_datos_empleado_nuevo(ArrayList<Empleado> empleados) {
+		System.out.println("Datos del nuevo empleado");
+		int nuevoCodigo = generar_codigo_empleado(empleados);
+		System.out.println("Código generado automáticamente: " + nuevoCodigo);
+		System.out.print("Nombre: ");
+		String nombre = read.nextLine();
+		System.out.print("Contraseña: ");
+		String passwd = read.nextLine();
+		boolean repetir = true;
+		System.out.print("Cargo: ");
+		String cargo = read.nextLine();
+		if (cargo.equals("Vendedor") || cargo.equals("Gestor")) {
+			repetir = false;
+		}
+		while (repetir) {
+			System.out.print("Escribe un cargo disponible (Vendedor o Gestor): ");
+			cargo = read.nextLine();
+			if (cargo.equals("Vendedor") || cargo.equals("Gestor")) {
+				repetir = false;
+			}
+		}
+		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
+		empleados.add(new Empleado(nuevoCodigo, nombre, passwd, cargo));
+		guardar_empleados(listaEmpleadosFichero, empleados);
+		return empleados;
 	}
 
-	private static List<Empleado> seleccion_empleado_baja(List<Empleado> empleados) {
-		// TODO Auto-generated method stub
-		return null;
+	private static ArrayList<Empleado> dar_empleado_baja(ArrayList<Empleado> empleados,
+			ArrayList<Empleado> empleadosBaja) {
+		System.out.println("Esta es la lista de empleados");
+		for (Empleado empleado : empleados) {
+			System.out.println(empleado.toString());
+			System.out.println("\n································\n");
+		}
+		System.out.print("Introduce la identificación del empleado que quieras dar de baja: ");
+		String idBuscar = read.next();
+		read.nextLine();
+		int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
+		while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+			System.out.print("Introduce una identificación válida: ");
+			idBuscar = read.next();
+			read.nextLine();
+			posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
+		}
+		Empleado empleadoDarBaja = empleados.get(posicion);
+		empleadosBaja.add(empleadoDarBaja);
+		if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
+			empleados.remove(empleadoDarBaja);
+		}
+		return empleados;
 	}
 
-	private static List<Empleado> seleccion_empleado_alta() {
-		// TODO Auto-generated method stub
-		return null;
+	private static ArrayList<Empleado> dar_empleado_alta(ArrayList<Empleado> empleados,
+			ArrayList<Empleado> empleadosBaja) {
+		System.out.println("Esta es la lista de empleados dados de baja");
+		for (Empleado empleado : empleadosBaja) {
+			System.out.println(empleado.toString());
+			System.out.println("\n································\n");
+		}
+		System.out.print("Introduce la identificación del empleado que quieras dar de alta: ");
+		String idBuscar = read.next();
+		read.nextLine();
+		int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
+		while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+			System.out.print("Introduce una identificación válida: ");
+			idBuscar = read.next();
+			read.nextLine();
+			posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
+		}
+		Empleado empleadoDarAlta = empleadosBaja.get(posicion);
+		empleados.add(empleadoDarAlta);
+		if (guardar_empleados(new File("EMPLEADOS/empleados.dat"), empleados) == 1) {
+			empleadosBaja.remove(empleadoDarAlta);
+		}
+		return empleados;
 	}
 
 	private static void total_recaudado_tickets() {
-		// TODO Auto-generated method stub
-		
+		float totalRecaudado = 0f;
+		for (int i = 1; i <= cantidad_tickets(); i++) {
+			Ticket datosTicket = new Ticket(i);
+			String paso1 = datosTicket.devolverContenido();
+			String contenido = "Ticket "+i+" no encontrado.";
+			if (!paso1.equals(contenido)) {
+				String [] paso2 = paso1.split("Total: ");
+				String [] paso3 = paso2[1].split("€");
+				totalRecaudado += Float.valueOf(paso3[0]);
+			}
+		}
+		System.out.printf("El total recaudado según todos los tickets es de %.2f€\n", totalRecaudado);
 	}
 
 	private static void plantas_mas_vendidas(ArrayList<Planta> plantas) {
-		// TODO Auto-generated method stub
-		
+		// TODO Sacar listas de los codigos y las cantidades
+		// TODO Sacar listas de los codigos sin repetirse y sus cantidades sumadas
+		// TODO Ordenar los codigos por las cantidades de mayor a menor
+		// TODO Imprimir el nombre de la planta segun el codio junto con su cantidad total de ventas.
+
 	}
 
 	private static int guardar_plantas(ArrayList<Planta> plantas, File ficheroEscribirXml) {
@@ -729,7 +786,7 @@ public class GestorTienda {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.newDocument();
-	
+
 			Element root = doc.createElement("plantas");
 			doc.appendChild(root);
 			for (Planta añadeplanta : plantas) {
@@ -748,7 +805,7 @@ public class GestorTienda {
 				descripcion.appendChild(doc.createTextNode(añadeplanta.getDescripcion()));
 				planta.appendChild(descripcion);
 			}
-	
+
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -756,11 +813,11 @@ public class GestorTienda {
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			// transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
 			// transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-	
+
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(ficheroEscribirXml);
 			transformer.transform(source, result);
-	
+
 		} catch (TransformerConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
@@ -777,26 +834,46 @@ public class GestorTienda {
 		return 1;
 	}
 
+	private static int guardar_empleados(File listaEmpleadosFichero, ArrayList<Empleado> listaEmpleados) {
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(listaEmpleadosFichero.getPath()));
+			out.writeObject(listaEmpleados);
+			out.close();
+			System.out.println("Empleados añadidos.");
+		} catch (FileNotFoundException e) {
+			System.out.println(
+					"Ha ocurrido un error en la escritura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
+			e.printStackTrace();
+			return 0;
+		} catch (IOException e) {
+			System.out.println(
+					"Ha ocurrido un error en la escritura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
+			e.printStackTrace();
+			return 0;
+		}
+		return 1;
+	}
+
 	private static void imprimir_planta(Planta planta, File listaPlantasFicheroDat) {
 		RandomAccessFile raf;
-		float precio=0;
-		int stock=0;
+		float precio = 0;
+		int stock = 0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			raf.seek((planta.getCodigo()-1) * 12);
+			raf.seek((planta.getCodigo() - 1) * 12);
 			int codigo = raf.readInt();
 			// plantas.get(i).setCodigo(codigo);
-			//float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
-			//raf.seek(((codigo-1)*12)+4);
+			// float precio = planta.getPrecio(planta.getCodigo(), listaPlantasFicheroDat);
+			// raf.seek(((codigo-1)*12)+4);
 			precio = raf.readFloat();
 			// plantas.get(i).setPrecio(codigo, listaPlantasFicheroDat, precio);
-			//int stock = planta.getStock(planta.getCodigo(), listaPlantasFicheroDat);
+			// int stock = planta.getStock(planta.getCodigo(), listaPlantasFicheroDat);
 			stock = raf.readInt();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		System.out.println(planta.toString());
-		System.out.println("\tPrecio: "+precio+"€\n\tStock: "+stock);
+		System.out.println("\tPrecio: " + precio + "€\n\tStock: " + stock);
 	}
 
 	private static Integer vender_planta(Empleado empleado, Planta planta) {
@@ -809,45 +886,47 @@ public class GestorTienda {
 		cantidad = read.next();
 		read.nextLine();
 		RandomAccessFile raf;
-		int stockPlanta=0;
+		int stockPlanta = 0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			raf.seek(((planta.getCodigo()-1) * 12)+8);
+			raf.seek(((planta.getCodigo() - 1) * 12) + 8);
 			stockPlanta = raf.readInt();
 		} catch (Exception e) {
-			stockPlanta=100;
+			stockPlanta = 100;
 		}
-		while (!cantidad.matches("[0-9]*") || stockPlanta<Integer.valueOf(cantidad)) {
+		while (!cantidad.matches("[0-9]*") || stockPlanta < Integer.valueOf(cantidad)) {
 			System.out.print("Introduce otro número: ");
 			cantidad = read.next();
 			read.nextLine();
 		}
 		return Integer.valueOf(cantidad);
-		
+
 	}
 
-	private static ArrayList<Planta> restar_cantidades(List<Planta> plantasVendidas, List<Integer> cantidades, ArrayList<Planta> plantas) {
-		int codigo=0;
-		int cantidadResta=0;
-		int cantidadAnterior=0;
-		int cantidadFinal=0;
-		int puntero=0;
+	private static ArrayList<Planta> restar_cantidades(List<Planta> plantasVendidas, List<Integer> cantidades,
+			ArrayList<Planta> plantas) {
+		int codigo = 0;
+		int cantidadResta = 0;
+		int cantidadAnterior = 0;
+		int cantidadFinal = 0;
+		int puntero = 0;
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		RandomAccessFile raf;
 		for (int i = 0; i < plantasVendidas.size(); i++) {
 			codigo = plantasVendidas.get(i).getCodigo();
 			cantidadResta = cantidades.get(i);
-			puntero = ((codigo-1) * 12)+8;
+			puntero = ((codigo - 1) * 12) + 8;
 			try {
 				raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
 				raf.seek(puntero);
 				cantidadAnterior = raf.readInt();
-				cantidadFinal = cantidadAnterior-cantidadResta;
+				cantidadFinal = cantidadAnterior - cantidadResta;
 			} catch (Exception e) {
-				cantidadFinal=0;
+				cantidadFinal = 0;
 			}
-			if (cantidadFinal==0) {
-				System.out.println("Se han comprado todas las unidades de "+ plantasVendidas.get(i).getNombre()+", se dará de baja automáticamente.");
+			if (cantidadFinal == 0) {
+				System.out.println("Se han comprado todas las unidades de " + plantasVendidas.get(i).getNombre()
+						+ ", se dará de baja automáticamente.");
 				boolean eliminarPlanta = dar_de_baja(plantasVendidas.get(i));
 				if (eliminarPlanta) {
 					plantas.remove(plantasVendidas.get(i));
@@ -871,7 +950,7 @@ public class GestorTienda {
 		File listaPlantasBajaFicheroDat = new File("PLANTAS/plantasbaja.dat");
 		RandomAccessFile raf;
 		float precioPlanta = 0f;
-		int puntero = ((planta.getCodigo()-1) * 12)+4;
+		int puntero = ((planta.getCodigo() - 1) * 12) + 4;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
 			raf.seek(puntero);
@@ -879,18 +958,16 @@ public class GestorTienda {
 			try {
 				raf = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
 				raf.seek(raf.length());
-				//System.out.println(raf.readInt());
+				// System.out.println(raf.readInt());
 				/*
-				while (raf.getFilePointer() < raf.length()) {
-					raf.readInt();
-				}
-				*/
+				 * while (raf.getFilePointer() < raf.length()) { raf.readInt(); }
+				 */
 				raf.writeInt(planta.getCodigo());
 				raf.writeFloat(precioPlanta);
 				raf.writeInt(0);
 				raf.close();
 				ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
-				if (plantasBaja==null) {
+				if (plantasBaja == null) {
 					plantasBaja = new ArrayList<Planta>();
 				}
 				plantasBaja.add(planta);
@@ -921,23 +998,117 @@ public class GestorTienda {
 		return -1;
 	}
 
-	private static int numero_ticket() {
+	private static int posicion_empleado_por_codigo(Integer id, ArrayList<Empleado> empleados) {
+		for (int i = 0; i < empleados.size(); i++) {
+			if (empleados.get(i).getId() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private static int generar_codigo_empleado(ArrayList<Empleado> empleados) {
+		int posibleCodigo = 0;
+		boolean seguir = true;
+		do {
+			seguir = false;
+			posibleCodigo = ThreadLocalRandom.current().nextInt(1, 9999);
+			for (Empleado empleado : empleados) {
+				if (empleado.getId() == posibleCodigo) {
+					seguir = true;
+				}
+			}
+		} while (seguir);
+		return posibleCodigo;
+	}
+
+	private static int cantidad_tickets() {
 		int num = 0;
 		Path tickets = Path.of("TICKETS");
 		Path devoluciones = Path.of("DEVOLUCIONES");
 		try {
-			Stream<Path> flujo= Files.list(tickets);
-			Stream<Path> flujo2= Files.list(devoluciones);
-			num = (int) (flujo.count()+flujo2.count());
-			num++;
-			//System.out.println(num);
-			//flujo.forEach(archivo->System.out.println(archivo.getFileName()));
+			Stream<Path> flujo = Files.list(tickets);
+			Stream<Path> flujo2 = Files.list(devoluciones);
+			num = (int) (flujo.count() + flujo2.count());
+			// System.out.println(num);
+			// flujo.forEach(archivo->System.out.println(archivo.getFileName()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return num;
+	}
+
+	private static ArrayList<Planta> cargar_datos_plantas(File listaPlantasFichero) {
+		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder docB = dbf.newDocumentBuilder();
+			Document doc = docB.parse(listaPlantasFichero.getPath());
+			doc.getDocumentElement().normalize();
+			NodeList lista = doc.getElementsByTagName("planta");
+
+			for (int i = 0; i < lista.getLength(); i++) {
+				Node nodo = lista.item(i);
+				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+					Planta plantaTmp;
+					Element planta = (Element) nodo;
+					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
+					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
+					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
+					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
+
+					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
+					listaPlantas.add(plantaTmp);
+				}
+			}
+		} catch (IOException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		}
+		return listaPlantas;
+	}
+
+	private static ArrayList<Empleado> cargar_datos_empleados(File listaEmpleadosFichero) {
+		ArrayList<Empleado> listaEmpleados = new ArrayList<Empleado>();
+		ObjectInputStream ois;
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(listaEmpleadosFichero.getPath());
+			ois = new ObjectInputStream(fis);
+			listaEmpleados = (ArrayList<Empleado>) ois.readObject();
+			ois.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(
+					"Ha ocurrido un error en la lectura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException e) {
+			System.out.println(
+					"Ha ocurrido un error en la lectura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			System.out.println(
+					"Ha ocurrido un error en la lectura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
+			// System.out.println("Comprueba que el archivo no esté vacío");
+			e.printStackTrace();
+			return null;
+		}
+		return listaEmpleados;
 	}
 
 	private static void crear_plantas_por_defecto() {
@@ -1022,6 +1193,15 @@ public class GestorTienda {
 		}
 	}
 
+	private static void crear_empleados_por_defecto() {
+		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
+		ArrayList<Empleado> listaEmpleados = new ArrayList<Empleado>();
+		listaEmpleados.add(new Empleado(1452, "Teresa", "asb123", "Vendedor"));
+		listaEmpleados.add(new Empleado(156, "Miguel Ángel", "123qwes", "Gestor"));
+		listaEmpleados.add(new Empleado(7532, "Natalia", "xs21qw4", "Gestor"));
+		guardar_empleados(listaEmpleadosFichero, listaEmpleados);
+	}
+
 	private static float numeroAleatorioPrecio() {
 
 		float numero = ThreadLocalRandom.current().nextFloat(10, 50);
@@ -1031,93 +1211,6 @@ public class GestorTienda {
 
 	private static int numeroAleatorioStock() {
 		return ThreadLocalRandom.current().nextInt(1, 100);
-	}
-private static void crear_empleados_por_defecto() {
-		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
-		ArrayList<Empleado> listaEmpleados = new ArrayList<Empleado>();
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(listaEmpleadosFichero.getPath()));
-			listaEmpleados.add(new Empleado(1452, "Teresa", "asb123", "Vendedor"));
-			listaEmpleados.add(new Empleado(156, "Miguel Ángel", "123qwes", "Gestor"));
-			listaEmpleados.add(new Empleado(7532, "Natalia", "xs21qw4", "Gestor"));
-			out.writeObject(listaEmpleados);
-			out.close();
-			System.out.println("Empleados añadidos.");
-		} catch (FileNotFoundException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'empleados.dat'.");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'empleados.dat'.");
-			e.printStackTrace();
-		}
-	}
-
-	private static List<Empleado> cargar_datos_empleados(File listaEmpleadosFichero) {
-		ArrayList<Empleado> listaEmpleados = new ArrayList<Empleado>();
-		ObjectInputStream ois;
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(listaEmpleadosFichero.getPath());
-			ois = new ObjectInputStream(fis);
-			listaEmpleados = (ArrayList<Empleado>) ois.readObject();
-			ois.close();
-		} catch (FileNotFoundException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero '"+listaEmpleadosFichero.getPath()+"'.");
-			e.printStackTrace();
-			return null;
-		} catch (ClassNotFoundException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero '"+listaEmpleadosFichero.getPath()+"'.");
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la lectura del fichero '"+listaEmpleadosFichero.getPath()+"'.");
-			// System.out.println("Comprueba que el archivo no esté vacío");
-			e.printStackTrace();
-			return null;
-		}
-		return listaEmpleados;
-	}
-
-	private static ArrayList<Planta> cargar_datos_plantas(File listaPlantasFichero) {
-		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder docB = dbf.newDocumentBuilder();
-			Document doc = docB.parse(listaPlantasFichero.getPath());
-			doc.getDocumentElement().normalize();
-			NodeList lista = doc.getElementsByTagName("planta");
-
-			for (int i = 0; i < lista.getLength(); i++) {
-				Node nodo = lista.item(i);
-				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-					Planta plantaTmp;
-					Element planta = (Element) nodo;
-					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
-					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
-					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
-					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
-
-					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
-					listaPlantas.add(plantaTmp);
-				}
-			}
-		} catch (IOException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		} catch (SAXException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + listaPlantasFichero.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		}
-		return listaPlantas;
 	}
 
 }

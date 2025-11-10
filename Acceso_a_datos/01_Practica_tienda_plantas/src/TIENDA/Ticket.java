@@ -245,6 +245,48 @@ public class Ticket {
 		return plantas;
 	}
 
+	private ArrayList<Planta> cargar_datos_plantas(File file) {
+		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		try {
+			DocumentBuilder docB = dbf.newDocumentBuilder();
+			Document doc = docB.parse(file.getPath());
+			doc.getDocumentElement().normalize();
+			NodeList lista = doc.getElementsByTagName("planta");
+	
+			for (int i = 0; i < lista.getLength(); i++) {
+				Node nodo = lista.item(i);
+				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+					Planta plantaTmp;
+					Element planta = (Element) nodo;
+					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
+					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
+					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
+					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
+	
+					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
+					listaPlantas.add(plantaTmp);
+				}
+			}
+		} catch (IOException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			System.out
+					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
+			e.printStackTrace();
+			return null;
+		}
+		return listaPlantas;
+	}
+
 	private int guardar_plantas(ArrayList<Planta> plantasBaja, File file) {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -296,48 +338,6 @@ public class Ticket {
 			return 0;
 		}
 		return 1;		
-	}
-
-	private ArrayList<Planta> cargar_datos_plantas(File file) {
-		ArrayList<Planta> listaPlantas = new ArrayList<Planta>();
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder docB = dbf.newDocumentBuilder();
-			Document doc = docB.parse(file.getPath());
-			doc.getDocumentElement().normalize();
-			NodeList lista = doc.getElementsByTagName("planta");
-
-			for (int i = 0; i < lista.getLength(); i++) {
-				Node nodo = lista.item(i);
-				if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-					Planta plantaTmp;
-					Element planta = (Element) nodo;
-					int codigo = Integer.valueOf(planta.getElementsByTagName("codigo").item(0).getTextContent());
-					String nombre = planta.getElementsByTagName("nombre").item(0).getTextContent();
-					String foto = planta.getElementsByTagName("foto").item(0).getTextContent();
-					String descripcion = planta.getElementsByTagName("descripcion").item(0).getTextContent();
-
-					plantaTmp = new Planta(codigo, nombre, foto, descripcion);
-					listaPlantas.add(plantaTmp);
-				}
-			}
-		} catch (IOException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		} catch (SAXException e) {
-			System.out
-					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
-		}
-		return listaPlantas;
 	}
 
 }
