@@ -34,10 +34,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/*
+ * Trabajo hecho por Arnau Blanch Manero
+ */
+
 public class Ticket {
 	private String nombre;
 	private int numero;
-	// private static int totalVendido;
 
 	public Ticket(int numero) {
 		super();
@@ -46,8 +49,10 @@ public class Ticket {
 	}
 
 	/*
-	 * public Ticket(String nombre) { super(); this.nombre = nombre; this.numero =
-	 * Integer.valueOf(nombre.substring(0, nombre.lastIndexOf('.'))); }
+	 * public Ticket(String nombre) { 
+	 * 	super(); this.nombre = nombre; 
+	 * 	this.numero = Integer.valueOf(nombre.substring(0, nombre.lastIndexOf('.'))); 
+	 * }
 	 */
 	public ArrayList<String> escribirTicket(List<Planta> plantasVendidas, List<Integer> cantidades, Empleado empleado) {
 		ArrayList<String> lineas = new ArrayList<String>();
@@ -84,7 +89,7 @@ public class Ticket {
 			raf.close();
 		} catch (Exception e) {
 			lineas.add("00                   00              0€");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		lineas.add("");
 		lineas.add("····················································");
@@ -111,7 +116,7 @@ public class Ticket {
 				System.out.println("Ticket creado correctamente.");
 				return true;
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		return false;
@@ -129,7 +134,7 @@ public class Ticket {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return "Ticket "+numero+" no encontrado.";
 		}
 		return "Ticket "+numero+" no encontrado.";
@@ -162,8 +167,6 @@ public class Ticket {
 				String [] precio = infoPlantas[33].split("€");
 				precios.add(precio[0]);
 			}
-			// ArrayList<Planta> plantasBaja = cargar_datos_plantas(new
-			// File("PLANTAS/plantasBaja.xml"));
 			File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 			RandomAccessFile raf;
 			int cantidadAnterior = 0;
@@ -186,22 +189,17 @@ public class Ticket {
 							raf2.seek(0);
 							int buscaCodigo = raf2.readInt();
 							raf2.seek(raf2.getFilePointer()+8);
-							while (raf2.getFilePointer() < raf2.length() && Integer.valueOf(codigos.get(j)) == buscaCodigo) {
+							while (raf2.getFilePointer() < raf2.length() && Integer.valueOf(codigos.get(j)) != buscaCodigo) {
 								buscaCodigo = raf2.readInt();
 								raf2.seek(raf2.getFilePointer()+8);
 							}
 							if (Integer.valueOf(codigos.get(j)) != buscaCodigo) {
 								System.out.println("No se ha encontrado el código de la planta "+codigos.get(j)+" en el fichero "+ listaPlantasBajaFicheroDat.getName());
+								precioPlanta = Float.valueOf(precios.get(j));
 							} else {
 								raf2.seek(raf2.getFilePointer()-8);
 								precioPlanta = raf2.readFloat();
 							}
-							/*
-							if (precioPlanta != Float.valueOf(precios.get(j))){
-								precioPlanta = Float.valueOf(precios.get(j));
-							}
-							*/
-							//raf.writeFloat(precioPlanta);
 							ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
 							Planta planta = null;
 							for (int i = 0; i < plantasBaja.size(); i++) {
@@ -218,17 +216,19 @@ public class Ticket {
 							int bien = guardar_plantas(plantasBaja, new File("PLANTAS/plantasBaja.xml"));
 							if (bien == 1) {
 								System.out.println("La planta con código "+ planta.getCodigo()+" ya no está de baja.");
+							} else {
+								System.out.println("No se han guardado correctamente las plantas que están de baja.");
 							}
 							try {
 								Files.deleteIfExists(fichero1);
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								System.out.println("No se ha podido eliminar el ticket "+nombre);
+								//e.printStackTrace();
 							}
 							raf2.close();
 						} catch (IOException e) {
 							System.out.println("Ha ocurrido un error.");
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 					}
 					raf.writeFloat(precioPlanta);
@@ -237,11 +237,11 @@ public class Ticket {
 				}
 			} catch (Exception e) {
 				System.out.println("Error. No se ha encontrado el código de la planta a devolver.");
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		} catch (IOException e) {
 			System.out.println("Error. No se ha devuelto el ticket.");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return plantas;
 	}
@@ -272,18 +272,15 @@ public class Ticket {
 		} catch (IOException e) {
 			System.out
 					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
+			//e.printStackTrace();
 		} catch (ParserConfigurationException e) {
 			System.out
 					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
+			//e.printStackTrace();
 		} catch (SAXException e) {
 			System.out
 					.println("Ha ocurrido un error en la lectura del fichero '" + file.getPath() + "'.");
-			e.printStackTrace();
-			return null;
+			//e.printStackTrace();
 		}
 		return listaPlantas;
 	}
@@ -327,15 +324,15 @@ public class Ticket {
 
 		} catch (TransformerConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0;
 		} catch (TransformerException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0;
 		} catch (ParserConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0;
 		}
 		return 1;		
