@@ -818,7 +818,7 @@ public class GestorTienda {
 		// TODO Sacar listas de los codigos y las cantidades
 		ArrayList<Integer> codigosLeidos = new ArrayList<Integer>();
 		ArrayList<Integer> cantidadesLeidas = new ArrayList<Integer>();
-		for (int i = 1; i < cantidad_tickets(); i++) {
+		for (int i = 1; i <= cantidad_tickets(); i++) {
 			Ticket infoTicket = new Ticket(i);
 			String contenido = infoTicket.devolverContenido();
 			if (!contenido.equals("Ticket "+i+" no encontrado.")) {
@@ -826,7 +826,7 @@ public class GestorTienda {
 				String paso2 [] = paso1[1].split("·");
 				String paso3 [] = paso2[0].split("€");
 				for (int j = 0; j < paso3.length-1; j++) {
-					String paso4 [] = paso3[i].split(" ");
+					String paso4 [] = paso3[j].split(" ");
 					codigosLeidos.add(Integer.valueOf(paso4[0]));
 					cantidadesLeidas.add(Integer.valueOf(paso4[19]));
 				}
@@ -1101,7 +1101,7 @@ public class GestorTienda {
 		boolean seguir = true;
 		do {
 			seguir = false;
-			posibleCodigo = ThreadLocalRandom.current().nextInt(1, 9999);
+			posibleCodigo = ThreadLocalRandom.current().nextInt(1, 10000);
 			for (Empleado empleado : empleados) {
 				if (empleado.getId() == posibleCodigo) {
 					seguir = true;
@@ -1288,7 +1288,7 @@ public class GestorTienda {
 		listaEmpleados.add(new Empleado(1452, "Teresa", "asb123", "Vendedor"));
 		listaEmpleados.add(new Empleado(156, "Miguel Ángel", "123qwes", "Gestor"));
 		listaEmpleados.add(new Empleado(7532, "Natalia", "xs21qw4", "Gestor"));
-		if(guardar_empleados(listaEmpleadosFichero, listaEmpleados)==0) 
+		if(guardar_empleados(listaEmpleadosFichero, listaEmpleados)==1) 
 			System.out.println("Empleados añadidos correctamente.");
 		// mi usuario: 6812 456jkl
 	}

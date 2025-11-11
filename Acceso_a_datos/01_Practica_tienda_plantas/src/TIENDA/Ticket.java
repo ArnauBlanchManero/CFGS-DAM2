@@ -81,6 +81,7 @@ public class Ticket {
 						+ "              " + precioPlanta + "€");
 				total += (float) cantidades.get(i) * precioPlanta;
 			}
+			raf.close();
 		} catch (Exception e) {
 			lineas.add("00                   00              0€");
 			e.printStackTrace();
