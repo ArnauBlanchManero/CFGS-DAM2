@@ -20,7 +20,7 @@ public class Empleado implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Identificación del empleado: " + getIdCeros() + "\n\tNombre: " + nombre + "\t\nContraseña: " + passwd + "\n\tCargo:" + cargo;
+		return "Identificación del empleado: " + getIdCeros() + "\n\tNombre: " + nombre + "\n\tContraseña: " + passwd + "\n\tCargo: " + cargo;
 	}
 	public int getId() {
 		return id;

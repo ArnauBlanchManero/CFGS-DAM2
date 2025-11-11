@@ -10,7 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -34,6 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 
 public class GestorTienda {
 	static Scanner read = new Scanner(System.in);
@@ -212,9 +212,9 @@ public class GestorTienda {
 	private static ArrayList<Planta> menu_ventas(Empleado empleado, ArrayList<Planta> plantas) {
 		String respuesta;
 		do {
-			System.out.println("\n-------------");
+			System.out.println("\n-----------");
 			System.out.println("Menú ventas");
-			System.out.println("-------------");
+			System.out.println("-----------");
 			System.out.println("1. Vender plantas");
 			System.out.println("2. Devolver plantas");
 			System.out.println("3. Volver al menú");
@@ -286,6 +286,8 @@ public class GestorTienda {
 				break;
 			}
 		} while (!respuesta.equals("4"));
+		if(guardar_empleados(new File("EMPLEADOS/empleados.dat"), empleados)==0)
+			System.out.println("No se han guardado los empleados correctamente.");
 		return plantas;
 
 	}
@@ -293,9 +295,9 @@ public class GestorTienda {
 	private static ArrayList<Planta> menu_plantas(ArrayList<Planta> plantas, List<Planta> plantasBaja) {
 		String respuesta;
 		do {
-			System.out.println("\n-------------");
+			System.out.println("\n------------");
 			System.out.println("Menú plantas");
-			System.out.println("-------------");
+			System.out.println("------------");
 			System.out.println("1. Añadir plantas");
 			System.out.println("2. Dar de baja plantas");
 			System.out.println("3. Reponer stock de plantas");
@@ -335,9 +337,9 @@ public class GestorTienda {
 			ArrayList<Empleado> empleadosBaja) {
 		String respuesta;
 		do {
-			System.out.println("\n-------------");
+			System.out.println("\n--------------");
 			System.out.println("Menú empleados");
-			System.out.println("-------------");
+			System.out.println("--------------");
 			System.out.println("1. Añadir un empleado");
 			System.out.println("2. Dar de baja a un empleado");
 			System.out.println("3. Rescatar un empleado de baja");
@@ -376,9 +378,9 @@ public class GestorTienda {
 	private static void menu_tickets(ArrayList<Planta> plantas) {
 		String respuesta;
 		do {
-			System.out.println("\n-------------");
+			System.out.println("\n------------");
 			System.out.println("Menú tickets");
-			System.out.println("-------------");
+			System.out.println("------------");
 			System.out.println("1. Total recaudado");
 			System.out.println("2. Plantas más vendidas");
 			System.out.println("3. Volver al menú");
@@ -667,6 +669,7 @@ public class GestorTienda {
 		System.out.print("Escribe el código de la planta que quieras dar de baja: ");
 		String codigoBuscar = read.next();
 		read.nextLine();
+		// TODO arreglar el bucle while por lo de Integer.valueOf
 		int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
 		while (!codigoBuscar.matches("[0-9]*") || posicion == -1) {
 			System.out.print("Introduce un código válido: ");
@@ -684,14 +687,25 @@ public class GestorTienda {
 
 	private static ArrayList<Empleado> pedir_datos_empleado_nuevo(ArrayList<Empleado> empleados) {
 		System.out.println("Datos del nuevo empleado");
+		if (empleados==null) {
+			empleados = new ArrayList<Empleado>();
+		}
 		int nuevoCodigo = generar_codigo_empleado(empleados);
 		System.out.println("Código generado automáticamente: " + nuevoCodigo);
 		// No puedo permitir cualquier cadena de caracteres
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
+		while (!nombre.matches("([A-Z][a-z]*) ?([A-Z][a-z]*)?")) {
+			System.out.print("Introduce un nombre válido: ");
+			nombre = read.nextLine();
+		}
 		// No puedo permitir cualquier cadena de caracteres
 		System.out.print("Contraseña: ");
 		String passwd = read.nextLine();
+		while (!passwd.matches("[A-Za-z0-9@#\\.\\-\\_\\+\\$%&]{5,7}")) {
+			System.out.print("Introduce una contraseña válida: ");
+			passwd = read.nextLine();
+		}
 		boolean repetir = true;
 		System.out.print("Cargo: ");
 		String cargo = read.nextLine();
@@ -707,7 +721,7 @@ public class GestorTienda {
 		}
 		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
 		empleados.add(new Empleado(nuevoCodigo, nombre, passwd, cargo));
-		guardar_empleados(listaEmpleadosFichero, empleados);
+		//guardar_empleados(listaEmpleadosFichero, empleados);
 		return empleados;
 	}
 
@@ -719,20 +733,28 @@ public class GestorTienda {
 				System.out.println(empleado.toString());
 				System.out.println("\n································\n");
 			}
-			System.out.print("Introduce la identificación del empleado que quieras dar de baja: ");
+			System.out.print("Introduce la identificación del empleado que quieras dar de baja (0000 para cancelar): ");
 			String idBuscar = read.next();
 			read.nextLine();
-			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
-			while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+			while (!idBuscar.matches("[0-9]{4}")) {
 				System.out.print("Introduce una identificación válida: ");
 				idBuscar = read.next();
 				read.nextLine();
-				posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
 			}
-			Empleado empleadoDarBaja = empleados.get(posicion);
-			empleadosBaja.add(empleadoDarBaja);
-			if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
-				empleados.remove(empleadoDarBaja);
+			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
+			if(posicion != -1) {
+				Empleado empleadoDarBaja = empleados.get(posicion);
+				if (empleadosBaja == null) {
+					empleadosBaja = new ArrayList<Empleado>();
+				}
+				empleadosBaja.add(empleadoDarBaja);
+				if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
+					empleados.remove(empleadoDarBaja);
+				} else {
+					System.out.println("El empleado "+empleadoDarBaja.getNombre()+" no se ha podido dar de baja.");
+				}
+			} else {
+				System.out.println("No se ha encontrado el código");
 			}
 		} else {
 			System.out.println("No se han encontrado empleados para dar de baja.");
@@ -748,20 +770,28 @@ public class GestorTienda {
 				System.out.println(empleado.toString());
 				System.out.println("\n································\n");
 			}
-			System.out.print("Introduce la identificación del empleado que quieras dar de alta: ");
+			System.out.print("Introduce la identificación del empleado que quieras dar de alta (0000 para cancelar): ");
 			String idBuscar = read.next();
 			read.nextLine();
-			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
-			while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+			while (!idBuscar.matches("[0-9]{4}")) {
 				System.out.print("Introduce una identificación válida: ");
 				idBuscar = read.next();
 				read.nextLine();
-				posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
 			}
-			Empleado empleadoDarAlta = empleadosBaja.get(posicion);
-			empleados.add(empleadoDarAlta);
-			if (guardar_empleados(new File("EMPLEADOS/empleados.dat"), empleados) == 1) {
+			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
+			if(posicion != -1) {
+				Empleado empleadoDarAlta = empleadosBaja.get(posicion);
+				if (empleados == null) {
+					empleados = new ArrayList<Empleado>();
+				}
 				empleadosBaja.remove(empleadoDarAlta);
+				if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
+					empleados.add(empleadoDarAlta);
+				} else {
+					System.out.println("El empleado "+empleadoDarAlta.getNombre()+" no se ha podido eliminar de los empleados de baja.");
+				}
+			} else {
+				System.out.println("No se ha encontrado el código");
 			}
 		} else {
 			System.out.println("No se han encontrado empleados de baja para dar de alta");
@@ -786,10 +816,58 @@ public class GestorTienda {
 
 	private static void plantas_mas_vendidas(ArrayList<Planta> plantas) {
 		// TODO Sacar listas de los codigos y las cantidades
-		// TODO Sacar listas de los codigos sin repetirse y sus cantidades sumadas
+		ArrayList<Integer> codigosLeidos = new ArrayList<Integer>();
+		ArrayList<Integer> cantidadesLeidas = new ArrayList<Integer>();
+		for (int i = 1; i < cantidad_tickets(); i++) {
+			Ticket infoTicket = new Ticket(i);
+			String contenido = infoTicket.devolverContenido();
+			if (!contenido.equals("Ticket "+i+" no encontrado.")) {
+				String paso1 [] = contenido.split("unitario");
+				String paso2 [] = paso1[1].split("·");
+				String paso3 [] = paso2[0].split("€");
+				for (int j = 0; j < paso3.length-1; j++) {
+					String paso4 [] = paso3[i].split(" ");
+					codigosLeidos.add(Integer.valueOf(paso4[0]));
+					cantidadesLeidas.add(Integer.valueOf(paso4[19]));
+				}
+			}
+		}
+		// Sacar listas de los codigos sin repetirse y sus cantidades sumadas
 		// TODO Ordenar los codigos por las cantidades de mayor a menor
+		ArrayList<Integer> codigosUnicos = new ArrayList<Integer>();
+		ArrayList<Integer> cantidadesSumadas = new ArrayList<Integer>();
+		for (int i = 0; i < plantas.size(); i++) {
+			Integer cantidadTotalPlanta = 0;
+			Integer codigoVueltaPlanta = 0;
+			for (int j = 0; j < codigosLeidos.size(); j++) {
+				if (plantas.get(i).getCodigo() == codigosLeidos.get(j)) {
+					cantidadTotalPlanta += cantidadesLeidas.get(j);
+					codigoVueltaPlanta = codigosLeidos.get(j);
+				}
+			}
+			codigosUnicos.add(codigoVueltaPlanta);
+			cantidadesSumadas.add(cantidadTotalPlanta);
+		}
+		ArrayList<Planta> plantasOrdenadas = new ArrayList<Planta>();
+		ArrayList<Integer> cantidadesOredenadas = new ArrayList<Integer>();
+		while (cantidadesSumadas.size() <= 0) {
+			int posicionCantidadMax = 0;
+			int cantidadMax = cantidadesSumadas.get(0);
+			for (int i = 1; i < cantidadesSumadas.size(); i++) {
+				if (cantidadMax < cantidadesSumadas.get(i)) {
+					posicionCantidadMax = i;
+					cantidadMax = cantidadesSumadas.get(i);
+				}
+			}
+			plantasOrdenadas.add(plantas.get(posicion_planta_por_codigo(codigosUnicos.get(posicionCantidadMax), plantas)));
+			cantidadesOredenadas.add(cantidadesSumadas.get(posicionCantidadMax));
+			codigosUnicos.remove(codigosUnicos.get(posicionCantidadMax));
+			cantidadesSumadas.remove(cantidadesSumadas.get(posicionCantidadMax));
+		}
 		// TODO Imprimir el nombre de la planta segun el codio junto con su cantidad total de ventas.
-
+		for (int i = 0; i < plantasOrdenadas.size(); i++) {
+			System.out.println(plantasOrdenadas.get(i)+": "+cantidadesOredenadas.get(i));
+		}
 	}
 
 	private static int guardar_plantas(ArrayList<Planta> plantas, File ficheroEscribirXml) {
@@ -828,7 +906,6 @@ public class GestorTienda {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(ficheroEscribirXml);
 			transformer.transform(source, result);
-
 		} catch (TransformerConfigurationException e) {
 			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
 			e.printStackTrace();
@@ -850,7 +927,7 @@ public class GestorTienda {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(listaEmpleadosFichero.getPath()));
 			out.writeObject(listaEmpleados);
 			out.close();
-			System.out.println("Empleados añadidos.");
+			//System.out.println("Empleados añadidos.");
 		} catch (FileNotFoundException e) {
 			System.out.println(
 					"Ha ocurrido un error en la escritura del fichero '" + listaEmpleadosFichero.getPath() + "'.");
@@ -1211,7 +1288,9 @@ public class GestorTienda {
 		listaEmpleados.add(new Empleado(1452, "Teresa", "asb123", "Vendedor"));
 		listaEmpleados.add(new Empleado(156, "Miguel Ángel", "123qwes", "Gestor"));
 		listaEmpleados.add(new Empleado(7532, "Natalia", "xs21qw4", "Gestor"));
-		guardar_empleados(listaEmpleadosFichero, listaEmpleados);
+		if(guardar_empleados(listaEmpleadosFichero, listaEmpleados)==0) 
+			System.out.println("Empleados añadidos correctamente.");
+		// mi usuario: 6812 456jkl
 	}
 
 	private static float numeroAleatorioPrecio() {
