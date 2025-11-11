@@ -445,7 +445,7 @@ public class GestorTienda {
 		boolean otraPlanta = true;
 		List<Planta> cestaPlantas = new ArrayList<Planta>();
 		List<Integer> cantidades = new ArrayList<Integer>();
-		List<Integer> codigosPlantasVendidas = new ArrayList<Integer>();
+		List<String> codigosPlantasVendidas = new ArrayList<String>();
 		do {
 			String codigo;
 			System.out.print("Escribe el id de la planta que quieras vender (0 para cancelar): ");
@@ -461,9 +461,9 @@ public class GestorTienda {
 				otraPlanta = false;
 			} else {
 				int posicion = posicion_planta_por_codigo(Integer.valueOf(codigo), plantas);
-				codigosPlantasVendidas.add(posicion);
 				if (posicion != -1) {
-					if (Collections.frequency(codigosPlantasVendidas, posicion) >= 2) {
+					codigosPlantasVendidas.add(codigo);
+					if (Collections.frequency(codigosPlantasVendidas, codigo) >= 2) {
 						System.out.println("No puedes volver a añadir la misma planta.");
 					} else {
 						Planta planta = plantas.get(posicion);
@@ -558,6 +558,7 @@ public class GestorTienda {
 				maxId = plantas.get(i).getCodigo();
 			}
 		}
+		maxId++;
 		System.out.println("Código generado automáticamente: " + maxId);
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
@@ -593,7 +594,7 @@ public class GestorTienda {
 		read.nextLine();
 		int cantidadi = 0;
 		try {
-			cantidadi = Integer.valueOf(precio);
+			cantidadi = Integer.valueOf(cantidad);
 			repetir2 = false;
 		} catch (Exception e) {
 			repetir2 = true;
@@ -685,8 +686,10 @@ public class GestorTienda {
 		System.out.println("Datos del nuevo empleado");
 		int nuevoCodigo = generar_codigo_empleado(empleados);
 		System.out.println("Código generado automáticamente: " + nuevoCodigo);
+		// No puedo permitir cualquier cadena de caracteres
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
+		// No puedo permitir cualquier cadena de caracteres
 		System.out.print("Contraseña: ");
 		String passwd = read.nextLine();
 		boolean repetir = true;
@@ -710,50 +713,58 @@ public class GestorTienda {
 
 	private static ArrayList<Empleado> dar_empleado_baja(ArrayList<Empleado> empleados,
 			ArrayList<Empleado> empleadosBaja) {
-		System.out.println("Esta es la lista de empleados");
-		for (Empleado empleado : empleados) {
-			System.out.println(empleado.toString());
-			System.out.println("\n································\n");
-		}
-		System.out.print("Introduce la identificación del empleado que quieras dar de baja: ");
-		String idBuscar = read.next();
-		read.nextLine();
-		int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
-		while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
-			System.out.print("Introduce una identificación válida: ");
-			idBuscar = read.next();
+		if (empleados != null) {
+					System.out.println("Esta es la lista de empleados");
+			for (Empleado empleado : empleados) {
+				System.out.println(empleado.toString());
+				System.out.println("\n································\n");
+			}
+			System.out.print("Introduce la identificación del empleado que quieras dar de baja: ");
+			String idBuscar = read.next();
 			read.nextLine();
-			posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
-		}
-		Empleado empleadoDarBaja = empleados.get(posicion);
-		empleadosBaja.add(empleadoDarBaja);
-		if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
-			empleados.remove(empleadoDarBaja);
+			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
+			while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+				System.out.print("Introduce una identificación válida: ");
+				idBuscar = read.next();
+				read.nextLine();
+				posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleados);
+			}
+			Empleado empleadoDarBaja = empleados.get(posicion);
+			empleadosBaja.add(empleadoDarBaja);
+			if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
+				empleados.remove(empleadoDarBaja);
+			}
+		} else {
+			System.out.println("No se han encontrado empleados para dar de baja.");
 		}
 		return empleados;
 	}
 
 	private static ArrayList<Empleado> dar_empleado_alta(ArrayList<Empleado> empleados,
 			ArrayList<Empleado> empleadosBaja) {
-		System.out.println("Esta es la lista de empleados dados de baja");
-		for (Empleado empleado : empleadosBaja) {
-			System.out.println(empleado.toString());
-			System.out.println("\n································\n");
-		}
-		System.out.print("Introduce la identificación del empleado que quieras dar de alta: ");
-		String idBuscar = read.next();
-		read.nextLine();
-		int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
-		while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
-			System.out.print("Introduce una identificación válida: ");
-			idBuscar = read.next();
+		if (empleadosBaja != null) {
+			System.out.println("Esta es la lista de empleados dados de baja");
+			for (Empleado empleado : empleadosBaja) {
+				System.out.println(empleado.toString());
+				System.out.println("\n································\n");
+			}
+			System.out.print("Introduce la identificación del empleado que quieras dar de alta: ");
+			String idBuscar = read.next();
 			read.nextLine();
-			posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
-		}
-		Empleado empleadoDarAlta = empleadosBaja.get(posicion);
-		empleados.add(empleadoDarAlta);
-		if (guardar_empleados(new File("EMPLEADOS/empleados.dat"), empleados) == 1) {
-			empleadosBaja.remove(empleadoDarAlta);
+			int posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
+			while (!idBuscar.matches("[0-9]{4}") || posicion == -1) {
+				System.out.print("Introduce una identificación válida: ");
+				idBuscar = read.next();
+				read.nextLine();
+				posicion = posicion_empleado_por_codigo(Integer.valueOf(idBuscar), empleadosBaja);
+			}
+			Empleado empleadoDarAlta = empleadosBaja.get(posicion);
+			empleados.add(empleadoDarAlta);
+			if (guardar_empleados(new File("EMPLEADOS/empleados.dat"), empleados) == 1) {
+				empleadosBaja.remove(empleadoDarAlta);
+			}
+		} else {
+			System.out.println("No se han encontrado empleados de baja para dar de alta");
 		}
 		return empleados;
 	}
@@ -921,6 +932,7 @@ public class GestorTienda {
 				raf.seek(puntero);
 				cantidadAnterior = raf.readInt();
 				cantidadFinal = cantidadAnterior - cantidadResta;
+				raf.close();
 			} catch (Exception e) {
 				cantidadFinal = 0;
 			}
@@ -932,15 +944,15 @@ public class GestorTienda {
 					plantas.remove(plantasVendidas.get(i));
 				}
 			}
-		}
-		try {
-			raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
-			raf.seek(puntero);
-			raf.writeInt(cantidadFinal);
-			raf.close();
-		} catch (IOException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
-			e.printStackTrace();
+			try {
+				raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
+				raf.seek(puntero);
+				raf.writeInt(cantidadFinal);
+				raf.close();
+			} catch (IOException e) {
+				System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
+				e.printStackTrace();
+			}
 		}
 		return plantas;
 	}
