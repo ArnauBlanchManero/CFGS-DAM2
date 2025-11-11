@@ -609,7 +609,7 @@ public class GestorTienda {
 
 	private static ArrayList<Planta> seleccion_planta_baja(ArrayList<Planta> plantas, List<Planta> plantasBaja) {
 		System.out.println("Esta es toda la lista de plantas");
-		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
+		File listaPlantasFicheroDat = new File("PLANTAS/plantasbaja.dat");
 		for (Planta planta : plantas) {
 			imprimir_planta(planta, listaPlantasFicheroDat);
 			System.out.println("\n································\n");
@@ -760,9 +760,9 @@ public class GestorTienda {
 			}
 		}
 		System.out.println("¡Apunta el código y la contraseña para que no se te olvide al iniciar sesión!");
+		// Datos empleado que he añadido: codigo 2423 contraseña 2423abc
 		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
 		empleados.add(new Empleado(nuevoCodigo, nombre, passwd, cargo));
-		//guardar_empleados(listaEmpleadosFichero, empleados);
 		return empleados;
 	}
 
@@ -986,7 +986,7 @@ public class GestorTienda {
 
 	private static void imprimir_planta(Planta planta, File listaPlantasFicheroDat) {
 		RandomAccessFile raf;
-		float precio = 0;
+		float precio = 0f;
 		int stock = 0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
@@ -995,7 +995,7 @@ public class GestorTienda {
 			precio = raf.readFloat();
 			stock = raf.readInt();
 		} catch (Exception e) {
-			System.out.println("\tPrecio: 0€\n\tStock: 0");
+			System.out.println("No hay información ni del precio ni del stock.");
 		}
 		System.out.println(planta.toString());
 		System.out.println("\tPrecio: " + precio + "€\n\tStock: " + stock);

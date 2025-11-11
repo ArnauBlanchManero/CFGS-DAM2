@@ -8,10 +8,10 @@ Venta realizada por Teresa
 Código de empleado: 1452
 
 Código planta        Cantidad        Precio unitario
-19                   02              16.25€
-04                   04              46.44€
-18                   02              35.23€
+10                   05              23.31€
+16                   07              47.34€
+20                   09              12.27€
 
 ····················································
-Total: 288.72€
+Total: 558.36€
 
