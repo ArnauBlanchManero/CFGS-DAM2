@@ -13,12 +13,6 @@
     <descripcion>Planta de sombra con hojas verdes largas</descripcion>
   </planta>
   <planta>
-    <codigo>4</codigo>
-    <nombre>Rosa</nombre>
-    <foto>rosa.jpg</foto>
-    <descripcion>Flor ornamental con espinas</descripcion>
-  </planta>
-  <planta>
     <codigo>5</codigo>
     <nombre>Lavanda</nombre>
     <foto>lavanda.jpg</foto>
@@ -119,5 +113,17 @@
     <nombre>Carnivora</nombre>
     <foto>carnivora.jpg</foto>
     <descripcion>Come bichos</descripcion>
+  </planta>
+  <planta>
+    <codigo>22</codigo>
+    <nombre>Doraemon</nombre>
+    <foto>H0nolulu</foto>
+    <descripcion>es un76452872u43h5 cosmico</descripcion>
+  </planta>
+  <planta>
+    <codigo>23</codigo>
+    <nombre>Rosa</nombre>
+    <foto>rosa.png</foto>
+    <descripcion>tiene pincchos y es rosa</descripcion>
   </planta>
 </plantas>

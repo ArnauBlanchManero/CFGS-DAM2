@@ -21,7 +21,7 @@ public class Planta {
 	}
 	@Override
 	public String toString() {
-		return "Código planta " + codigo + "\n\tNombre: " + nombre + "\n\tFoto: " + foto + "\n\tDescripcion: " + descripcion;
+		return "Código planta: " + codigo + "\n\tNombre: " + nombre + "\n\tFoto: " + foto + "\n\tDescripcion: " + descripcion;
 	}
 	public int getCodigo() {
 		return codigo;

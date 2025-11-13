@@ -63,7 +63,7 @@ public class GestorTienda {
 					empleado = iniciar_sesión(empleados);
 					intentos--;
 				}
-				if (intentos > 0) {
+				if (intentos >= 0) {
 					System.out.println("\nSesión iniciada correctamente " + empleado.getNombre());
 					plantas = cargar_datos_plantas(listaPlantasFicheroXml);
 					if (plantas != null) {
@@ -145,8 +145,14 @@ public class GestorTienda {
 		String id = read.nextLine();
 		System.out.print("Contraseña: ");
 		String passwd = read.nextLine();
+		int idNum = 0;
+		try {
+			idNum = Integer.valueOf(id);
+		} catch (Exception e) {
+			return null;
+		}
 		for (int i = 0; i < empleados.size(); i++) {
-			if (empleados.get(i).getId() == Integer.valueOf(id)) {
+			if (empleados.get(i).getId() == idNum) {
 				if (passwd.compareTo(empleados.get(i).getPasswd()) == 0) {
 					seleccionado = empleados.get(i);
 				}
@@ -591,6 +597,7 @@ public class GestorTienda {
 			}
 		}
 		File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
+		// TODO no ha escrito el precio ni la cantidad ¿¿me aparece todo el catalogo con 0??
 		try {
 			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
 			raf.seek(raf.length());
@@ -604,12 +611,13 @@ public class GestorTienda {
 			return plantas;
 		}
 		plantas.add(new Planta(maxId, nombre, foto, descripcion));
+		// TODO Poner que se ha añadiso bin la planta.
 		return plantas;
 	}
 
 	private static ArrayList<Planta> seleccion_planta_baja(ArrayList<Planta> plantas, List<Planta> plantasBaja) {
 		System.out.println("Esta es toda la lista de plantas");
-		File listaPlantasFicheroDat = new File("PLANTAS/plantasbaja.dat");
+		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		for (Planta planta : plantas) {
 			imprimir_planta(planta, listaPlantasFicheroDat);
 			System.out.println("\n································\n");
@@ -624,6 +632,7 @@ public class GestorTienda {
 		}
 		int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
 		if(posicion != -1) {
+			// TODO poner que se ha dado e baja correctamente
 			if (dar_de_baja(plantas.get(posicion))) {
 				plantas.remove(plantas.get(posicion));
 			} else {
@@ -907,6 +916,7 @@ public class GestorTienda {
 			codigosUnicos.remove(codigosUnicos.get(posicionCantidadMax));
 			cantidadesSumadas.remove(cantidadesSumadas.get(posicionCantidadMax));
 		}
+		// TODO Resaltar para que se vea mejor el texto
 		for (int i = 0; i < plantasOrdenadas.size(); i++) {
 			System.out.println(plantasOrdenadas.get(i).getNombre()+": "+cantidadesOredenadas.get(i));
 		}
@@ -990,6 +1000,7 @@ public class GestorTienda {
 		int stock = 0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			// TODO si lee el fichero plantasbaja.dat al no estar los codigos ordenados no fucnionan las mates
 			raf.seek((planta.getCodigo() - 1) * 12);
 			int codigo = raf.readInt();
 			precio = raf.readFloat();

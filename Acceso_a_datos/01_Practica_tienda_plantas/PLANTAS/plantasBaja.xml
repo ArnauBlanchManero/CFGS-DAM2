@@ -6,4 +6,10 @@
     <foto>poto.jpg</foto>
     <descripcion>Planta colgante de interior muy resistente</descripcion>
   </planta>
+  <planta>
+    <codigo>4</codigo>
+    <nombre>Rosa</nombre>
+    <foto>rosa.jpg</foto>
+    <descripcion>Flor ornamental con espinas</descripcion>
+  </planta>
 </plantas>
