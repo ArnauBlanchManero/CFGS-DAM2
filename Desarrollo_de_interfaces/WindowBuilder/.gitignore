@@ -1,1 +1,3 @@
 /bin/
+# Para las librerías asociadas
+*.jar
