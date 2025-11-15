@@ -219,17 +219,17 @@ public class Ticket {
 							} else {
 								System.out.println("No se han guardado correctamente las plantas que están de baja.");
 							}
-							try {
-								Files.deleteIfExists(fichero1);
-							} catch (IOException e) {
-								System.out.println("No se ha podido eliminar el ticket "+nombre);
-								//e.printStackTrace();
-							}
 							raf2.close();
 						} catch (IOException e) {
 							System.out.println("Ha ocurrido un error.");
 							//e.printStackTrace();
 						}
+					}
+					try {
+						Files.deleteIfExists(fichero1);
+					} catch (IOException e) {
+						System.out.println("No se ha podido eliminar el ticket "+nombre);
+						//e.printStackTrace();
 					}
 					raf.writeFloat(precioPlanta);
 					raf.writeInt(nuevaCantidad);

@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -63,7 +64,7 @@ public class GestorTienda {
 					empleado = iniciar_sesión(empleados);
 					intentos--;
 				}
-				if (intentos >= 0) {
+				if (intentos >= 0 && empleado != null) {
 					System.out.println("\nSesión iniciada correctamente " + empleado.getNombre());
 					if (empleado.getCargo().equals("Vendedor")) {
 						plantas = cargar_datos_plantas(listaPlantasFicheroXml);
@@ -107,7 +108,7 @@ public class GestorTienda {
 			}
 		}
 		// guardar_empleados(empleados, listaEmpleadosFichero);
-		System.out.println("Aplicación cerrada.");
+		System.out.println("\nAplicación cerrada.");
 	}
 
 	private static boolean crear_jerarquía_ficheros() {
@@ -226,7 +227,7 @@ public class GestorTienda {
 			System.out.println("Menú ventas");
 			System.out.println("-----------");
 			System.out.println("1. Vender plantas");
-			System.out.println("2. Devolver plantas");
+			System.out.println("2. Devolver ticket");
 			System.out.println("3. Volver al menú");
 			System.out.print("Opción: ");
 			respuesta = read.next();
@@ -324,7 +325,7 @@ public class GestorTienda {
 			plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
 			switch (respuesta) {
 			case "1":
-				plantas = nueva_planta(plantas);
+				plantas = nueva_planta(plantas, plantasBaja);
 				break;
 			case "2":
 				if(plantas != null)
@@ -524,10 +525,25 @@ public class GestorTienda {
 			read.nextLine();
 		}
 		if (!numTicket.equals("0")) {
-			System.out.println("Esta es la información del ticket que vas a cancelar");
 			Ticket ticketDevolver = new Ticket(Integer.valueOf(numTicket));
-			System.out.println("\n" + ticketDevolver.devolverContenido());
+			//System.out.println("\n" + ticketDevolver.devolverContenido());
 			plantas = ticketDevolver.marcarDevuelto(plantas);
+			System.out.println("Esta es la información del ticket que has devuelto");
+			numTicket = numTicket + ".txt";
+			Path directorio = Path.of("DEVOLUCIONES");
+			try {
+				Stream<Path> flujo = Files.list(directorio);
+				// flujo.count();
+				List<Path> ficheros = flujo.toList();
+				for (Path fichero : ficheros) {
+					if (numTicket.equals(fichero.getFileName().toString())) {
+						System.out.println(Files.readString(fichero));
+					}
+				}
+			} catch (IOException e) {
+				//e.printStackTrace();
+				System.out.println("Ticket "+numTicket+" no encontrado.");
+			}
 		} else {
 			System.out.println("Proceso de devolución cancelado.");
 		}
@@ -543,25 +559,44 @@ public class GestorTienda {
 		}
 	}
 
-	private static ArrayList<Planta> nueva_planta(ArrayList<Planta> plantas) {
+	private static ArrayList<Planta> nueva_planta(ArrayList<Planta> plantas, ArrayList<Planta> plantasBaja) {
 		System.out.println("Datos de la nueva planta");
 		int maxId = 0;
 		if (plantas != null) {
-			maxId = plantas.get(0).getCodigo();
-			for (int i = 0; i < plantas.size(); i++) {
-				if (plantas.get(i).getCodigo() > maxId) {
-					maxId = plantas.get(i).getCodigo();
+			try {
+				maxId = plantas.get(0).getCodigo();
+				for (int i = 0; i < plantas.size(); i++) {
+					if (plantas.get(i).getCodigo() > maxId) {
+						maxId = plantas.get(i).getCodigo();
+					}
+				}
+			} catch (Exception e) {
+				if (plantasBaja != null) {
+					maxId = plantasBaja.get(0).getCodigo();
+					for (int i = 0; i < plantasBaja.size(); i++) {
+						if (plantasBaja.get(i).getCodigo() > maxId) {
+							maxId = plantasBaja.get(i).getCodigo();
+						}
+					}
 				}
 			}
 		} else {
 			plantas = new ArrayList<Planta>();
+			if (plantasBaja != null) {
+				maxId = plantasBaja.get(0).getCodigo();
+				for (int i = 0; i < plantasBaja.size(); i++) {
+					if (plantasBaja.get(i).getCodigo() > maxId) {
+						maxId = plantasBaja.get(i).getCodigo();
+					}
+				}
+			}
 		}
 		maxId++;
 		System.out.println("Código generado automáticamente: " + maxId);
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
 		while (!nombre.matches("^([A-Z][a-z]*) ?([A-Z][a-z]*)?$")) {
-			System.out.print("Introduce un nombre válido (empezando con mayúscula): ");
+			System.out.print("Introduce un nombre válido (la primera en mayúscula): ");
 			nombre = read.nextLine();
 		}
 		System.out.print("Foto: ");
@@ -734,6 +769,7 @@ public class GestorTienda {
 			File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 			raf2 = new RandomAccessFile(listaPlantasFicheroDat, "rw");
 			raf1.seek(0);
+			raf2.seek(4);
 			int buscaCodigo;
 			do {
 				buscaCodigo = raf1.readInt();
@@ -768,18 +804,18 @@ public class GestorTienda {
 		if (empleados == null) {
 			empleados = new ArrayList<Empleado>();
 		}
-		int nuevoCodigo = generar_codigo_empleado(empleados);
+		String nuevoCodigo = generar_codigo_empleado(empleados);
 		System.out.println("Código generado automáticamente: " + nuevoCodigo);
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
 		while (!nombre.matches("^([A-Z][a-z]*) ?([A-Z][a-z]*)?$")) {
-			System.out.print("Introduce un nombre válido: ");
+			System.out.print("Introduce un nombre válido (sin tildes y la primera en mayúscula): ");
 			nombre = read.nextLine();
 		}
 		System.out.print("Contraseña: ");
 		String passwd = read.nextLine();
 		while (!passwd.matches("^[A-Za-z0-9@#\\.\\-\\_\\+\\$%&]{5,7}$")) {
-			System.out.print("Introduce una contraseña válida: ");
+			System.out.print("Introduce una contraseña válida (entre 5 y 7 caracteres): ");
 			passwd = read.nextLine();
 		}
 		boolean repetir = true;
@@ -795,10 +831,11 @@ public class GestorTienda {
 				repetir = false;
 			}
 		}
-		System.out.println("¡Apunta el código y la contraseña para que no se te olvide al iniciar sesión!");
+		System.out.println("¡APUNTA EL CÓDIGO Y LA CONTRASEÑA PARA QUE NO SE TE OLVIDE AL INICIAR SESIÓN!");
 		// Datos empleado que he añadido: codigo 2423 contraseña 2423abc
+		// Datos empleado que he añadido: codigo 0319 contraseña 1234xd
 		File listaEmpleadosFichero = new File("EMPLEADOS/empleados.dat");
-		empleados.add(new Empleado(nuevoCodigo, nombre, passwd, cargo));
+		empleados.add(new Empleado(Integer.valueOf(nuevoCodigo), nombre, passwd, cargo));
 		return empleados;
 	}
 
@@ -950,12 +987,16 @@ public class GestorTienda {
 			codigosUnicos.remove(codigosUnicos.get(posicionCantidadMax));
 			cantidadesSumadas.remove(cantidadesSumadas.get(posicionCantidadMax));
 		}
-		System.out.println("Plantas orddenadas por cantidad vendida");
-		System.out.println("╔");
-		for (int i = 0; i < plantasOrdenadas.size(); i++) {
-			System.out.println("║" + plantasOrdenadas.get(i).getNombre() + ": " + cantidadesOredenadas.get(i));
+		if(plantasOrdenadas.size()!=0) {
+			System.out.println("Plantas ordenadas por cantidad vendida");
+			System.out.println("╔");
+			for (int i = 0; i < plantasOrdenadas.size(); i++) {
+				System.out.println("║" + plantasOrdenadas.get(i).getNombre() + ": " + cantidadesOredenadas.get(i));
+			}
+			System.out.println("╚");
+		}else {
+			System.out.println("No hay plantas para ordenar.");
 		}
-		System.out.println("╚");
 	}
 
 	private static int guardar_plantas(ArrayList<Planta> plantas, File ficheroEscribirXml) {
@@ -995,15 +1036,15 @@ public class GestorTienda {
 			StreamResult result = new StreamResult(ficheroEscribirXml);
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			System.out.println("Ha ocurrido un error en la escritura del fichero '"+ficheroEscribirXml.getPath()+"'.");
 			// e.printStackTrace();
 			return 0;
 		} catch (TransformerException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			System.out.println("Ha ocurrido un error en la escritura del fichero '"+ficheroEscribirXml.getPath()+"'.");
 			// e.printStackTrace();
 			return 0;
 		} catch (ParserConfigurationException e) {
-			System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.xml'.");
+			System.out.println("Ha ocurrido un error en la escritura del fichero '"+ficheroEscribirXml.getPath()+"'.");
 			// e.printStackTrace();
 			return 0;
 		}
@@ -1126,28 +1167,30 @@ public class GestorTienda {
 		File listaPlantasFicheroDat = new File("PLANTAS/plantas.dat");
 		File listaPlantasBajaFicheroDat = new File("PLANTAS/plantasbaja.dat");
 		RandomAccessFile raf;
+		RandomAccessFile raf2;
 		float precioPlanta = 0f;
 		int puntero = ((planta.getCodigo() - 1) * 12) + 4;
 		try {
-			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
+			raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
 			raf.seek(puntero);
 			precioPlanta = raf.readFloat();
 			try {
-				raf = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
-				raf.seek(raf.length());
-				raf.writeInt(planta.getCodigo());
-				raf.writeFloat(precioPlanta);
-				raf.writeInt(0);
-				raf.close();
+				raf2 = new RandomAccessFile(listaPlantasBajaFicheroDat, "rw");
+				raf2.seek(raf2.length());
+				raf2.writeInt(planta.getCodigo());
+				raf2.writeFloat(precioPlanta);
+				raf2.writeInt(0);
+				raf2.close();
 				ArrayList<Planta> plantasBaja = cargar_datos_plantas(new File("PLANTAS/plantasBaja.xml"));
 				if (plantasBaja == null) {
 					plantasBaja = new ArrayList<Planta>();
 				}
 				plantasBaja.add(planta);
 				guardar_plantas(plantasBaja, new File("PLANTAS/plantasBaja.xml"));
-				raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
+				//raf = new RandomAccessFile(listaPlantasFicheroDat, "rw");
 				raf.seek(puntero);
 				raf.writeFloat(0f);
+				raf.writeInt(0);
 				raf.close();
 			} catch (IOException e) {
 				System.out.println("Ha ocurrido un error en la escritura del fichero 'plantas.dat'.");
@@ -1180,7 +1223,7 @@ public class GestorTienda {
 		return -1;
 	}
 
-	private static int generar_codigo_empleado(ArrayList<Empleado> empleados) {
+	private static String generar_codigo_empleado(ArrayList<Empleado> empleados) {
 		int posibleCodigo = 0;
 		boolean seguir = true;
 		do {
@@ -1192,7 +1235,11 @@ public class GestorTienda {
 				}
 			}
 		} while (seguir);
-		return posibleCodigo;
+		String ceros = "";
+		for (int i = 0; i < 4-(posibleCodigo+"").length(); i++) {
+			ceros += "0";
+		}
+		return ceros + posibleCodigo;
 	}
 
 	private static int cantidad_tickets() {
