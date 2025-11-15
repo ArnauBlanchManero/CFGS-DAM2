@@ -7,9 +7,9 @@
     <descripcion>Planta colgante de interior muy resistente</descripcion>
   </planta>
   <planta>
-    <codigo>4</codigo>
-    <nombre>Rosa</nombre>
-    <foto>rosa.jpg</foto>
-    <descripcion>Flor ornamental con espinas</descripcion>
+    <codigo>20</codigo>
+    <nombre>Jazmín</nombre>
+    <foto>jazmin.jpg</foto>
+    <descripcion>Planta trepadora de flores fragantes</descripcion>
   </planta>
 </plantas>

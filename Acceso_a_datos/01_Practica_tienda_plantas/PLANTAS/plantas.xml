@@ -97,12 +97,6 @@
     <descripcion>Árbol o arbusto de interior muy popular</descripcion>
   </planta>
   <planta>
-    <codigo>20</codigo>
-    <nombre>Jazmín</nombre>
-    <foto>jazmin.jpg</foto>
-    <descripcion>Planta trepadora de flores fragantes</descripcion>
-  </planta>
-  <planta>
     <codigo>1</codigo>
     <nombre>Cactus</nombre>
     <foto>cactus.jpg</foto>
@@ -125,5 +119,17 @@
     <nombre>Rosa</nombre>
     <foto>rosa.png</foto>
     <descripcion>tiene pincchos y es rosa</descripcion>
+  </planta>
+  <planta>
+    <codigo>24</codigo>
+    <nombre>Aloevera.png</nombre>
+    <foto>aloe_vera.png</foto>
+    <descripcion>Es una copia de la planta Aloe Vera para comprobar si funcionan ciertas funcionalidades</descripcion>
+  </planta>
+  <planta>
+    <codigo>4</codigo>
+    <nombre>Rosa</nombre>
+    <foto>rosa.jpg</foto>
+    <descripcion>Flor ornamental con espinas</descripcion>
   </planta>
 </plantas>

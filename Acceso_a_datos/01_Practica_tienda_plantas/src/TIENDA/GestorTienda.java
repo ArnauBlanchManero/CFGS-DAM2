@@ -274,7 +274,7 @@ public class GestorTienda {
 				plantas = menu_plantas(plantas, plantasBaja);
 				break;
 			case "2":
-				empleados = menu_empleados(empleados, empleadosBaja);
+				empleados = menu_empleados(empleado, empleados, empleadosBaja);
 				break;
 			case "3":
 				menu_tickets(plantas);
@@ -333,7 +333,7 @@ public class GestorTienda {
 		return plantas;
 	}
 
-	private static ArrayList<Empleado> menu_empleados(ArrayList<Empleado> empleados,
+	private static ArrayList<Empleado> menu_empleados(Empleado empleado, ArrayList<Empleado> empleados,
 			ArrayList<Empleado> empleadosBaja) {
 		String respuesta;
 		do {
@@ -360,7 +360,7 @@ public class GestorTienda {
 				empleados = pedir_datos_empleado_nuevo(empleados);
 				break;
 			case "2":
-				empleados = dar_empleado_baja(empleados, empleadosBaja);
+				empleados = dar_empleado_baja(empleado, empleados, empleadosBaja);
 				break;
 			case "3":
 				empleados = dar_empleado_alta(empleados, empleadosBaja);
@@ -541,13 +541,14 @@ public class GestorTienda {
 		System.out.print("Nombre: ");
 		String nombre = read.nextLine();
 		while (!nombre.matches("([A-Z][a-z]*) ?([A-Z][a-z]*)?")) {
-			System.out.print("Introduce un nombre válido: ");
+			System.out.print("Introduce un nombre válido (empezando con mayúscula): ");
 			nombre = read.nextLine();
 		}
 		System.out.print("Foto: ");
 		String foto = read.nextLine();
-		while (!nombre.matches("([A-Z][a-z]*)\\.?([a-z]+)?")) {
-			System.out.print("Introduce un nombre de foto válido: ");
+//		while (!nombre.matches("([A-Z]?[a-z_]*)\\.?([a-z]+)?")) {
+		while (!nombre.matches("[A-Za-z]+[A-Za-z_]*[A-Za-z]+\\.[a-z]+")) {
+			System.out.print("Introduce un nombre de foto válido (con extensión y sin símbolos raros): ");
 			nombre = read.nextLine();
 		}
 		System.out.print("Descripcion: ");
@@ -597,7 +598,6 @@ public class GestorTienda {
 			}
 		}
 		File ficheroEscribirDat = new File("PLANTAS/plantas.dat");
-		// TODO no ha escrito el precio ni la cantidad ¿¿me aparece todo el catalogo con 0??
 		try {
 			RandomAccessFile raf = new RandomAccessFile(ficheroEscribirDat, "rw");
 			raf.seek(raf.length());
@@ -611,7 +611,7 @@ public class GestorTienda {
 			return plantas;
 		}
 		plantas.add(new Planta(maxId, nombre, foto, descripcion));
-		// TODO Poner que se ha añadiso bin la planta.
+		System.out.println("Se ha añadido la planta "+plantas.getLast().getNombre()+" correctamente.");
 		return plantas;
 	}
 
@@ -632,8 +632,8 @@ public class GestorTienda {
 		}
 		int posicion = posicion_planta_por_codigo(Integer.valueOf(codigoBuscar), plantas);
 		if(posicion != -1) {
-			// TODO poner que se ha dado e baja correctamente
 			if (dar_de_baja(plantas.get(posicion))) {
+				System.out.println("La planta "+plantas.get(posicion).getNombre()+" se ha dado de baja correctamente");
 				plantas.remove(plantas.get(posicion));
 			} else {
 				System.out.println("No se ha podido dar de baja la planta con código " + plantas.get(posicion).getCodigo());
@@ -652,7 +652,9 @@ public class GestorTienda {
 			return plantas;
 		}
 		for (Planta planta : plantasBaja) {
+			// La funcion imprimir_planta no me mostraba ni el precio ni el stock porque los codigos de las plantas no aparecen en orden en el fichero plantasbaja.dat
 			imprimir_planta(planta, listaPlantasBajaFicheroDat);
+			//System.out.println(planta.toString());
 			System.out.println("\n································\n");
 		}
 		System.out.print("Escribe el código de la planta que quieras dar de alta: ");
@@ -775,10 +777,10 @@ public class GestorTienda {
 		return empleados;
 	}
 
-	private static ArrayList<Empleado> dar_empleado_baja(ArrayList<Empleado> empleados,
+	private static ArrayList<Empleado> dar_empleado_baja(Empleado empleadoGestor, ArrayList<Empleado> empleados,
 			ArrayList<Empleado> empleadosBaja) {
 		if (empleados != null) {
-					System.out.println("Esta es la lista de empleados");
+			System.out.println("Esta es la lista de empleados");
 			for (Empleado empleado : empleados) {
 				System.out.println(empleado.toString());
 				System.out.println("\n································\n");
@@ -797,11 +799,15 @@ public class GestorTienda {
 				if (empleadosBaja == null) {
 					empleadosBaja = new ArrayList<Empleado>();
 				}
-				empleadosBaja.add(empleadoDarBaja);
-				if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
-					empleados.remove(empleadoDarBaja);
+				if(empleadoGestor.getId() != empleadoDarBaja.getId()) {
+					empleadosBaja.add(empleadoDarBaja);
+					if (guardar_empleados(new File("EMPLEADOS/BAJA/empleadosBaja.dat"), empleadosBaja) == 1) {
+						empleados.remove(empleadoDarBaja);
+					} else {
+						System.out.println("El empleado "+empleadoDarBaja.getNombre()+" no se ha podido dar de baja.");
+					}
 				} else {
-					System.out.println("El empleado "+empleadoDarBaja.getNombre()+" no se ha podido dar de baja.");
+					System.out.println("No te puedes dar de baja a ti mismo.");
 				}
 			} else {
 				System.out.println("No se ha encontrado el código");
@@ -916,10 +922,12 @@ public class GestorTienda {
 			codigosUnicos.remove(codigosUnicos.get(posicionCantidadMax));
 			cantidadesSumadas.remove(cantidadesSumadas.get(posicionCantidadMax));
 		}
-		// TODO Resaltar para que se vea mejor el texto
+		System.out.println("Plantas orddenadas por cantidad vendida");
+		System.out.println("╔");
 		for (int i = 0; i < plantasOrdenadas.size(); i++) {
-			System.out.println(plantasOrdenadas.get(i).getNombre()+": "+cantidadesOredenadas.get(i));
+			System.out.println("║"+plantasOrdenadas.get(i).getNombre()+": "+cantidadesOredenadas.get(i));
 		}
+		System.out.println("╚");
 	}
 
 	private static int guardar_plantas(ArrayList<Planta> plantas, File ficheroEscribirXml) {
@@ -1000,11 +1008,16 @@ public class GestorTienda {
 		int stock = 0;
 		try {
 			raf = new RandomAccessFile(listaPlantasFicheroDat, "r");
-			// TODO si lee el fichero plantasbaja.dat al no estar los codigos ordenados no fucnionan las mates
-			raf.seek((planta.getCodigo() - 1) * 12);
-			int codigo = raf.readInt();
+			//raf.seek((planta.getCodigo() - 1) * 12);
+			raf.seek(0);
+			int posicionCodigo = raf.readInt();
+			while (posicionCodigo != planta.getCodigo()) {
+				raf.seek(raf.getFilePointer()+8);
+				posicionCodigo = raf.readInt();
+			}
 			precio = raf.readFloat();
 			stock = raf.readInt();
+			raf.close();
 		} catch (Exception e) {
 			System.out.println("No hay información ni del precio ni del stock.");
 		}
