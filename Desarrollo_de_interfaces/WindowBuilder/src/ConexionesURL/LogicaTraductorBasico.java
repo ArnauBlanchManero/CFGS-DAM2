@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 //import java.util.Scanner;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 
@@ -26,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class Traductor {
+public class LogicaTraductorBasico {
 	private JFrame frame;
 	private Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 	private JTextField palabraOriginal;
@@ -34,7 +35,7 @@ public class Traductor {
 	private Document doc;
 	private static JLabel palabraTraducida = new JLabel("");
 	public static void main(String[] args) throws IOException {
-		/*
+		
 		System.out.print("Escribe la palabra que quieres traducir: ");
 		Scanner sc = new Scanner(System.in);
 		String palabraOriginal = sc.next();
@@ -59,11 +60,11 @@ public class Traductor {
 		System.out.println(palabraOriginal+"="+palabraTraducida3);
 		System.out.println(palabraOriginal+"="+palabraTraducida4);
 		System.out.println(palabraOriginal+"="+palabraTraducida5);
-		*/
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Traductor window = new Traductor();
+					LogicaTraductorBasico window = new LogicaTraductorBasico();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -71,7 +72,7 @@ public class Traductor {
 			}
 		});
 	}
-	public Traductor(){
+	public LogicaTraductorBasico(){
 		JLabel info = new JLabel("Escribe la palabra en español de la que quieras saber su traduccion al ingles");
 		JButton botonTraducir = new JButton("TRADUCIR");
 		frame = new JFrame();
@@ -162,6 +163,7 @@ public class Traductor {
 		// ?langFrom=en" class="tCur1iYh">
 		String [] paso1 = html.split("\\?langFrom=en\" class=\"tCur1iYh\">");
 		// </a>
+		// Aquí me puede salir un error porque no encuentra el paso1[1]
 		String [] paso2 = paso1[1].split("</a>");
 		return paso2[0];
 	}
