@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class AmpliaciónMenú {
@@ -22,6 +23,7 @@ public class AmpliaciónMenú {
 			borrar_jugador(conexion);
 			// Fichar un jugador en un equipo, los equipos aparecen en una lista donde el usuario inserta el número de equipo controlado y de ahí se inserta en la base de datos
 			System.out.println("\n\n2. Fichar un jugador en un equipo");
+			fichar_jugador_equipo(conexion);
 			// Insertar un partido utilizando parte de la funcionalidad anterior para no tener que insertar los nombres de los jugadores
 			System.out.println("\n\n3. Insertar un partido");
 			// Dado un equipo por número (como el procedimiento anterior) conocer las estadísticas de todos sus jugadores
@@ -31,6 +33,91 @@ public class AmpliaciónMenú {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+
+	private static void fichar_jugador_equipo(Connection conexion) {
+		mostrar_jugadores(conexion);
+		String respuesta;
+		System.out.print("\nEscribe el ID del jugador al que quieras fichar en un equipo: ");
+		respuesta = read.next();
+		read.nextLine();
+		try {
+			int idJugador = Integer.parseInt(respuesta);
+			String consulta = "SELECT * FROM jugadores WHERE codigo = ? ";
+			PreparedStatement sentencia;
+			sentencia = conexion.prepareStatement(consulta);
+			int posicion_interrogante = 1;
+			sentencia.setInt(posicion_interrogante, idJugador);
+			ResultSet resultado_consulta = sentencia.executeQuery();
+			// Mostrar resultados
+			System.out.println("Este es el jugador seleccionado");
+			if (resultado_consulta.next()) {
+				int codigo = resultado_consulta.getInt(1);
+				String nombre = resultado_consulta.getString(2);
+				String procedencia = resultado_consulta.getString(3);
+				String altura = resultado_consulta.getString(4);
+				int peso = resultado_consulta.getInt(5);
+				String posicion = resultado_consulta.getString(6);
+				String nombreEquipo = resultado_consulta.getString(7);
+				System.out.println("\nID: "+codigo + "\n    Nombre: " + nombre + "\n    Procedencia: " + procedencia + "\n    Altura: "
+						+ altura + "\n    Peso: " + peso + "\n    Posicion: " + posicion + "\n    Nombre del equipo: "
+						+ nombreEquipo);
+				String equipo = Menú.lista_equipos(conexion);
+				if(equipo!=null) {
+					try {
+						String consulta2 = "UPDATE jugadores SET nombre_equipo = ? WHERE codigo = ?";
+						PreparedStatement sentencia2;
+						sentencia2 = conexion.prepareStatement(consulta2);
+						sentencia2.setString(1, equipo);
+						sentencia2.setInt(2, codigo);
+						
+						if(sentencia2.executeUpdate()>0) {
+							System.out.println("\n\nJugador cambiado de equipo");
+						} else {
+							System.out.println("Error al cambiar el jugador de equipo.");
+						}
+						
+					} catch (SQLException e) {
+						System.out.println("ERROR");
+						e.printStackTrace();
+					}
+				}
+			} else
+				System.out.println("No hay jugadores con ese ID.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void mostrar_jugadores(Connection conexion) {
+		Statement sentencia;
+		try {
+			sentencia = conexion.createStatement();
+			String consulta = "SELECT * FROM jugadores";
+			ResultSet resultado_consulta = sentencia.executeQuery(consulta);
+			int vueltas = 0;
+			while (resultado_consulta.next()) {
+				int codigo = resultado_consulta.getInt(1);
+				String nombre = resultado_consulta.getString(2);
+				String procedencia = resultado_consulta.getString(3);
+				String altura = resultado_consulta.getString(4);
+				int peso = resultado_consulta.getInt(5);
+				String posicion = resultado_consulta.getString(6);
+				String nombreEquipo = resultado_consulta.getString(7);
+				System.out.println("\nID: "+codigo + "\n    Nombre: " + nombre + "\n    Procedencia: " + procedencia + "\n    Altura: "
+						+ altura + "\n    Peso: " + peso + "\n    Posicion: " + posicion + "\n    Nombre del equipo: "
+						+ nombreEquipo);
+
+				vueltas++;
+			}
+			if (vueltas == 0)
+				System.out.println("No hay jugadores.");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 
 	private static void borrar_jugador(Connection conexion) {

@@ -191,7 +191,7 @@ public class Menú {
 		}		
 	}
 
-	private static String lista_equipos(Connection conexion) {
+	static String lista_equipos(Connection conexion) {
 		try {
 			Statement sentencia = conexion.createStatement();
 			String consulta = "SELECT nombre FROM equipos;";
