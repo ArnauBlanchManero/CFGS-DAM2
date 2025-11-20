@@ -1,4 +1,4 @@
-package ConexionesURL;
+package Traductor;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;

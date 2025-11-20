@@ -1,4 +1,4 @@
-package ConexionesURL;
+package Traductor;
 
 import java.io.IOException;
 
