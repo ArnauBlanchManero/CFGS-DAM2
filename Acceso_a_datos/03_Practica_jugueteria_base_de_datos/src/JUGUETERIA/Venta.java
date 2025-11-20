@@ -8,10 +8,10 @@ public class Venta {
 	private int idJuguete;
 	private String idStand;
 	private Date fecha;
-	private int monto;
+	private double monto;
 	private TipoPago pago;
 	
-	public Venta(int id, int idEmpleado, int idJuguete, String idStand, Date fecha, int monto, TipoPago pago) {
+	public Venta(int id, int idEmpleado, int idJuguete, String idStand, Date fecha, double monto, TipoPago pago) {
 		super();
 		this.id = id;
 		this.idEmpleado = idEmpleado;
@@ -20,6 +20,12 @@ public class Venta {
 		this.fecha = fecha;
 		this.monto = monto;
 		this.pago = pago;
+	}
+
+	@Override
+	public String toString() {
+		return "Venta [id=" + id + ", idEmpleado=" + idEmpleado + ", idJuguete=" + idJuguete + ", idStand=" + idStand
+				+ ", fecha=" + fecha + ", monto=" + monto + ", pago=" + pago + "]";
 	}
 	
 }

@@ -11,5 +11,10 @@ public class Zona {
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}
+
+	@Override
+	public String toString() {
+		return "Zona [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+	}
 	
 }

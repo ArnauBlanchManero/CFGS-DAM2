@@ -6,7 +6,7 @@ public class Juguete {
 	private String descripcion;
 	private double precio;
 	private int cantidad;
-	//private CategoriaJuguete categoria;
+	private CategoriaJuguete categoria;
 	
 	public Juguete(int id, String nombre, String descripcion, double precio, int cantidad) {
 		super();
@@ -15,6 +15,12 @@ public class Juguete {
 		this.descripcion = descripcion;
 		this.precio = precio;
 		this.cantidad = cantidad;
+	}
+
+	@Override
+	public String toString() {
+		return "Juguete [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio
+				+ ", cantidad=" + cantidad + ", categoria=" + categoria + "]";
 	}
 	
 }
