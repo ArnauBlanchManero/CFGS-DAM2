@@ -1,21 +1,19 @@
-package ConexionesURL;
+package AtrapaMosca;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
-import Ventanas.Ejemplo4y5;
-
-public class MainTraductor {
+public class MainAtrapaMosca {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaTraductor ventanaPrincipal = new VentanaTraductor("TRADUCTOR ES-EN");
-					ventanaPrincipal.setSize(800, 400);
+					VentanaMosca ventanaPrincipal = new VentanaMosca("Atrapa la mosca");
+					ventanaPrincipal.setSize(800, 800);
 					ventanaPrincipal.setResizable(false);
 					ventanaPrincipal.setLocationRelativeTo(null);
-					ventanaPrincipal.setIconImage(Toolkit.getDefaultToolkit().getImage(Ejemplo4y5.class.getResource("/O-Berry.jpg")));
+					ventanaPrincipal.setIconImage(Toolkit.getDefaultToolkit().getImage(MainAtrapaMosca.class.getResource("/moscaLogo.png")));
 				} catch (Exception e){
 					e.getStackTrace();
 				}

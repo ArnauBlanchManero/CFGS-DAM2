@@ -1,11 +1,9 @@
-package ConexionesURL;
+package Traductor;
 
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-import Ventanas.Ejemplo4y5;
 
 public class VentanaTraductor extends JFrame{
 
@@ -16,7 +14,6 @@ public class VentanaTraductor extends JFrame{
 		setVisible(true);
 		setResizable(isVisible());
 		setLocationRelativeTo(null);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Ejemplo4y5.class.getResource("/O-Berry.jpg")));
 		PanelTraductor panelPrincipal = new PanelTraductor();
 		add(panelPrincipal);
 	}
