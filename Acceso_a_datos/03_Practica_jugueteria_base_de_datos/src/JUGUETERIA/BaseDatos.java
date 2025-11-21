@@ -30,13 +30,19 @@ public class BaseDatos {
 
 			// Conectar
 			conexionTMP = DriverManager.getConnection(url, usuario, password);
-			System.out.println("Conexión realizada "+nombreBBDD);
+			System.out.println("Conexión realizada a "+nombre);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Comprueba que tengas las librerías añadidas");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Conexión fallida "+nombreBBDD);
-			crearBBDDJugueteria();
+			System.out.println("Conexión fallida a "+nombre);
+			String confirmacion = Utilidades.preguntarString("\n¿Quieres crear la base de datos jugueteria? (si o no): ");
+			if(confirmacion.equalsIgnoreCase("si")) {
+				crearBBDDJugueteria();
+				añadir_datos_por_defecto();
+			} else {
+				System.out.println("No se ha creado la base de datos.");
+			}
 			//e.printStackTrace();
 		}
 		return conexionTMP;
@@ -60,8 +66,11 @@ public class BaseDatos {
 		Statement sentencia;
 		ResultSet resultado_consulta = null;
 		try {
-			if(conexion==null)
-				System.out.println("Reinicia la aplicacion");
+			if(conexion==null) {
+				System.out.println("Fatal Error.");
+				System.out.println("Cerrando aplicación.");
+				System.exit(1);
+			}
 			else {
 				sentencia = conexion.createStatement();
 				resultado_consulta = sentencia.executeQuery(consulta);
@@ -74,11 +83,15 @@ public class BaseDatos {
 	}
 
 	private void crearBBDDJugueteria() {
-		if(conexion == null)
+		if(conexion == null) {
+			this.nombre = "localhost";
 			conexion = conectar("jdbc:mysql://localhost:3306", "root", "cfgs");
+		}
 		if(consultaModifica("CREATE DATABASE IF NOT EXISTS jugueteria DEFAULT CHARACTER SET utf8")!=-1)
-			System.out.println("Base de datos Juguetería creada correctamente");
-		conexion = conectar("jdbc:mysql://localhost:3306/Jugueteria", "root", "cfgs");
+			System.out.println("Base de datos jugueteria creada correctamente");
+		nombre = "jugueteria";
+		conexion = conectar("jdbc:mysql://localhost:3306/jugueteria", "root", "cfgs");
+		System.out.println("");
 		// Crear tabla EMPLEADO
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`empleados` (" +
@@ -89,7 +102,7 @@ public class BaseDatos {
 		    "PRIMARY KEY (`idEmpleado`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Empleado creada correctamente");
+			System.out.println("Tabla empleados creada correctamente");
 		// Crear tabla JUGUETE
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`juguetes` (" +
@@ -103,7 +116,7 @@ public class BaseDatos {
 		    "PRIMARY KEY (`idJuguete`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Juguete creada correctamente");
+			System.out.println("Tabla juguetes creada correctamente");
 	
 		// Crear tabla ZONA
 		if(consultaModifica(
@@ -114,7 +127,7 @@ public class BaseDatos {
 		    "PRIMARY KEY (`idZona`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Zona creada correctamente");
+			System.out.println("Tabla zonas creada correctamente");
 	
 		// Crear tabla STAND
 		if(consultaModifica(
@@ -129,7 +142,7 @@ public class BaseDatos {
 		    "ON DELETE CASCADE ON UPDATE CASCADE) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Stand creada correctamente");
+			System.out.println("Tabla stands creada correctamente");
 	
 		// Crear tabla VENTA
 		if(consultaModifica(
@@ -151,7 +164,7 @@ public class BaseDatos {
 		    "CONSTRAINT `fk_venta_STAND1` FOREIGN KEY (`STAND_idStand`, `STAND_zona_idZona`) REFERENCES `jugueteria`.`stands`(`idStand`, `zona_idZona`) ON DELETE RESTRICT ON UPDATE CASCADE) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Venta creada correctamente");
+			System.out.println("Tabla ventas creada correctamente");
 	
 		// Crear tabla STOCK
 		if(consultaModifica(
@@ -159,7 +172,7 @@ public class BaseDatos {
 		    "`stand_idStand` INT NOT NULL, " +
 		    "`stand_zona_idZona` INT NOT NULL, " +
 		    "`juguete_idJuguete` INT NOT NULL, " +
-		    "`CANTIDAD` VARCHAR(45) NULL, " +
+		    "`cantidad` INT NULL, " +
 		    "PRIMARY KEY (`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`), " +
 		    "INDEX `fk_stand_has_juguete_juguete1_idx` (`juguete_idJuguete` ASC), " +
 		    "INDEX `fk_stand_has_juguete_stand1_idx` (`stand_idStand` ASC, `stand_zona_idZona` ASC), " +
@@ -167,33 +180,34 @@ public class BaseDatos {
 		    "CONSTRAINT `fk_stand_has_juguete_juguete1` FOREIGN KEY (`juguete_idJuguete`) REFERENCES `jugueteria`.`juguetes`(`idJuguete`) ON DELETE RESTRICT ON UPDATE CASCADE) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
-			System.out.println("Tabla Stock creada correctamente");
+			System.out.println("Tabla stock creada correctamente");
 	
 		// Crear tabla CAMBIO
 		if(consultaModifica(
-		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`cambios` (" +
-		    "`idCambio` INT NOT NULL AUTO_INCREMENT, " +
-		    "`MOTIVO` VARCHAR(150) NULL, " +
-		    "`Fecha` DATE NULL, " +
-		    "`stock_stand_idStand_Original` INT NOT NULL, " +
-		    "`stock_stand_zona_idZona_Original` INT NOT NULL, " +
-		    "`stock_juguete_idJuguete_Original` INT NOT NULL, " +
-		    "`stock_stand_idStand_Nuevo` INT NOT NULL, " +
-		    "`stock_stand_zona_idZona_Nuevo` INT NOT NULL, " +
-		    "`stock_juguete_idJuguete_Nuevo` INT NOT NULL, " +
-		    "`empleado_idEmpleado` INT UNSIGNED NULL, " +
-		    "PRIMARY KEY (`idCambio`), " +
-		    "INDEX `fk_cambio_stock1_idx` (`stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original` ASC), " +
-		    "INDEX `fk_cambio_stock2_idx` (`stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo` ASC), " +
-		    "INDEX `fk_cambio_empleado1_idx` (`empleado_idEmpleado` ASC), " +
-		    "CONSTRAINT `fk_cambio_stock1` FOREIGN KEY (`stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`) " +
-		    "REFERENCES `jugueteria`.`stocks`(`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`) ON DELETE RESTRICT ON UPDATE CASCADE, " +
-		    "CONSTRAINT `fk_cambio_stock2` FOREIGN KEY (`stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`) " +
-		    "REFERENCES `jugueteria`.`stocks`(`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`) ON DELETE RESTRICT ON UPDATE CASCADE, " +
-		    "CONSTRAINT `fk_cambio_empleado1` FOREIGN KEY (`empleado_idEmpleado`) REFERENCES `jugueteria`.`empleados`(`idEmpleado`) ON DELETE SET NULL ON UPDATE CASCADE) " +
-		    "ENGINE=InnoDB;"
+			"CREATE TABLE IF NOT EXISTS `jugueteria`.`cambios` (" +
+			"`idCambio` INT NOT NULL AUTO_INCREMENT, " +
+			"`MOTIVO` VARCHAR(150) NULL, " +
+			"`Fecha` DATE NULL, " +
+			"`stock_stand_idStand_Original` INT NOT NULL, " +
+			"`stock_stand_zona_idZona_Original` INT NOT NULL, " +
+			"`stock_juguete_idJuguete_Original` INT NOT NULL, " +
+			"`stock_stand_idStand_Nuevo` INT NOT NULL, " +
+			"`stock_stand_zona_idZona_Nuevo` INT NOT NULL, " +
+			"`stock_juguete_idJuguete_Nuevo` INT NOT NULL, " +
+			"`empleado_idEmpleado` INT UNSIGNED NULL, " +
+			"PRIMARY KEY (`idCambio`), " +
+			"INDEX `fk_cambio_stock1_idx` (`stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original` ASC), " +
+			"INDEX `fk_cambio_stock2_idx` (`stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo` ASC), " +
+			"INDEX `fk_cambio_empleado1_idx` (`empleado_idEmpleado` ASC), " +
+			"CONSTRAINT `fk_cambio_stock1` FOREIGN KEY (`stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`) " +
+			"REFERENCES `jugueteria`.`stocks`(`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`) ON DELETE RESTRICT ON UPDATE CASCADE, " +
+			"CONSTRAINT `fk_cambio_stock2` FOREIGN KEY (`stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`) " +
+			"REFERENCES `jugueteria`.`stocks`(`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`) ON DELETE RESTRICT ON UPDATE CASCADE, " +
+			"CONSTRAINT `fk_cambio_empleado1` FOREIGN KEY (`empleado_idEmpleado`) REFERENCES `jugueteria`.`empleados`(`idEmpleado`) ON DELETE SET NULL ON UPDATE CASCADE) " +
+			"ENGINE=InnoDB;"
+
 		)!=-1)
-			System.out.println("Tabla Cambio creada correctamente");
+			System.out.println("Tabla cambios creada correctamente");
 	}
 
 	public void añadir_datos_por_defecto() {
@@ -207,20 +221,20 @@ public class BaseDatos {
 		ResultSet cambioVacia = consulta("SELECT * FROM cambios");
 		
 		try {
-			if(empleadoVacia.getFetchSize()==0)
-				tablasDatos[0] = false;
-			if(jugueteVacia.getFetchSize()==0)
-				tablasDatos[1] = false;
-			if(zonaVacia.getFetchSize()==0)
-				tablasDatos[2] = false;
-			if(standVacia.getFetchSize()==0)
-				tablasDatos[3] = false;
-			if(ventaVacia.getFetchSize()==0)
-				tablasDatos[4] = false;
-			if(stockVacia.getFetchSize()==0)
-				tablasDatos[5] = false;
-			if(cambioVacia.getFetchSize()==0)
-				tablasDatos[6] = false;
+		    if (empleadoVacia == null || !empleadoVacia.next()) 
+		        tablasDatos[0] = false;
+		    if (jugueteVacia == null || !jugueteVacia.next()) 
+		        tablasDatos[1] = false;
+		    if (zonaVacia == null || !zonaVacia.next()) 
+		        tablasDatos[2] = false;
+		    if (standVacia == null || !standVacia.next()) 
+		        tablasDatos[3] = false;
+		    if (ventaVacia == null || !ventaVacia.next()) 
+		        tablasDatos[4] = false;
+		    if (stockVacia == null || !stockVacia.next()) 
+		        tablasDatos[5] = false;
+		    if (cambioVacia == null || !cambioVacia.next()) 
+		        tablasDatos[6] = false;
 		} catch (NullPointerException e) {
 			System.out.println("Algo falla en la estructura de la Base de Datos");
 			crearBBDDJugueteria();
@@ -308,20 +322,22 @@ public class BaseDatos {
 
 		// INSERT STOCKS
 		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`stocks` (`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`, `CANTIDAD`) VALUES" +
-		    "(1, 1, 3, '10')," +
-		    "(1, 1, 9, '6')," +
-		    "(2, 2, 2, '12')," +
-		    "(2, 2, 8, '8')," +
-		    "(3, 2, 4, '15')," +
-		    "(4, 3, 6, '5')," +
-		    "(4, 3, 10, '7')," +
-		    "(5, 4, 1, '20')," +
-		    "(5, 4, 7, '10')," +
-		    "(6, 4, 1, '8')," +
-		    "(7, 5, 5, '9')," +
-		    "(8, 5, 10, '4')," +
-		    "(9, 5, 10, '3');"
+		    "INSERT INTO `jugueteria`.`stocks` (`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`, `cantidad`) VALUES" +
+		    "(1, 1, 3, 10)," +
+		    "(1, 1, 9, 6)," +
+		    "(2, 2, 2, 12)," +
+		    "(2, 2, 8, 8)," +
+		    "(3, 2, 4, 15)," +
+		    "(3, 2, 7, 5)," +
+		    "(4, 3, 6, 5)," +
+		    "(4, 3, 5, 9)," +
+		    "(5, 4, 1, 20)," +
+		    "(5, 4, 7, 10)," +
+		    "(6, 4, 1, 8)," +
+		    "(6, 4, 7, 4)," +
+		    "(6, 4, 4, 0)," + 
+		    "(7, 5, 10, 7)," +
+		    "(8, 5, 5, 9);"
 		)!=-1)
 		    System.out.println("Datos insertados en STOCKS");
 		else
@@ -347,12 +363,13 @@ public class BaseDatos {
 
 		// INSERT CAMBIOS
 		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`cambios` (`MOTIVO`, `Fecha`, `stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`, `stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`, `empleado_idEmpleado`) VALUES" +
-		    "('Reubicación por demanda', '2024-02-01', 5, 4, 1, 6, 4, 1, 1)," +
-		    "('Optimización de espacio', '2024-02-02', 3, 2, 4, 5, 4, 4, 4)," +
-		    "('Actualización de inventario', '2024-02-03', 2, 2, 2, 7, 5, 2, 2)," +
-		    "('Producto mal ubicado', '2024-02-04', 4, 3, 6, 1, 1, 6, 3)," +
-		    "('Cambio de categoría', '2024-02-05', 7, 5, 5, 8, 5, 5, 5);"
+			"INSERT INTO `jugueteria`.`cambios` (`MOTIVO`, `Fecha`, `stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`, `stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`, `empleado_idEmpleado`) VALUES" +
+			"('Reubicación por demanda', '2024-02-01', 5, 4, 1, 6, 4, 1, 1)," +
+			"('Optimización de espacio', '2024-02-02', 3, 2, 4, 4, 3, 6, 4)," +
+			"('Actualización de inventario', '2024-02-03', 2, 2, 2, 5, 4, 7, 2)," +
+			"('Producto mal ubicado', '2024-02-04', 4, 3, 6, 1, 1, 9, 3)," +
+			"('Cambio de categoría', '2024-02-05', 4, 3, 5, 8, 5, 5, 5);"
+
 		)!=-1)
 		    System.out.println("Datos insertados en CAMBIOS");
 		else

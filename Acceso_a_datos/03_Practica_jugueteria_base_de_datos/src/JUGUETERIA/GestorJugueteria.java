@@ -95,7 +95,7 @@ public class GestorJugueteria {
 
 	private static void crear_objetosBBDD(BaseDatos jugueteriaBBDD) {
 		System.out.println("\nLeyendo datos de la base de datos...\n");
-		ResultSet datosEmpleados= jugueteriaBBDD.consulta("SELECT * FROM EMPLEADO");
+		ResultSet datosEmpleados= jugueteriaBBDD.consulta("SELECT * FROM empleados");
 		try {
 			while(datosEmpleados.next()) {
 				Empleado empleadoTMP;
@@ -115,14 +115,17 @@ public class GestorJugueteria {
 				System.out.println(empleadoTMP.toString());
 				empleados.add(empleadoTMP);
 			}
-			System.out.println("Datos de los empleados recolectados.\n");
+			System.out.println("Datos de los empleados recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosJuguetes = jugueteriaBBDD.consulta("SELECT * FROM JUGUETE");
+		ResultSet datosJuguetes = jugueteriaBBDD.consulta("SELECT * FROM juguetes");
 		try {
 			while(datosJuguetes.next()) {
 				Juguete jugueteTMP;
@@ -136,14 +139,17 @@ public class GestorJugueteria {
 				System.out.println(jugueteTMP.toString());
 				juguetes.add(jugueteTMP);
 			}
-			System.out.println("Datos de los juguetes recolectados.\n");
+			System.out.println("Datos de los juguetes recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosZonas = jugueteriaBBDD.consulta("SELECT * FROM ZONA");
+		ResultSet datosZonas = jugueteriaBBDD.consulta("SELECT * FROM zonas");
 		try {
 			while(datosZonas.next()) {
 				Zona zonaTMP;
@@ -154,14 +160,17 @@ public class GestorJugueteria {
 				System.out.println(zonaTMP.toString());
 				zonas.add(zonaTMP);
 			}
-			System.out.println("Datos de las zonas recolectados.\n");
+			System.out.println("Datos de las zonas recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosStands = jugueteriaBBDD.consulta("SELECT * FROM STAND");
+		ResultSet datosStands = jugueteriaBBDD.consulta("SELECT * FROM stands");
 		try {
 			while(datosStands.next()) {
 				Stand standTMP;
@@ -173,14 +182,17 @@ public class GestorJugueteria {
 				System.out.println(standTMP.toString());
 				stands.add(standTMP);
 			}
-			System.out.println("Datos de las Stands recolectados.\n");
+			System.out.println("Datos de las stands recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosVentas = jugueteriaBBDD.consulta("SELECT * FROM VENTA");
+		ResultSet datosVentas = jugueteriaBBDD.consulta("SELECT * FROM ventas");
 		try {
 			while(datosVentas.next()) {
 				Venta ventaTMP;
@@ -207,14 +219,17 @@ public class GestorJugueteria {
 				System.out.println(ventaTMP.toString());
 				ventas.add(ventaTMP);
 			}
-			System.out.println("Datos de las ventas recolectados.\n");
+			System.out.println("Datos de las ventas recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosStocks = jugueteriaBBDD.consulta("SELECT * FROM STOCK");
+		ResultSet datosStocks = jugueteriaBBDD.consulta("SELECT * FROM stocks");
 		try {
 			while(datosStocks.next()) {
 				Stock stockTMP;
@@ -227,14 +242,17 @@ public class GestorJugueteria {
 				System.out.println(stockTMP.toString());
 				stocks.add(stockTMP);
 			}
-			System.out.println("Datos de los stocks recolectados.\n");
+			System.out.println("Datos de los stocks recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
 		}
 		
-		ResultSet datosCambios = jugueteriaBBDD.consulta("SELECT * FROM CAMBIO");
+		ResultSet datosCambios = jugueteriaBBDD.consulta("SELECT * FROM cambios");
 		try {
 			while(datosCambios.next()) {
 				Cambio cambioTMP;
@@ -254,18 +272,21 @@ public class GestorJugueteria {
 				System.out.println(cambioTMP.toString());
 				cambios.add(cambioTMP);
 			}
-			System.out.println("Datos de los cambios recolectados.\n");
+			System.out.println("Datos de los cambios recolectados.");
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
 			jugueteriaBBDD.añadir_datos_por_defecto();
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
 			e.printStackTrace();
 		}
 		
 	}
 
 	private static BaseDatos conectarseBBDD() {
-		String[] datosConectar = {"jdbc:mysql://localhost:3306/Jugueteria", "root", "cfgs"};
-		BaseDatos jugueteriaBBDD = new BaseDatos("Jugueteria", datosConectar);
+		String[] datosConectar = {"jdbc:mysql://localhost:3306/jugueteria", "root", "cfgs"};
+		BaseDatos jugueteriaBBDD = new BaseDatos("jugueteria", datosConectar);
 		return jugueteriaBBDD;
 	}
 
