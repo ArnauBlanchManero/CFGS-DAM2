@@ -31,5 +31,10 @@ public class Cambio {
 				+ ", idJugueteNuevo=" + idJugueteNuevo + ", motivo=" + motivo + ", fecha=" + fecha + ", idStandOrigen="
 				+ idStandOrigen + ", idStandDestino=" + idStandDestino + "]";
 	}
+
+	public static void datosEmpleado(int idEmpleado) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

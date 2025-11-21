@@ -21,5 +21,28 @@ public class Empleado {
 		return "Empleado [id=" + id + ", nombre=" + nombre + ", cargo=" + cargo + ", fechaIngreso=" + fechaIngreso
 				+ "]";
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void eliminar() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void modificar(String nombreNuevo, CargoEmpleado cargoNuevo, Date fechaNueva) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void registrarNuevoEmpleado(String nombreNuevo, CargoEmpleado cargoNuevo, Date fechaNueva) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

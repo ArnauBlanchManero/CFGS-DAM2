@@ -21,5 +21,13 @@ public class Stand {
 		return "Stand [idStand=" + idStand + ", idZona=" + idZona + ", id=" + id + ", nombre=" + nombre
 				+ ", descripcion=" + descripcion + "]";
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 	
 }
