@@ -14,7 +14,7 @@ public class Mosca extends JLabel{
 		mosca = ruta;
 		moscaLabel.setIcon(new ImageIcon(new ImageIcon(PanelMosca.class.getResource(mosca)).getImage().getScaledInstance(60, 62, java.awt.Image.SCALE_SMOOTH)));
 		moscaLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		moscaLabel.setBounds(365, 317, 100, 100);
+		moscaLabel.setBounds(315, 267, 200, 200);
 	}
 
 	public Mosca(String nombre, int ancho, int alto) {
@@ -30,6 +30,20 @@ public class Mosca extends JLabel{
 
 	public void setMoscaLabel(JLabel moscaLabel) {
 		this.moscaLabel = moscaLabel;
+	}
+	
+	public String getName() {
+		return mosca;
+	}
+
+	public void setName(String mosca) {
+		this.mosca = mosca;
+	}
+
+	public void morir() {
+		this.setName("/AtrapaMosca/mosca_muerta.png");
+		moscaLabel.setIcon(new ImageIcon(new ImageIcon(PanelMosca.class.getResource(mosca)).getImage().getScaledInstance(60, 62, java.awt.Image.SCALE_SMOOTH)));
+		
 	}
 	
 }

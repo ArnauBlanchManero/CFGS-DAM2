@@ -3,10 +3,8 @@ package AtrapaMosca;
 import javax.swing.JPanel;
 import java.awt.Color;
 
-import javax.swing.JLabel;
 import java.awt.Rectangle;
 
-import javax.swing.SwingConstants;
 
 public class PanelMosca extends JPanel{
 	public PanelMosca() {
@@ -22,11 +20,18 @@ public class PanelMosca extends JPanel{
 		add(moscaViva.getMoscaLabel());
 		EventosRaton eventosMosca = new EventosRaton(moscaViva);
 		moscaViva.getMoscaLabel().addMouseListener(eventosMosca);
+		//moscaViva.setBounds(365, 317, 700, 700);
+		//EventosRaton eventosPanel = new EventosRaton(this, moscaViva);
+		//this.addMouseListener(eventosPanel);
 		
-		JLabel informacion = new JLabel("Posición del ratón: "+eventosMosca.posicionString());
+		
+		/*JLabel informacion = new JLabel("Posición del ratón: "+eventosMosca.posicionString());
 		informacion.setHorizontalAlignment(SwingConstants.LEFT);
 		informacion.setBounds(10, 723, 730, 27);
+		informacion.addMouseListener(eventosMosca);
 		add(informacion);
+		*/
+		
 		 /*
 		JLabel imgMosca = new JLabel();
 		imgMosca.addMouseListener(eventosMosca);

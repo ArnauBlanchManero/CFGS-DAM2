@@ -3,7 +3,6 @@ package AtrapaMosca;
 import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 
 public class VentanaMosca extends JFrame{
@@ -17,7 +16,6 @@ public class VentanaMosca extends JFrame{
 		setLocationRelativeTo(null);
 		PanelMosca panelPrincipal = new PanelMosca();
 		getContentPane().add(panelPrincipal);
-		getWidth();
 	}
 
 }
