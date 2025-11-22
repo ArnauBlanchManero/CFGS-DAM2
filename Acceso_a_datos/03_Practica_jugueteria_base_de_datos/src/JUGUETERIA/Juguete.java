@@ -46,13 +46,17 @@ public class Juguete {
 		
 	}
 	
-	public void modificar(String nombreNuevo, String descNueva, double precioNuevo, int cantNueva) {
+	public void modificar(String nombreNuevo, String descNueva, double precioNuevo, int cantNueva, String categoriaNueva) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public static void registrarNuevoJuguete(String nombreNuevo, String descNueva, double precioNuevo, int cantNueva) {
-		// TODO Auto-generated method stub
+	public static void registrarNuevoJuguete(String nombreNuevo, String descNueva, double precioNuevo, int cantNueva, String categoriaNueva) {
+		/*
+		 * "INSERT INTO `jugueteria`.`juguetes` (`Nombre`, `Descripcion`, `Precio`, `Cantidad_stock`, `Categoria`, `Visible`) VALUES" +
+		    "('Auto de Carrera', 'Auto a fricción rojo', 12.99, 50, 'Vehículos', TRUE),"
+		 */
+		BaseDatos.consultaModifica("INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES ('"+nombreNuevo+"', '"+descNueva+"', "+precioNuevo+", "+cantNueva+", '"+categoriaNueva+"', TRUE);");
 		
 	}
 

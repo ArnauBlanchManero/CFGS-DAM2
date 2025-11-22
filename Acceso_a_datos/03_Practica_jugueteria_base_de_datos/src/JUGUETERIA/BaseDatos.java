@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class BaseDatos {
 	private String nombre;
-	private Connection conexion;
+	private static Connection conexion;
 
 	public BaseDatos(String nombreSchema, String[] argumentos) {
 		super();
@@ -48,7 +48,7 @@ public class BaseDatos {
 		return conexionTMP;
 	}
 
-	public int consultaModifica(String consulta) {
+	public static int consultaModifica(String consulta) {
 		try {
 			PreparedStatement sentencia;
 			sentencia = conexion.prepareStatement(consulta);
@@ -62,7 +62,7 @@ public class BaseDatos {
 
 	// TODO consultasComplejas(Array String)
 	
-	public ResultSet consulta(String consulta) {
+	public static ResultSet consulta(String consulta) {
 		Statement sentencia;
 		ResultSet resultado_consulta = null;
 		try {

@@ -39,7 +39,8 @@ public class Menu {
 	public int respuesta(String especificacion) {
 		mostrar();
 		int numRespuesta;
-		numRespuesta = Utilidades.preguntarRangoInt(1, opciones.size()+1, "Opcion: ", especificacion);
+		String regex = "^[1-"+(opciones.size()+1)+"]$";
+		numRespuesta = Utilidades.preguntarIntRegex(regex, "Opcion: ", especificacion);
 		return numRespuesta;
 	}
 
@@ -76,11 +77,18 @@ public class Menu {
 	}
 
 	private void pedir_datos_juguete_nuevo() {
+		System.out.println("Por favor, rellena los siguientes campos");
 		String nombre;
 		String desc;
 		double precio;
 		int cant;
-		Juguete.registrarNuevoJuguete(nombre, desc, precio, cant);
+		String categoriaS;
+		nombre = Utilidades.preguntarLongitud(45, "Nombre: ", "menos de 45 caracteres");
+		desc = Utilidades.preguntarLongitud(150, "Descripción: ", "menos de 150 caracteres");
+		precio = Utilidades.preguntarDouble("Precio: ", "un simple número con decimales");
+		cant = Utilidades.preguntarIntRegex("^[0-9]*$", "Cantidad: ", "un numero entero");
+		categoriaS = Utilidades.preguntarCategoriaJuguete();
+		Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
 		
 	}
 

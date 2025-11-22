@@ -1,7 +1,12 @@
 package JUGUETERIA;
 
 public enum CategoriaJuguete {
-	PELOTAS,
+	VEHICULOS,
 	MUÑECAS,
-	VEHICULOS
+	ELECTRONICOS,
+	LIBRE,
+	ACCION,
+	MESA,
+	CONSTRUCCION,
+	PELUCHES
 }
