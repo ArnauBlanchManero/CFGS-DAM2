@@ -1,5 +1,7 @@
 package JUGUETERIA;
 
+import java.awt.font.TextLayout.CaretPolicy;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Utilidades {
@@ -12,17 +14,15 @@ public class Utilidades {
 		return respuesta;
 	}
 
-	public static int preguntarIntRegex(String regex, String pregunta, String especificacion) {
+	public static String preguntarRegex(String regex, String pregunta, String especificacion) {
 		String respuestaUsuario;
 		System.out.print(pregunta);
-		respuestaUsuario = read.next();
-		read.nextLine();
+		respuestaUsuario = read.nextLine();
 		while(!respuestaUsuario.matches(regex)) {
 			System.out.print("Introduce un valor correcto ("+especificacion+"): ");
-			respuestaUsuario = read.next();
-			read.nextLine();
+			respuestaUsuario = read.nextLine();
 		}
-		return Integer.valueOf(respuestaUsuario);
+		return respuestaUsuario;
 	}
 
 	public static String preguntarLongitud(int longitud, String pregunta, String especificacion) {
@@ -36,54 +36,83 @@ public class Utilidades {
 		return respuesta;
 	}
 
-	public static double preguntarDouble(String pregunta, String especificacion) {
+	public static String preguntarDouble(String pregunta, String especificacion) {
 		String respuesta;
 		double respuestaD = 0;
 		boolean repetir;
 		System.out.print(pregunta);
-		respuesta = read.next();
-		read.nextLine();
+		respuesta = read.nextLine();
+		if (respuesta.equals("")) {
+			return "NULL";
+		}
 		try {
 			respuestaD = Double.valueOf(respuesta);
 			repetir = false;
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			repetir = true;
 		}
 		while(repetir) {
 			System.out.print("Introduce un valor correcto ("+especificacion+"): ");
-			respuesta = read.next();
-			read.nextLine();
+			respuesta = read.nextLine();
+			if (respuesta.equals("")) {
+				return "NULL";
+			}
 			try {
 				respuestaD = Double.valueOf(respuesta);
 				repetir = false;
-			} catch (Exception e) {
+			} catch (NumberFormatException e) {
 				repetir = true;
 			}
 		}
-		return respuestaD;
+		return respuesta;
 	}
 
 	public static String preguntarCategoriaJuguete() {
 		String respuesta;
-		CategoriaJuguete categoria1 = CategoriaJuguete.ACCION;
-		CategoriaJuguete categoria2 = CategoriaJuguete.CONSTRUCCION;
-		CategoriaJuguete categoria3 = CategoriaJuguete.ELECTRONICOS;
-		CategoriaJuguete categoria4 = CategoriaJuguete.LIBRE;
-		CategoriaJuguete categoria5 = CategoriaJuguete.MESA;
-		CategoriaJuguete categoria6 = CategoriaJuguete.MUÑECAS;
-		CategoriaJuguete categoria7 = CategoriaJuguete.PELUCHES;
-		CategoriaJuguete categoria8 = CategoriaJuguete.VEHICULOS;
-		System.out.println("1. "+categoria1.toString());
-		System.out.println("2. "+categoria2.toString());
-		System.out.println("3. "+categoria3.toString());
-		System.out.println("4. "+categoria4.toString());
-		System.out.println("5. "+categoria5.toString());
-		System.out.println("6. "+categoria6.toString());
-		System.out.println("7. "+categoria7.toString());
-		System.out.println("8. "+categoria8.toString());
+		ArrayList<CategoriaJuguete> categorias = new ArrayList<CategoriaJuguete>();
+		ArrayList<String> categoriaString = new ArrayList<String>();
+		boolean comprobar = true;
+		
+		categorias.add(CategoriaJuguete.ACCION);
+		categorias.add(CategoriaJuguete.CONSTRUCCION);
+		categorias.add(CategoriaJuguete.ELECTRONICOS);
+		categorias.add(CategoriaJuguete.LIBRE);
+		categorias.add(CategoriaJuguete.MESA);
+		categorias.add(CategoriaJuguete.MUÑECAS);
+		categorias.add(CategoriaJuguete.PELUCHES);
+		categorias.add(CategoriaJuguete.VEHICULOS);
+		for (int i = 0; i < categorias.size(); i++) {
+			categoriaString.add(categorias.get(i).toString());
+			System.out.println((i+1)+". "+categoriaString.get(i));
+		}
+		categoriaString.add("");
 		System.out.print("Categoria: ");
 		respuesta = read.nextLine();
-		//TODO control de errores
+		if (respuesta.matches("^[1-8]$")) {
+			comprobar = false;
+			respuesta = categoriaString.get(Integer.valueOf(respuesta)-1);
+		} else {
+			for (int j = 0; j < categoriaString.size(); j++) {
+				if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
+					comprobar = false;
+				}
+			}
+		}
+		while (comprobar) {
+			System.out.print("Introduce un valor correcto (una de las categorías mostradas): ");
+			respuesta = read.nextLine();
+			if (respuesta.matches("^[1-8]$")) {
+				comprobar = false;
+				respuesta = categoriaString.get(Integer.valueOf(respuesta)-1);
+			} else {
+				for (int j = 0; j < categoriaString.size(); j++) {
+					if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
+						comprobar = false;
+						//respuesta = categoriaString.get(j).toLowerCase();
+					}
+				}
+			}
+		} 
 		return respuesta;
 	}
 

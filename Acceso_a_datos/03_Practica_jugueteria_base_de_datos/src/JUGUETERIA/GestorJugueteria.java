@@ -134,8 +134,9 @@ public class GestorJugueteria {
 				String descripcion = datosJuguetes.getString(3);
 				Double precio = datosJuguetes.getDouble(4);
 				int cantidad = datosJuguetes.getInt(5);
+				String categoria = datosJuguetes.getString(6);
 				
-				jugueteTMP = new Juguete(id, nombre, descripcion, precio, cantidad);
+				jugueteTMP = new Juguete(id, nombre, descripcion, precio, cantidad, categoria);
 				System.out.println(jugueteTMP.toString());
 				juguetes.add(jugueteTMP);
 			}

@@ -97,7 +97,7 @@ public class BaseDatos {
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`empleados` (" +
 		    "`idEmpleado` INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
 		    "`Nombre` VARCHAR(45) NULL, " +
-		    "`Cargo` ENUM('jefe', 'cajero') NULL, " +
+		    "`Cargo` ENUM('Jefe', 'Cajero') NULL, " +
 		    "`Fecha_ingreso` DATE NULL, " +
 		    "PRIMARY KEY (`idEmpleado`)) " +
 		    "ENGINE=InnoDB;"
@@ -111,7 +111,7 @@ public class BaseDatos {
 		    "`Descripcion` VARCHAR(150) NULL, " +
 		    "`Precio` DOUBLE NULL, " +
 		    "`Cantidad_stock` INT UNSIGNED NOT NULL, " +
-		    "`Categoria` ENUM('Vehículos', 'Muñecas', 'Electronicos', 'Libre', 'Accion', 'Mesa', 'Construccion', 'Peluches') NULL, " +
+		    "`Categoria` ENUM('Vehiculos', 'Muñecas', 'Electronicos', 'Libre', 'Accion', 'Mesa', 'Construccion', 'Peluches') NULL, " +
 		    "`Visible` BOOLEAN NULL, " +
 		    "PRIMARY KEY (`idJuguete`)) " +
 		    "ENGINE=InnoDB;"
@@ -150,7 +150,7 @@ public class BaseDatos {
 		    "`idVenta` INT NOT NULL AUTO_INCREMENT, " +
 		    "`Fecha` DATE NULL, " +
 		    "`Monto` DOUBLE NULL, " +
-		    "`tipo_pago` ENUM('efectivo', 'tarjeta', 'paypal') NULL, " +
+		    "`tipo_pago` ENUM('Efectivo', 'Tarjeta', 'Paypal') NULL, " +
 		    "`juguete_idJuguete` INT NOT NULL, " +
 		    "`empleado_idEmpleado` INT UNSIGNED NULL, " +
 		    "`STAND_idStand` INT NOT NULL, " +
@@ -213,7 +213,7 @@ public class BaseDatos {
 	public void añadir_datos_por_defecto() {
 		boolean [] tablasDatos = {true, true, true, true, true, true, true};
 		ResultSet empleadoVacia = consulta("SELECT * FROM empleados");
-		ResultSet jugueteVacia = consulta("SELECT * FROM juguetes");
+		ResultSet jugueteVacia = consulta("SELECT * FROM juguetes WHERE Visible = TRUE");
 		ResultSet zonaVacia = consulta("SELECT * FROM zonas");
 		ResultSet standVacia = consulta("SELECT * FROM stands");
 		ResultSet ventaVacia = consulta("SELECT * FROM ventas");
