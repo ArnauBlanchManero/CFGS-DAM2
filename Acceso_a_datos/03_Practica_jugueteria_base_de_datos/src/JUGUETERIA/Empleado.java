@@ -16,9 +16,9 @@ public class Empleado {
 		this.id = id;
 		this.nombre = nombre;
 		CargoEmpleado cargoE;
-		if (cargo.equals("Cajero")) {
+		if (cargo.equalsIgnoreCase("cajero")) {
 			cargoE = CargoEmpleado.CAJERO;
-		} else if (cargo.equals("Jefe")) {
+		} else if (cargo.equalsIgnoreCase("jefe")) {
 			cargoE = CargoEmpleado.JEFE;
 		} else {
 			cargoE = null;

@@ -21,29 +21,29 @@ public class Juguete {
 		this.precio = precio;
 		this.cantidad = cantidad;
 		if (categoria!=null) {
-			switch (categoria) {
-				case "Vehiculos":
+			switch (categoria.toLowerCase()) {
+				case "vehiculos":
 					this.categoria = CategoriaJuguete.VEHICULOS;
 					break;
-				case "Muñecas":
+				case "muñecas":
 					this.categoria = CategoriaJuguete.MUÑECAS;
 					break;
-				case "Electronicos":
+				case "electronicos":
 					this.categoria = CategoriaJuguete.ELECTRONICOS;
 					break;
-				case "Libre":
+				case "libre":
 					this.categoria = CategoriaJuguete.LIBRE;
 					break;
-				case "Accion":
+				case "accion":
 					this.categoria = CategoriaJuguete.ACCION;
 					break;
-				case "Mesa":
+				case "mesa":
 					this.categoria = CategoriaJuguete.MESA;
 					break;
-				case "Construccion":
+				case "construccion":
 					this.categoria = CategoriaJuguete.CONSTRUCCION;
 					break;
-				case "Peluches":
+				case "peluches":
 					this.categoria = CategoriaJuguete.PELUCHES;
 					break;
 		

@@ -21,9 +21,11 @@ public class BaseDatos {
 	private Connection conectar(String url, String usuario, String password) {
 		Connection conexionTMP = null;
 		String[] info = url.split("/");
-		String nombreBBDD = "";
+		String nombreBBDD;
 		if (info.length >= 4) {
-			nombreBBDD = "a "+info[3];
+			nombreBBDD = info[3];
+		} else {
+			nombreBBDD = nombre;
 		}
 		try {
 			// Carga el drive de la BBDD
@@ -31,7 +33,7 @@ public class BaseDatos {
 
 			// Conectar
 			conexionTMP = DriverManager.getConnection(url, usuario, password);
-			System.out.println("Conexión realizada a "+nombre);
+			System.out.println("Conexión realizada a "+nombreBBDD);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Comprueba que tengas las librerías añadidas");
 			e.printStackTrace();

@@ -20,11 +20,8 @@ public class GestorJugueteria {
 		System.out.println(" /|\\ ( • ) /|___|\\  /|\\ ( • ) /|___|\\ ");
 		System.out.println(" / \\ () ()   | |    / \\ () ()   | |   ");
 		System.out.println("BIENVENIDO AL GESTOR DE LA JUGUETERIA\n");
-		// TODO conectarse a la bbdd
 		BaseDatos jugueteriaBBDD = conectarseBBDD();
-		// TODO crear variables esenciales
 		crear_objetosBBDD(jugueteriaBBDD);
-		// TODO delegar el trabajo a los menus
 		ArrayList<String> opcionesMenuGeneral = new ArrayList<String>();
 		opcionesMenuGeneral.add("Gestionar Juguetes");
 		opcionesMenuGeneral.add("Gestionar Empleados");
@@ -34,6 +31,33 @@ public class GestorJugueteria {
 		int numRespuesta;
 		while((numRespuesta = menuGeneral.respuesta("escribe un número del 1 al 5")) !=5) {
 			subMenus(numRespuesta);
+			/*
+			 * TODO 
+			 * ● Juguetes: 
+			 * ○ Registrar un nuevo juguete 
+			 * ○ Modificar los datos de los juguetes 
+			 * ○ Eliminar juguetes 
+			 * ○ Salir 
+			 * ● Empleado 
+			 * ○ Registra un nuevo empleado 
+			 * ○ Modificar los datos de un nuevo empleado 
+			 * ○ Eliminar el empleado 
+			 * ○ Salir 
+			 * ● Ventas 
+			 * ○ Realizar una venta 
+			 * ○ Realizar una devolución // Realizar un cambio
+			 * ○ Producto más vendido ( los cincos primeros) 
+			 * ○ Los empleados que más venden 
+			 * ○ Salir 
+			 * ● Obtener datos de la tienda
+			 * ○ Obtener todos los juguetes que están disponibles en un stand específicos 
+			 * ○ Obtener los datos de las ventas realizadas en un mes 
+			 * ○ Obtener los datos de las ventas realizadas por un empleado en un mes. 
+			 * ○ Obtener los datos de los cambios de los empleados y el motivo del cambio 
+			 * ○ Lista de los productos ordenados por precio
+			 * ○ Salir 
+			 * ● Salir 
+			 */
 		}
 		System.out.println("\nAplicación cerrada.");
 	}
@@ -192,21 +216,11 @@ public class GestorJugueteria {
 				int idVenta = datosVentas.getInt(1);
 				Date fecha = datosVentas.getDate(2);
 				double monto = datosVentas.getDouble(3);
-				String tipoPagoS = datosVentas.getString(4);
+				String tipoPago = datosVentas.getString(4);
 				int idJuguete = datosVentas.getInt(5);
 				int idEmpleado = datosVentas.getInt(6);
 				int idStand = datosVentas.getInt(7);
 				int idZona = datosVentas.getInt(8);
-				TipoPago tipoPago;
-				if (tipoPagoS.equals("efectivo")) {
-					tipoPago = TipoPago.EFECTIVO;
-				} else if (tipoPagoS.equals("tarjeta")) {
-					tipoPago = TipoPago.TARJETA;
-				} else if (tipoPagoS.equals("paypal")) {
-					tipoPago = TipoPago.PAYPAL;
-				} else {
-					tipoPago = null;
-				}
 				String idS = idZona +" "+idStand;
 				ventaTMP = new Venta(idVenta, idEmpleado, idJuguete, idS, fecha, monto, tipoPago);
 				System.out.println(ventaTMP.toString());

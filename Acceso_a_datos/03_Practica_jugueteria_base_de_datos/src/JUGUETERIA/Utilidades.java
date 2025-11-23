@@ -1,6 +1,5 @@
 package JUGUETERIA;
 
-import java.awt.font.TextLayout.CaretPolicy;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -154,6 +153,52 @@ public class Utilidades {
 					if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
 						comprobar = false;
 						respuesta = categoriaString.get(j);
+					}
+				}
+			}
+		} 
+		return respuesta;
+	}
+
+	public static String preguntarTipoPago() {
+		String respuesta;
+		ArrayList<TipoPago> tipos = new ArrayList<TipoPago>();
+		ArrayList<String> tiposString = new ArrayList<String>();
+		boolean comprobar = true;
+		
+		tipos.add(TipoPago.EFECTIVO);
+		tipos.add(TipoPago.TARJETA);
+		tipos.add(TipoPago.PAYPAL);
+		for (int i = 0; i < tipos.size(); i++) {
+			tiposString.add(tipos.get(i).toString());
+			System.out.println((i+1)+". "+tiposString.get(i));
+		}
+		tiposString.add("");
+
+		System.out.print("Tipo de pago: ");
+		respuesta = read.nextLine();
+		if (respuesta.matches("^[1-3]$")) {
+			comprobar = false;
+			respuesta = tiposString.get(Integer.valueOf(respuesta)-1);
+		} else {
+			for (int j = 0; j < tiposString.size(); j++) {
+				if (respuesta.equalsIgnoreCase(tiposString.get(j))) {
+					comprobar = false;
+					respuesta = tiposString.get(j);
+				}
+			}
+		}
+		while (comprobar) {
+			System.out.print("Introduce un valor correcto (uno de los tipos de pago mostrados): ");
+			respuesta = read.nextLine();
+			if (respuesta.matches("^[1-3]$")) {
+				comprobar = false;
+				respuesta = tiposString.get(Integer.valueOf(respuesta)-1);
+			} else {
+				for (int j = 0; j < tiposString.size(); j++) {
+					if (respuesta.equalsIgnoreCase(tiposString.get(j))) {
+						comprobar = false;
+						respuesta = tiposString.get(j);
 					}
 				}
 			}

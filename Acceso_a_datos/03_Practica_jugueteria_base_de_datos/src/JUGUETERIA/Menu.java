@@ -87,7 +87,7 @@ public class Menu {
 	private void pedir_datos_juguete_modificar() {
 		System.out.println("\nModificar un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del juguete que quieres modificar: ", "idJuguete", "juguetes", "WHERE Visible = TRUE");
+		String idSeleccionado = pedir_id("Escrbe el id del juguete que quieres modificar: ", "todos los juguetes","idJuguete", "juguetes", "WHERE Visible = TRUE");
 		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
 		ArrayList<String> columnas = new ArrayList<String>();
 		ArrayList<Object> datos = new ArrayList<Object>();
@@ -156,7 +156,7 @@ public class Menu {
 		categoriaS = Utilidades.preguntarCategoriaJuguete();
 		} while (categoriaS.equals(""));
 		Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
-		
+		// TODO registrar el stock en stocks, preguntando en que zona y stand lo quiere guardar.
 	}
 
 	public void opcionesEmpleados(int num) {
@@ -179,7 +179,7 @@ public class Menu {
 	private void pedir_id_empleado_eliminar() {
 		System.out.println("\nEliminar un empleado");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres eliminar: ", "idEmpleado", "empleados", "");
+		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres eliminar: ", "todos los empleados","idEmpleado", "empleados", "");
 		Empleado empleadoEliminar = new Empleado(Integer.valueOf(idSeleccionado));
 		System.out.println("Esta es la información del empleado que vas a eliminar\n"+empleadoEliminar.toString());
 		String confirmacion = Utilidades.preguntarString("¿Seguro que quieres eliminarlo? (si o no): ");
@@ -197,7 +197,7 @@ public class Menu {
 	private void pedir_datos_empleado_modificar() {
 		System.out.println("\nModificar un empleado");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres modificar: ", "idEmpleado", "empleados", "");
+		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres modificar: ", "todos los empleados","idEmpleado", "empleados", "");
 		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
 		ArrayList<String> columnas = new ArrayList<String>();
 		ArrayList<Object> datos = new ArrayList<Object>();
@@ -249,19 +249,21 @@ public class Menu {
 		
 	}
 
-	private String pedir_id(String pregunta, String nombreId, String tabla, String where) {
-		System.out.println("Esta es la lista de todos los "+tabla);
+	private String pedir_id(String pregunta, String queMuestra, String nombreId, String tabla, String where) {
+		System.out.println("Esta es la lista de "+queMuestra);
 		ResultSet ids = BaseDatos.consulta("SELECT "+nombreId+" FROM "+tabla+" "+where);
-		int cantidadIds = 0;
 		ArrayList<Integer> idsTotales = new ArrayList<Integer>();
 		try {
 			while (ids.next()) {
-				if(tabla.equals("juguetes"))
+				if(nombreId.equals("idJuguete"))
 					Juguete.mostrarPorId(ids.getInt(1));
-				if(tabla.equals("empleados"))
+				else if(nombreId.equals("idEmpleado"))
 					Empleado.mostrarPorId(ids.getInt(1));
+				else if(nombreId.equals("stand_zona_idZona"))
+					Zona.mostrarPorId(ids.getInt(1));
+				else if(nombreId.equals("stand_idStand"))
+					Stand.mostrarPorId(ids.getInt(1));
 				idsTotales.add(ids.getInt(1));
-				cantidadIds++;
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
@@ -271,9 +273,14 @@ public class Menu {
 			e.printStackTrace();
 		}
 		String idSeleccionado;
-		do {
-			idSeleccionado = Utilidades.preguntarRegex("^[0-9]+$", pregunta, "un número del 1 a "+cantidadIds);
-		} while(!exisite_id(Integer.valueOf(idSeleccionado), idsTotales));
+		if(idsTotales.size()!=0) {
+			do {
+				idSeleccionado = Utilidades.preguntarRegex("^[0-9]+$", pregunta, "un id que se haya mostrado");
+			} while(!exisite_id(Integer.valueOf(idSeleccionado), idsTotales));
+		} else {
+			System.out.println("No se han encontrado datos.");
+			return "0";
+		}
 		return idSeleccionado;
 	}
 
@@ -324,8 +331,63 @@ public class Menu {
 
 	private void pedir_datos_venta() {
 		Venta venta;
-		venta.vender();
-		
+		Date fecha;
+		String tipoPago;
+		int idJuguete;
+		int idEmpleado;
+		int idZona;
+		int idStand;
+		String idZonaStand;
+		int cantidad;
+		double precioUnitario = 0;
+		double monto;
+		fecha = new Date(System.currentTimeMillis());
+		idJuguete = Integer.valueOf(pedir_id("Escribe el id del juguete que quieras vender: ", "todos los juguetes","idJuguete", "juguetes", " WHERE Visible = true"));
+		idEmpleado = Integer.valueOf(pedir_id("Escribe el id del empleado que está realizando la venta: ", "todos los empleados","idEmpleado", "empleados", ""));
+		idZona = Integer.valueOf(pedir_id("Escribe el id de la zona donde se encuentra el juguete: ", "las zonas con ese juguete","stand_zona_idZona", "stocks", " WHERE juguete_idJuguete = "+idJuguete+" GROUP BY stand_zona_idZona"));
+		idStand = Integer.valueOf(pedir_id("Escribe el id del stand donde se encuentra el juguete: ", "los stands en la zona con ese juguete","stand_idStand", "stocks", " WHERE stand_zona_idZona = "+idZona+" and juguete_idJuguete = "+idJuguete));
+		if(idStand != 0) {
+			idZonaStand = idZona + " " + idStand;
+			do {
+				cantidad = Integer.valueOf(Utilidades.preguntarRegex("^[0-9]+$", "¿Cuántas unidades quieres vender? ", "un número"));
+			} while(!stock_suficiente(idStand, idZona, idJuguete, cantidad));
+			ResultSet resultado = BaseDatos.consulta("SELECT precio FROM juguetes WHERE idJuguete = "+idJuguete);
+			try {
+				if (resultado.next()) {
+					precioUnitario = resultado.getDouble(1);
+				}
+			} catch (SQLException e) {
+				System.out.println("Error en la ejecución de la consutla.");
+				precioUnitario = 0;
+				e.printStackTrace();
+			}
+			monto = precioUnitario * Double.valueOf(cantidad);
+			tipoPago = Utilidades.preguntarTipoPago();
+			venta = new Venta(idStand, idEmpleado, idJuguete, idZonaStand, fecha, monto, tipoPago);
+			venta.vender(cantidad);
+		} else {
+			System.out.println("Venta cancelada.");
+		}
+	}
+
+	private boolean stock_suficiente(int idStand, int idZona, int idJuguete, int cantidad) {
+		boolean suficiente = false;
+		ResultSet resultado = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idStand+" AND stand_zona_idZona = "+idZona+" AND juguete_idJuguete = "+idJuguete);
+		int stock = 0;
+		try {
+			if (resultado.next()) {
+				stock = resultado.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la ejecución de la consutla.");
+			e.printStackTrace();
+		}
+		if((stock-cantidad) >= 0) {
+			suficiente = true;
+		} else {
+			System.out.println("No hay tantas unidades, introduce un número menor a "+stock);
+		}
+		return suficiente;
 	}
 
 	public void opcionesDatos(int num) {
