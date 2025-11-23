@@ -1,11 +1,13 @@
 package JUGUETERIA;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Iterator;
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class Menu {
 	private ArrayList<String> opciones;
@@ -66,7 +68,9 @@ public class Menu {
 	}
 
 	private void pedir_id_juguete_eliminar() {
-		String idSeleccionado = pedir_id("Escribe el id del juguete que quieres eliminar: ");
+		System.out.println("\nEliminar un juguete");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		String idSeleccionado = pedir_id("Escribe el id del juguete que quieres eliminar: ", "idJuguete", "juguetes", "WHERE Visible = TRUE");
 		Juguete jugueteEliminar = new Juguete(Integer.valueOf(idSeleccionado));
 		System.out.println("Esta es la información del juguete que vas a eliminar\n"+jugueteEliminar.toString());
 		String confirmacion = Utilidades.preguntarString("¿Seguro que quieres eliminarlo? (si o no): ");
@@ -83,15 +87,15 @@ public class Menu {
 	private void pedir_datos_juguete_modificar() {
 		System.out.println("\nModificar un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del juguete que quieres modificar: ");
+		String idSeleccionado = pedir_id("Escrbe el id del juguete que quieres modificar: ", "idJuguete", "juguetes", "WHERE Visible = TRUE");
 		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
 		ArrayList<String> columnas = new ArrayList<String>();
-		ArrayList<String> datos = new ArrayList<String>();
+		ArrayList<Object> datos = new ArrayList<Object>();
 		Juguete jugueteModificar = new Juguete(Integer.valueOf(idSeleccionado));
 		String nombre;
 		String desc;
-		String precio;
-		String cant;
+		Double precio;
+		int cant;
 		String categoriaS;
 		nombre = Utilidades.preguntarLongitud(45, "Nombre: ", "menos de 45 caracteres");
 		if(nombre.length()!=0) {
@@ -104,17 +108,18 @@ public class Menu {
 			datos.add(desc);
 		}
 		precio = Utilidades.preguntarDouble("Precio: ", "un simple número con decimales");
-		if(!precio.equals("NULL")) {
+		if(precio != -1D) {
 			columnas.add("Precio ");
 			datos.add(precio);
 		}
-		cant = Utilidades.preguntarRegex("(^[0-9]*$)", "Cantidad: ", "un numero entero");
+		String cantS;
+		cantS = Utilidades.preguntarRegex("^[0-9]*$", "Cantidad: ", "un numero entero");
 		try {
-			Integer.valueOf(cant);
+			cant = Integer.valueOf(cantS);
 			columnas.add("Cantidad_stock ");
 			datos.add(cant);
 		} catch (Exception e) {
-			cant = "0";
+			cant = jugueteModificar.getCantidad();
 		}
 		categoriaS = Utilidades.preguntarCategoriaJuguete();
 		if (!categoriaS.equals("")) {
@@ -128,64 +133,29 @@ public class Menu {
 		}
 	}
 	
-	private String pedir_id(String pregunta) {
-		System.out.println("Esta es la lista de todos los juguetes");
-		ResultSet ids = BaseDatos.consulta("SELECT idJuguete FROM juguetes WHERE Visible = TRUE");
-		int cantidadIds = 0;
-		ArrayList<Integer> idsJuguetes = new ArrayList<Integer>();
-		try {
-			while (ids.next()) {
-				Juguete.mostrarPorId(ids.getInt(1));
-				idsJuguetes.add(ids.getInt(1));
-				cantidadIds++;
-			}
-		} catch (SQLException e) {
-			System.out.println("La consulta no se ha ejecutado correctamente.");
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			System.out.println("No hay datos para leer");
-			e.printStackTrace();
-		}
-		String idSeleccionado;
-		do {
-			idSeleccionado = Utilidades.preguntarRegex("^[0-9]+$", pregunta, "un número del 1 a "+cantidadIds);
-		} while(!exisite_id(Integer.valueOf(idSeleccionado), idsJuguetes));
-		return idSeleccionado;
-	}
-
-	private boolean exisite_id(Integer idComprobar, ArrayList<Integer> idsJuguetes) {
-		boolean existe = false;
-		for (Integer id : idsJuguetes) {
-			if(idComprobar == id)
-				existe = true;
-		}
-		return existe;
-	}
-
 	private void pedir_datos_juguete_nuevo() {
 		System.out.println("\nAñadir un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		System.out.println("Por favor, rellena los siguientes campos");
 		String nombre;
 		String desc;
-		String precio;
-		String cant;
+		Double precio;
+		int cant;
 		String categoriaS;
+		do {
 		nombre = Utilidades.preguntarLongitud(45, "Nombre: ", "menos de 45 caracteres");
-		if(nombre.length()==0) {
-			nombre = "NULL";
-		}
+		} while(nombre.length()==0);
+		do {
 		desc = Utilidades.preguntarLongitud(150, "Descripción: ", "menos de 150 caracteres");
-		if(desc.length()==0) {
-			desc = "NULL";
-		}
+		} while(desc.length()==0);
+		do {
 		precio = Utilidades.preguntarDouble("Precio: ", "un simple número con decimales");
-		cant = Utilidades.preguntarRegex("(^[0-9]+$)", "Cantidad: ", "un numero entero");
+		} while (precio == -1D);
+		cant = Integer.valueOf(Utilidades.preguntarRegex("^[0-9]+$", "Cantidad: ", "un numero entero"));
+		do {
 		categoriaS = Utilidades.preguntarCategoriaJuguete();
-		if (categoriaS.equals("")) {
-			categoriaS = "NULL";
-		}
-		Juguete.registrarNuevoJuguete(nombre, desc, precio, Integer.valueOf(cant), categoriaS);
+		} while (categoriaS.equals(""));
+		Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
 		
 	}
 
@@ -207,24 +177,113 @@ public class Menu {
 	}
 
 	private void pedir_id_empleado_eliminar() {
-		Empleado empleadoEliminar;
-		empleadoEliminar.eliminar();
+		System.out.println("\nEliminar un empleado");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres eliminar: ", "idEmpleado", "empleados", "");
+		Empleado empleadoEliminar = new Empleado(Integer.valueOf(idSeleccionado));
+		System.out.println("Esta es la información del empleado que vas a eliminar\n"+empleadoEliminar.toString());
+		String confirmacion = Utilidades.preguntarString("¿Seguro que quieres eliminarlo? (si o no): ");
+		if (confirmacion.equalsIgnoreCase("si")) {
+			if(empleadoEliminar.eliminar()) {
+				System.out.println("Empleado eliminado correctamente");
+			} else {
+				System.out.println("Error al eliminar el empleado");
+			}
+		} else {
+			System.out.println("No se eliminará el empleado.");
+		}
 	}
 
 	private void pedir_datos_empleado_modificar() {
-		Empleado empleadoModificar;
+		System.out.println("\nModificar un empleado");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres modificar: ", "idEmpleado", "empleados", "");
+		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
+		ArrayList<String> columnas = new ArrayList<String>();
+		ArrayList<Object> datos = new ArrayList<Object>();
+		Empleado empleadoModificar = new Empleado(Integer.valueOf(idSeleccionado));
 		String nombre;
-		CargoEmpleado cargo;
+		String cargo;
+		String fechaS;
+		nombre = Utilidades.preguntarLongitud(45, "Nombre: ", "menos de 45 caracteres");
+		if(nombre.length()!=0) {
+			columnas.add("Nombre ");
+			datos.add(nombre);
+		}
+		cargo = Utilidades.preguntarCargoEmpleado();
+		if (cargo.length()!=0) {
+			columnas.add("Cargo ");
+			datos.add(cargo);
+		}
+		fechaS = Utilidades.preguntarRegex("(^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$)|(^$)", "Fecha de ingreso: ", "formato de fecha yyyy-MM-dd");
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 		Date fecha;
-		empleadoModificar.modificar(nombre, cargo, fecha);
+		try {
+			fecha = new Date(formato.parse(fechaS).getTime());
+			columnas.add("Fecha_ingreso ");
+			datos.add(fecha);
+		} catch (ParseException e){
+			System.out.println("No se puede modificar la fecha porque no cumple con el formato (yyyy-MM-dd)"); //TODO no mostrar esta frase
+			e.printStackTrace();
+		}
+		if (columnas.size()>0)
+			empleadoModificar.modificar(columnas, datos, empleadoModificar.getId());
+		else
+			System.out.println("No se modificará el empleado.");
 	}
 
 	private void pedir_datos_empleado_nuevo() {
+		System.out.println("\nAñadir un empleado");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		String nombre;
-		CargoEmpleado cargo;
+		String cargoS;
 		Date fecha;
-		Empleado.registrarNuevoEmpleado(nombre, cargo, fecha);
+		do {
+		nombre = Utilidades.preguntarLongitud(45, "Nombre: ", "menos de 45 caracteres");
+		}while(nombre.length()<1);
+		do {
+		cargoS = Utilidades.preguntarCargoEmpleado();
+		} while (!cargoS.equals(""));
+		fecha = new Date(System.currentTimeMillis());
+		Empleado.registrarNuevoEmpleado(nombre, cargoS, fecha);
 		
+	}
+
+	private String pedir_id(String pregunta, String nombreId, String tabla, String where) {
+		System.out.println("Esta es la lista de todos los "+tabla);
+		ResultSet ids = BaseDatos.consulta("SELECT "+nombreId+" FROM "+tabla+" "+where);
+		int cantidadIds = 0;
+		ArrayList<Integer> idsTotales = new ArrayList<Integer>();
+		try {
+			while (ids.next()) {
+				if(tabla.equals("juguetes"))
+					Juguete.mostrarPorId(ids.getInt(1));
+				if(tabla.equals("empleados"))
+					Empleado.mostrarPorId(ids.getInt(1));
+				idsTotales.add(ids.getInt(1));
+				cantidadIds++;
+			}
+		} catch (SQLException e) {
+			System.out.println("La consulta no se ha ejecutado correctamente.");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
+		}
+		String idSeleccionado;
+		do {
+			idSeleccionado = Utilidades.preguntarRegex("^[0-9]+$", pregunta, "un número del 1 a "+cantidadIds);
+		} while(!exisite_id(Integer.valueOf(idSeleccionado), idsTotales));
+		return idSeleccionado;
+	}
+
+	private boolean exisite_id(Integer idComprobar, ArrayList<Integer> idsTotales) {
+		boolean existe = false;
+		for (Integer id : idsTotales) {
+			if(idComprobar == id)
+				existe = true;
+		}
+		return existe;
 	}
 
 	public void opcionesVentas(int num) {

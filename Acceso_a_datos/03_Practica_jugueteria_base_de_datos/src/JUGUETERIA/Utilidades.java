@@ -36,14 +36,14 @@ public class Utilidades {
 		return respuesta;
 	}
 
-	public static String preguntarDouble(String pregunta, String especificacion) {
+	public static Double preguntarDouble(String pregunta, String especificacion) {
 		String respuesta;
 		double respuestaD = 0;
 		boolean repetir;
 		System.out.print(pregunta);
 		respuesta = read.nextLine();
 		if (respuesta.equals("")) {
-			return "NULL";
+			return -1D;
 		}
 		try {
 			respuestaD = Double.valueOf(respuesta);
@@ -55,7 +55,7 @@ public class Utilidades {
 			System.out.print("Introduce un valor correcto ("+especificacion+"): ");
 			respuesta = read.nextLine();
 			if (respuesta.equals("")) {
-				return "NULL";
+				return -1D;
 			}
 			try {
 				respuestaD = Double.valueOf(respuesta);
@@ -64,7 +64,7 @@ public class Utilidades {
 				repetir = true;
 			}
 		}
-		return respuesta;
+		return respuestaD;
 	}
 
 	public static String preguntarCategoriaJuguete() {
@@ -109,6 +109,51 @@ public class Utilidades {
 					if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
 						comprobar = false;
 						//respuesta = categoriaString.get(j).toLowerCase();
+					}
+				}
+			}
+		} 
+		return respuesta;
+	}
+
+	public static String preguntarCargoEmpleado() {
+		String respuesta;
+		ArrayList<CargoEmpleado> categorias = new ArrayList<CargoEmpleado>();
+		ArrayList<String> categoriaString = new ArrayList<String>();
+		boolean comprobar = true;
+		
+		categorias.add(CargoEmpleado.CAJERO);
+		categorias.add(CargoEmpleado.JEFE);
+		for (int i = 0; i < categorias.size(); i++) {
+			categoriaString.add(categorias.get(i).toString());
+			System.out.println((i+1)+". "+categoriaString.get(i));
+		}
+		categoriaString.add("");
+
+		System.out.print("Cargo: ");
+		respuesta = read.nextLine();
+		if (respuesta.matches("^[1-2]$")) {
+			comprobar = false;
+			respuesta = categoriaString.get(Integer.valueOf(respuesta)-1);
+		} else {
+			for (int j = 0; j < categoriaString.size(); j++) {
+				if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
+					comprobar = false;
+					respuesta = categoriaString.get(j);
+				}
+			}
+		}
+		while (comprobar) {
+			System.out.print("Introduce un valor correcto (uno de los cargos mostrados): ");
+			respuesta = read.nextLine();
+			if (respuesta.matches("^[1-2]$")) {
+				comprobar = false;
+				respuesta = categoriaString.get(Integer.valueOf(respuesta)-1);
+			} else {
+				for (int j = 0; j < categoriaString.size(); j++) {
+					if (respuesta.equalsIgnoreCase(categoriaString.get(j))) {
+						comprobar = false;
+						respuesta = categoriaString.get(j);
 					}
 				}
 			}

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class BaseDatos {
 	private String nombre;
@@ -96,9 +97,9 @@ public class BaseDatos {
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`empleados` (" +
 		    "`idEmpleado` INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
-		    "`Nombre` VARCHAR(45) NULL, " +
-		    "`Cargo` ENUM('Jefe', 'Cajero') NULL, " +
-		    "`Fecha_ingreso` DATE NULL, " +
+		    "`Nombre` VARCHAR(45) NOT NULL, " +
+		    "`Cargo` ENUM('Jefe', 'Cajero') NOT NULL, " +
+		    "`Fecha_ingreso` DATE NOT NULL, " +
 		    "PRIMARY KEY (`idEmpleado`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
@@ -107,12 +108,12 @@ public class BaseDatos {
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`juguetes` (" +
 		    "`idJuguete` INT NOT NULL AUTO_INCREMENT, " +
-		    "`Nombre` VARCHAR(45) NULL, " +
-		    "`Descripcion` VARCHAR(150) NULL, " +
-		    "`Precio` DOUBLE NULL, " +
+		    "`Nombre` VARCHAR(45) NOT NULL, " +
+		    "`Descripcion` VARCHAR(150) NOT NULL, " +
+		    "`Precio` DOUBLE NOT NULL, " +
 		    "`Cantidad_stock` INT UNSIGNED NOT NULL, " +
-		    "`Categoria` ENUM('Vehiculos', 'Muñecas', 'Electronicos', 'Libre', 'Accion', 'Mesa', 'Construccion', 'Peluches') NULL, " +
-		    "`Visible` BOOLEAN NULL, " +
+		    "`Categoria` ENUM('Vehiculos', 'Muñecas', 'Electronicos', 'Libre', 'Accion', 'Mesa', 'Construccion', 'Peluches') NOT NULL, " +
+		    "`Visible` BOOLEAN NOT NULL, " +
 		    "PRIMARY KEY (`idJuguete`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
@@ -122,8 +123,8 @@ public class BaseDatos {
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`zonas` (" +
 		    "`idZona` INT NOT NULL AUTO_INCREMENT, " +
-		    "`Nombre` VARCHAR(45) NULL, " +
-		    "`Descripcion` VARCHAR(150) NULL, " +
+		    "`Nombre` VARCHAR(45) NOT NULL, " +
+		    "`Descripcion` VARCHAR(150) NOT NULL, " +
 		    "PRIMARY KEY (`idZona`)) " +
 		    "ENGINE=InnoDB;"
 		)!=-1)
@@ -133,8 +134,8 @@ public class BaseDatos {
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`stands` (" +
 		    "`idStand` INT NOT NULL AUTO_INCREMENT, " +
-		    "`Nombre` VARCHAR(45) NULL, " +
-		    "`Descripcion` VARCHAR(150) NULL, " +
+		    "`Nombre` VARCHAR(45) NOT NULL, " +
+		    "`Descripcion` VARCHAR(150) NOT NULL, " +
 		    "`zona_idZona` INT NOT NULL, " +
 		    "PRIMARY KEY (`idStand`, `zona_idZona`), " +
 		    "INDEX `fk_STAND_zona_idx` (`zona_idZona` ASC), " +
@@ -148,9 +149,9 @@ public class BaseDatos {
 		if(consultaModifica(
 		    "CREATE TABLE IF NOT EXISTS `jugueteria`.`ventas` (" +
 		    "`idVenta` INT NOT NULL AUTO_INCREMENT, " +
-		    "`Fecha` DATE NULL, " +
-		    "`Monto` DOUBLE NULL, " +
-		    "`tipo_pago` ENUM('Efectivo', 'Tarjeta', 'Paypal') NULL, " +
+		    "`Fecha` DATE NOT NULL, " +
+		    "`Monto` DOUBLE NOT NULL, " +
+		    "`tipo_pago` ENUM('Efectivo', 'Tarjeta', 'Paypal', 'Devolucion') NOT NULL, " +
 		    "`juguete_idJuguete` INT NOT NULL, " +
 		    "`empleado_idEmpleado` INT UNSIGNED NULL, " +
 		    "`STAND_idStand` INT NOT NULL, " +
@@ -172,7 +173,7 @@ public class BaseDatos {
 		    "`stand_idStand` INT NOT NULL, " +
 		    "`stand_zona_idZona` INT NOT NULL, " +
 		    "`juguete_idJuguete` INT NOT NULL, " +
-		    "`cantidad` INT NULL, " +
+		    "`cantidad` INT NOT NULL, " +
 		    "PRIMARY KEY (`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`), " +
 		    "INDEX `fk_stand_has_juguete_juguete1_idx` (`juguete_idJuguete` ASC), " +
 		    "INDEX `fk_stand_has_juguete_stand1_idx` (`stand_idStand` ASC, `stand_zona_idZona` ASC), " +
@@ -186,8 +187,8 @@ public class BaseDatos {
 		if(consultaModifica(
 			"CREATE TABLE IF NOT EXISTS `jugueteria`.`cambios` (" +
 			"`idCambio` INT NOT NULL AUTO_INCREMENT, " +
-			"`MOTIVO` VARCHAR(150) NULL, " +
-			"`Fecha` DATE NULL, " +
+			"`MOTIVO` VARCHAR(150) NOT NULL, " +
+			"`Fecha` DATE NOT NULL, " +
 			"`stock_stand_idStand_Original` INT NOT NULL, " +
 			"`stock_stand_zona_idZona_Original` INT NOT NULL, " +
 			"`stock_juguete_idJuguete_Original` INT NOT NULL, " +
@@ -257,16 +258,16 @@ public class BaseDatos {
 		// INSERT EMPLEADOS
 		if(consultaModifica(
 		    "INSERT INTO `jugueteria`.`empleados` (`Nombre`, `Cargo`, `Fecha_ingreso`) VALUES" +
+    		"('Javier Morales', 'jefe', '2018-08-03')," +
+    		"('Carlos Ruiz', 'jefe', '2019-11-20')," +
 		    "('María López', 'jefe', '2020-03-15')," +
+		    "('Héctor Silva', 'cajero', '2020-10-28')," +
+		    "('Sofía Martínez', 'cajero', '2021-04-30')," +
 		    "('Juan Pérez', 'cajero', '2021-06-10')," +
 		    "('Ana Torres', 'cajero', '2022-01-05')," +
-		    "('Carlos Ruiz', 'jefe', '2019-11-20')," +
-		    "('Lucía Gómez', 'cajero', '2023-02-12')," +
 		    "('Diego Fernández', 'cajero', '2022-09-25')," +
-		    "('Sofía Martínez', 'cajero', '2021-04-30')," +
-		    "('Javier Morales', 'jefe', '2018-08-03')," +
-		    "('Paula Ramírez', 'cajero', '2023-05-14')," +
-		    "('Héctor Silva', 'cajero', '2020-10-28');"
+		    "('Lucía Gómez', 'cajero', '2023-02-12')," +
+		    "('Paula Ramírez', 'cajero', '2023-05-14');"
 		)!=-1)
 		    System.out.println("Datos insertados en EMPLEADOS");
 		else
@@ -373,7 +374,55 @@ public class BaseDatos {
 		)!=-1)
 		    System.out.println("Datos insertados en CAMBIOS");
 		else
-			System.out.println("Ya había datos en la tabla CAMBIOS.");		
+			System.out.println("Ya había datos en la tabla CAMBIOS.");
 	}
+
+	/*
+	public static int nuevoEmpleado(String nombreNuevo, String cargoNuevo, Date fechaNueva) {
+		try {
+			String consulta = "INSERT INTO empleados (Nombre, Cargo, Fecha_ingreso) VALUES (?, ?, ?)";
+			PreparedStatement sentencia;
+			sentencia = conexion.prepareStatement(consulta);
+			sentencia.setString(1, nombreNuevo);
+			sentencia.setString(2, cargoNuevo);
+			sentencia.setDate(3, fechaNueva);
+			return sentencia.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+ */
+	public static int modificaSeguro(ArrayList<Object> parametros, String consulta) {
+		try {
+			PreparedStatement sentencia;
+			sentencia = conexion.prepareStatement(consulta);
+			for (int i = 0; i < parametros.size(); i++) {
+				sentencia.setObject(i+1, parametros.get(i));
+			}
+			return sentencia.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	/*
+	public static int nuevoJuguete(String nombreNuevo, String descNueva, Double precioNuevo, int cantNueva,	String categoriaNueva) {
+		try {
+			String consulta = "INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES (?, ?, ?, ?, ?, TRUE)";
+			PreparedStatement sentencia;
+			sentencia = conexion.prepareStatement(consulta);
+			sentencia.setString(1, nombreNuevo);
+			sentencia.setString(2, descNueva);
+			sentencia.setDouble(3, precioNuevo);
+			sentencia.setInt(4, cantNueva);
+			sentencia.setString(5, categoriaNueva);
+			return sentencia.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	 */
 
 }

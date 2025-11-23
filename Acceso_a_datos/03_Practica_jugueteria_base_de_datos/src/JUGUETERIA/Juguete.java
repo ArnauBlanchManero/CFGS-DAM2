@@ -76,37 +76,35 @@ public class Juguete {
 				this.descripcion = datosJuguete.getString(3);
 				this.precio = datosJuguete.getDouble(4);
 				this.cantidad = datosJuguete.getInt(5);
-				if (datosJuguete.getString(6)!=null) {
-					switch (datosJuguete.getString(6)) {
-						case "Vehiculos":
-							this.categoria = CategoriaJuguete.VEHICULOS;
-							break;
-						case "Muñecas":
-							this.categoria = CategoriaJuguete.MUÑECAS;
-							break;
-						case "Electronicos":
-							this.categoria = CategoriaJuguete.ELECTRONICOS;
-							break;
-						case "Libre":
-							this.categoria = CategoriaJuguete.LIBRE;
-							break;
-						case "Accion":
-							this.categoria = CategoriaJuguete.ACCION;
-							break;
-						case "Mesa":
-							this.categoria = CategoriaJuguete.MESA;
-							break;
-						case "Construccion":
-							this.categoria = CategoriaJuguete.CONSTRUCCION;
-							break;
-						case "Peluches":
-							this.categoria = CategoriaJuguete.PELUCHES;
-							break;
-				
-						default:
-							this.categoria = null;
-							break;
-					}
+				switch (datosJuguete.getString(6)) {
+					case "Vehiculos":
+						this.categoria = CategoriaJuguete.VEHICULOS;
+						break;
+					case "Muñecas":
+						this.categoria = CategoriaJuguete.MUÑECAS;
+						break;
+					case "Electronicos":
+						this.categoria = CategoriaJuguete.ELECTRONICOS;
+						break;
+					case "Libre":
+						this.categoria = CategoriaJuguete.LIBRE;
+						break;
+					case "Accion":
+						this.categoria = CategoriaJuguete.ACCION;
+						break;
+					case "Mesa":
+						this.categoria = CategoriaJuguete.MESA;
+						break;
+					case "Construccion":
+						this.categoria = CategoriaJuguete.CONSTRUCCION;
+						break;
+					case "Peluches":
+						this.categoria = CategoriaJuguete.PELUCHES;
+						break;
+			
+					default:
+						this.categoria = null;
+						break;
 				}
 				this.visible = datosJuguete.getBoolean(7);
 			}
@@ -135,6 +133,14 @@ public class Juguete {
 		this.id = id;
 	}
 
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
 	public boolean isVisible() {
 		return visible;
 	}
@@ -148,44 +154,37 @@ public class Juguete {
 			visible = false;
 	}
 
-	public void modificar(ArrayList<String> columnas, ArrayList<String> datos, int id) {
+	public void modificar(ArrayList<String> columnas, ArrayList<Object> datos, int id) {
+		ArrayList<Object> param = new ArrayList<Object>();
 		String seters = "";
 		int i;
 		for (i = 0; i < columnas.size()-1; i++) {
 			seters += columnas.get(i)+" = ";
-			if (columnas.get(i).equals("Nombre ") || columnas.get(i).equals("Descripcion ") || columnas.get(i).equals("Categoria "))
-				seters += "'"+datos.get(i)+"', ";
-			else
-				seters += datos.get(i)+", ";
+			param.add(datos.get(i));
+			seters += "?, ";
 		}
 		seters += columnas.get(i)+" = ";
-		if (columnas.get(i).equals("Nombre ") || columnas.get(i).equals("Descripcion ") || columnas.get(i).equals("Categoria "))
-			seters += "'"+datos.get(i)+"' ";
-		else
-			seters += datos.get(i)+" ";
-
-		if(BaseDatos.consultaModifica("UPDATE juguetes SET "+seters+"WHERE idJuguete = "+id+";")==1)
+		param.add(datos.get(i));
+		seters += "? ";
+		param.add(id);
+		if(BaseDatos.modificaSeguro(param, "UPDATE juguetes SET "+seters+"WHERE idJuguete = ?")==1)
 			System.out.println("Juguete modificado correctamente.");
 		else {
 			System.out.println("Error al modificar el juguete.");
 		}
 	}
 	
-	public static void registrarNuevoJuguete(String nombreNuevo, String descNueva, String precioNuevo, int cantNueva, String categoriaNueva) {
-		if (!nombreNuevo.equals("NULL")) {
-			nombreNuevo = "'"+nombreNuevo+"'";
-		}
-		if (!descNueva.equals("NULL")) {
-			descNueva = "'"+descNueva+"'";
-		}
-		if (!categoriaNueva.equals("NULL")) {
-			categoriaNueva = "'"+categoriaNueva+"'";
-		}
-		if(BaseDatos.consultaModifica("INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES ("+nombreNuevo+", "+descNueva+", "+precioNuevo+", "+cantNueva+", "+categoriaNueva+", TRUE);")==1)
+	public static void registrarNuevoJuguete(String nombreNuevo, String descNueva, Double precioNuevo, int cantNueva, String categoriaNueva) {
+		ArrayList<Object> param = new ArrayList<Object>();
+		param.add(nombreNuevo);
+		param.add(descNueva);
+		param.add(precioNuevo);
+		param.add(cantNueva);
+		param.add(categoriaNueva);
+		if(BaseDatos.modificaSeguro(param, "INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES (?, ?, ?, ?, ?, TRUE)")==1)
 			System.out.println("Juguete añadido correctamente.");
-		else {
+		else
 			System.out.println("Error al añadir el nuevo juguete.");
-		}
 	}
 
 	public static void mostrarPrecio() {

@@ -3,7 +3,7 @@ package JUGUETERIA;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class GestorJugueteria {
 
@@ -103,15 +103,7 @@ public class GestorJugueteria {
 				String nombre = datosEmpleados.getString(2);
 				String cargo = datosEmpleados.getString(3);
 				Date fecha = datosEmpleados.getDate(4);
-				CargoEmpleado cargoE;
-				if (cargo.equals("cajero")) {
-					cargoE = CargoEmpleado.CAJERO;
-				} else if (cargo.equals("jefe")) {
-					cargoE = CargoEmpleado.JEFE;
-				} else {
-					cargoE = null;
-				}
-				empleadoTMP = new Empleado(id, nombre, cargoE, fecha);
+				empleadoTMP = new Empleado(id, nombre, cargo, fecha);
 				System.out.println(empleadoTMP.toString());
 				empleados.add(empleadoTMP);
 			}
