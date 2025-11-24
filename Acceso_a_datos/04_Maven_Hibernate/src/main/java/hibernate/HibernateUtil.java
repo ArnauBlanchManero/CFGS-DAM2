@@ -9,7 +9,7 @@ public class HibernateUtil {
 		try {
 			return new Configuration().configure().buildSessionFactory();
 		} catch (Throwable e) {
-			System.out.println("Error en buildSessionFactory: "+e);
+			System.err.println("Error en buildSessionFactory: \n"+e);
 			throw new ExceptionInInitializerError(e);
 		}
 	}
