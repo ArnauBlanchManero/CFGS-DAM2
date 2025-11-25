@@ -34,7 +34,7 @@ public class Stand {
 	}
 
 	public static void mostrarPorId(int idBuscar) {
-		ResultSet datosStands = BaseDatos.consulta("SELECT * FROM stands WHERE idStand = "+idBuscar); // TODO comprobar que esto es correcto
+		ResultSet datosStands = BaseDatos.consulta("SELECT * FROM stands WHERE idStand = "+idBuscar);
 		try {
 			if(datosStands.next()) {
 				Stand standTMP;

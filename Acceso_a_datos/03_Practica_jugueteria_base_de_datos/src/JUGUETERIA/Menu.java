@@ -2,8 +2,6 @@ package JUGUETERIA;
 
 import java.util.ArrayList;
 import java.sql.Date;
-import java.util.Iterator;
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -156,7 +154,7 @@ public class Menu {
 		categoriaS = Utilidades.preguntarCategoriaJuguete();
 		} while (categoriaS.equals(""));
 		int idJuguete = Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
-		// TODO registrar el stock en stocks, preguntando en que zona y stand lo quiere guardar.
+		
 		System.out.println("¿Dónde quieres colocar el juguete?");
 		int idZona;
 		int idStand;
@@ -231,7 +229,7 @@ public class Menu {
 			columnas.add("Fecha_ingreso ");
 			datos.add(fecha);
 		} catch (ParseException e){
-			System.out.println("No se puede modificar la fecha porque no cumple con el formato (yyyy-MM-dd)"); //TODO no mostrar esta frase
+			//System.out.println("No se puede modificar la fecha porque no cumple con el formato (yyyy-MM-dd)");
 			e.printStackTrace();
 		}
 		if (columnas.size()>0)
@@ -324,11 +322,15 @@ public class Menu {
 	}
 
 	private void empleados_mas_venden() {
+		System.out.println("\nLos 5 empleados que más venden");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Venta.empleadosMasVenden();
 		
 	}
 
 	private void productos_mas_vendidos() {
+		System.out.println("\nLos 5 juguetes más vendidos");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Venta.productosMasVendidos();
 		
 	}
@@ -471,7 +473,7 @@ public class Menu {
 	}
 	
 	/*
-	 * TODO 
+	 *  
 	 * ● Juguetes: 
 	 * ○ Registrar un nuevo juguete 
 	 * ○ Modificar los datos de los juguetes 

@@ -63,7 +63,6 @@ public class BaseDatos {
 		}
 	}
 
-	// TODO consultasComplejas(Array String)
 	
 	public static ResultSet consulta(String consulta) {
 		Statement sentencia;

@@ -88,13 +88,34 @@ public class Venta {
 	}
 
 	public static void empleadosMasVenden() {
-		// TODO Auto-generated method stub
-		
+		ResultSet datosVentasMes = BaseDatos.consulta("SELECT empleado_idEmpleado, COUNT(empleado_idEmpleado) AS veces_vendido FROM ventas WHERE tipo_pago != 'Devolucion' GROUP BY empleado_idEmpleado ORDER BY veces_vendido DESC LIMIT 5");
+		try {
+			while(datosVentasMes.next()) {
+				Empleado.mostrarPorId(datosVentasMes.getInt(1));
+			}
+		} catch (SQLException e) {
+			System.out.println("La consulta no se ha ejecutado correctamente.");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
+		}
 	}
 
 	public static void productosMasVendidos() {
-		// TODO Auto-generated method stub
-		
+		ResultSet datosVentasMes = BaseDatos.consulta("SELECT t2.idJuguete, (montoTotal/precioUnitario) AS cantidadVendida FROM (SELECT t1.idJuguete, precio AS precioUnitario, montoTotal FROM juguetes INNER JOIN (SELECT juguete_idJuguete AS idJuguete, SUM(monto) AS montoTotal FROM ventas GROUP BY juguete_idJuguete) t1 ON juguetes.idJuguete = t1.idJuguete) t2 ORDER BY cantidadVendida DESC LIMIT 5");
+		try {
+			while(datosVentasMes.next()) {
+				Juguete.mostrarPorId(datosVentasMes.getInt(1));
+				System.out.println("Cantidad: "+datosVentasMes.getInt(2));
+			}
+		} catch (SQLException e) {
+			System.out.println("La consulta no se ha ejecutado correctamente.");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
+		}
 	}
 
 	public void devolver() {
@@ -118,7 +139,7 @@ public class Venta {
 				ResultSet resultado2 = BaseDatos.consulta("SELECT monto, precio FROM ventas INNER JOIN (SELECT precio, idJuguete FROM juguetes)t1 on ventas.juguete_idJuguete = t1.idJuguete WHERE idVenta = "+id);
 				int cantidad = 0;
 					if (resultado2.next()) {
-						stock = (int) (resultado2.getDouble(1)/resultado2.getDouble(2));
+						cantidad = (int) (resultado2.getDouble(1)/resultado2.getDouble(2));
 					}
 				int nuevoStock = stock + cantidad;
 				if(BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStock+" WHERE stand_idStand = "+idZonaStand[1]+" AND stand_zona_idZona = "+idZonaStand[0]+" AND juguete_idJuguete = "+idJuguete) == 1)
