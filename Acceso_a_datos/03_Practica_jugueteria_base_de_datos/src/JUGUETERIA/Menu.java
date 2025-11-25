@@ -70,7 +70,7 @@ public class Menu {
 	private void pedir_id_juguete_eliminar() {
 		System.out.println("\nEliminar un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escribe el id del juguete que quieres eliminar: ", "idJuguete", "juguetes", "WHERE Visible = TRUE");
+		String idSeleccionado = pedir_id("\nEscribe el id del juguete que quieres eliminar: ", "todos los juguetes disponibles","idJuguete", "juguetes", "WHERE Visible = TRUE");
 		Juguete jugueteEliminar = new Juguete(Integer.valueOf(idSeleccionado));
 		System.out.println("Esta es la información del juguete que vas a eliminar\n"+jugueteEliminar.toString());
 		String confirmacion = Utilidades.preguntarString("¿Seguro que quieres eliminarlo? (si o no): ");
@@ -87,7 +87,7 @@ public class Menu {
 	private void pedir_datos_juguete_modificar() {
 		System.out.println("\nModificar un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del juguete que quieres modificar: ", "todos los juguetes","idJuguete", "juguetes", "WHERE Visible = TRUE");
+		String idSeleccionado = pedir_id("\nEscrbe el id del juguete que quieres modificar: ", "todos los juguetes","idJuguete", "juguetes", "");
 		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
 		ArrayList<String> columnas = new ArrayList<String>();
 		ArrayList<Object> datos = new ArrayList<Object>();
@@ -155,8 +155,16 @@ public class Menu {
 		do {
 		categoriaS = Utilidades.preguntarCategoriaJuguete();
 		} while (categoriaS.equals(""));
-		Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
+		int idJuguete = Juguete.registrarNuevoJuguete(nombre, desc, precio, cant, categoriaS);
 		// TODO registrar el stock en stocks, preguntando en que zona y stand lo quiere guardar.
+		System.out.println("¿Dónde quieres colocar el juguete?");
+		int idZona;
+		int idStand;
+		idZona = Integer.valueOf(pedir_id("\nEscribe el id de la zona donde quieras buscar: ", "las zonas","idZona", "zonas", ""));
+		idStand = Integer.valueOf(pedir_id("\nEscribe el id del stand donde quieras buscar: ", "los stands de esa zona","idStand", "stands", " WHERE zona_idZona = "+idZona));
+		Stock juguete = new Stock(idJuguete, idZona+" "+idStand, cant);
+		if(juguete.guardarJuguete())
+			System.out.println("Juguete guardado");
 	}
 
 	public void opcionesEmpleados(int num) {
@@ -179,7 +187,7 @@ public class Menu {
 	private void pedir_id_empleado_eliminar() {
 		System.out.println("\nEliminar un empleado");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres eliminar: ", "todos los empleados","idEmpleado", "empleados", "");
+		String idSeleccionado = pedir_id("\nEscrbe el id del empleado que quieres eliminar: ", "todos los empleados","idEmpleado", "empleados", "");
 		Empleado empleadoEliminar = new Empleado(Integer.valueOf(idSeleccionado));
 		System.out.println("Esta es la información del empleado que vas a eliminar\n"+empleadoEliminar.toString());
 		String confirmacion = Utilidades.preguntarString("¿Seguro que quieres eliminarlo? (si o no): ");
@@ -197,7 +205,7 @@ public class Menu {
 	private void pedir_datos_empleado_modificar() {
 		System.out.println("\nModificar un empleado");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
-		String idSeleccionado = pedir_id("Escrbe el id del empleado que quieres modificar: ", "todos los empleados","idEmpleado", "empleados", "");
+		String idSeleccionado = pedir_id("\nEscrbe el id del empleado que quieres modificar: ", "todos los empleados","idEmpleado", "empleados", "");
 		System.out.println("Deja el campo vacío si no lo qieres cambiar.");
 		ArrayList<String> columnas = new ArrayList<String>();
 		ArrayList<Object> datos = new ArrayList<Object>();
@@ -255,14 +263,16 @@ public class Menu {
 		ArrayList<Integer> idsTotales = new ArrayList<Integer>();
 		try {
 			while (ids.next()) {
-				if(nombreId.equals("idJuguete"))
+				if(nombreId.contains("idJuguete"))
 					Juguete.mostrarPorId(ids.getInt(1));
-				else if(nombreId.equals("idEmpleado"))
+				else if(nombreId.contains("idEmpleado"))
 					Empleado.mostrarPorId(ids.getInt(1));
-				else if(nombreId.equals("stand_zona_idZona"))
+				else if(nombreId.contains("idZona"))
 					Zona.mostrarPorId(ids.getInt(1));
-				else if(nombreId.equals("stand_idStand"))
+				else if(nombreId.contains("idStand"))
 					Stand.mostrarPorId(ids.getInt(1));
+				else if(nombreId.contains("idVenta"))
+					Venta.mostrarPorId(ids.getInt(1));
 				idsTotales.add(ids.getInt(1));
 			}
 		} catch (SQLException e) {
@@ -324,12 +334,18 @@ public class Menu {
 	}
 
 	private void pedir_datos_devolucion() {
+		System.out.println("\nDevolver un juguete");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Venta venta;
+		int idVenta = Integer.valueOf(pedir_id("\nEscribe el id de la venta que quieras devolver: ", "las ventas realizadas", "idVenta", "ventas", "WHERE tipo_pago != 'Devolucion'"));
+		venta = new Venta(idVenta);
 		venta.devolver();
 		
 	}
 
 	private void pedir_datos_venta() {
+		System.out.println("\nVender un juguete");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Venta venta;
 		Date fecha;
 		String tipoPago;
@@ -342,10 +358,10 @@ public class Menu {
 		double precioUnitario = 0;
 		double monto;
 		fecha = new Date(System.currentTimeMillis());
-		idJuguete = Integer.valueOf(pedir_id("Escribe el id del juguete que quieras vender: ", "todos los juguetes","idJuguete", "juguetes", " WHERE Visible = true"));
-		idEmpleado = Integer.valueOf(pedir_id("Escribe el id del empleado que está realizando la venta: ", "todos los empleados","idEmpleado", "empleados", ""));
-		idZona = Integer.valueOf(pedir_id("Escribe el id de la zona donde se encuentra el juguete: ", "las zonas con ese juguete","stand_zona_idZona", "stocks", " WHERE juguete_idJuguete = "+idJuguete+" GROUP BY stand_zona_idZona"));
-		idStand = Integer.valueOf(pedir_id("Escribe el id del stand donde se encuentra el juguete: ", "los stands en la zona con ese juguete","stand_idStand", "stocks", " WHERE stand_zona_idZona = "+idZona+" and juguete_idJuguete = "+idJuguete));
+		idJuguete = Integer.valueOf(pedir_id("\nEscribe el id del juguete que quieras vender: ", "todos los juguetes","idJuguete", "juguetes", " WHERE Visible = true"));
+		idEmpleado = Integer.valueOf(pedir_id("\nEscribe el id del empleado que está realizando la venta: ", "todos los empleados","idEmpleado", "empleados", ""));
+		idZona = Integer.valueOf(pedir_id("\nEscribe el id de la zona donde se encuentra el juguete: ", "las zonas con ese juguete","stand_zona_idZona", "stocks", " WHERE juguete_idJuguete = "+idJuguete+" GROUP BY stand_zona_idZona"));
+		idStand = Integer.valueOf(pedir_id("\nEscribe el id del stand donde se encuentra el juguete: ", "los stands en la zona con ese juguete","stand_idStand", "stocks", " WHERE stand_zona_idZona = "+idZona+" and juguete_idJuguete = "+idJuguete));
 		if(idStand != 0) {
 			idZonaStand = idZona + " " + idStand;
 			do {
@@ -414,29 +430,44 @@ public class Menu {
 	}
 
 	private void productos_precio() {
+		System.out.println("\nJuguetes ordenados por precio");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Juguete.mostrarPrecio();
 	}
 
 	private void datos_cambios() {
-		Empleado empleado;
-		Cambio.datosEmpleado(empleado.getId());
+		System.out.println("\nInformación de los cambios por empleado");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		int idEmpleado = Integer.valueOf(pedir_id("\nEscribe el id del empleado del que quieras ver sus cambios: ", "todos los empleados","idEmpleado", "empleados", ""));
+		Cambio.datosEmpleado(idEmpleado);
 	}
 
 	private void ventas_realizadas_empleado_mes() {
-		Empleado empleado;
-		int mes;
-		Venta.ventasMesEmpleado(empleado.getId(), mes);
+		System.out.println("\nInformación de las ventas en un mes por empleado");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		String mes;
+		int idEmpleado = Integer.valueOf(pedir_id("\nEscribe el id del empleado del que quieras ver sus ventas: ", "todos los empleados","idEmpleado", "empleados", ""));
+		mes = Utilidades.preguntarRegex("^(0[1-9]|1[0-2])$", "Escribe el mes que quieres buscar en las ventas de ese empleado: ", "el número correspondiente a cada mes con dos dígitos");
+		Venta.ventasMesEmpleado(idEmpleado, mes);
 		
 	}
 
 	private void ventas_realizadas_mes() {
-		int mes;
+		System.out.println("\nInformación de las ventas en un mes");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		String mes;
+		mes = Utilidades.preguntarRegex("^(0[1-9]|1[0-2])$", "Escribe el mes que quieres buscar en las ventas: ", "el número correspondiente a cada mes con dos dígitos");
 		Venta.ventasMes(mes);
 	}
 
 	private void juguetes_disponibles_stand() {
-		Stand stand;
-		Juguete.mostrarPorStand(stand.getId());
+		System.out.println("\nJuguetes de un stand");
+		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
+		int idZona;
+		int idStand;
+		idZona = Integer.valueOf(pedir_id("\nEscribe el id de la zona donde quieras buscar: ", "las zonas","idZona", "zonas", ""));
+		idStand = Integer.valueOf(pedir_id("\nEscribe el id del stand donde quieras buscar: ", "los stands de esa zona","idStand", "stands", " WHERE zona_idZona = "+idZona));
+		Juguete.mostrarPorStand(idZona, idStand);
 	}
 	
 	/*

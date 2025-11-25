@@ -174,27 +174,55 @@ public class Juguete {
 		}
 	}
 	
-	public static void registrarNuevoJuguete(String nombreNuevo, String descNueva, Double precioNuevo, int cantNueva, String categoriaNueva) {
+	public static int registrarNuevoJuguete(String nombreNuevo, String descNueva, Double precioNuevo, int cantNueva, String categoriaNueva) {
 		ArrayList<Object> param = new ArrayList<Object>();
 		param.add(nombreNuevo);
 		param.add(descNueva);
 		param.add(precioNuevo);
 		param.add(cantNueva);
 		param.add(categoriaNueva);
-		if(BaseDatos.modificaSeguro(param, "INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES (?, ?, ?, ?, ?, TRUE)")==1)
+		int idRet = 0;
+		if(BaseDatos.modificaSeguro(param, "INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES (?, ?, ?, ?, ?, TRUE)")==1) {
 			System.out.println("Juguete añadido correctamente.");
-		else
+			ResultSet datosJuguetes = BaseDatos.consulta("SELECT idJuguete FROM juguetes ORDER BY idJuguete");
+			try {
+				while(datosJuguetes.next()) {
+					idRet = datosJuguetes.getInt(1);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
 			System.out.println("Error al añadir el nuevo juguete.");
+		}
+		return idRet;
 	}
 
 	public static void mostrarPrecio() {
-		// TODO Auto-generated method stub
-		
+		ResultSet datosJuguetes = BaseDatos.consulta("SELECT idJuguete FROM juguetes ORDER BY precio");
+		try {
+			while(datosJuguetes.next()) {
+				Juguete j = new Juguete(datosJuguetes.getInt(1));
+				System.out.println(j.toString());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public static void mostrarPorStand(String idStand) {
-		// TODO Auto-generated method stub
-		
+	public static void mostrarPorStand(int idZona, int idStand) {
+		ResultSet datosJuguetes = BaseDatos.consulta("SELECT juguete_idJuguete FROM stocks WHERE stand_idStand = "+idStand+" AND stand_zona_idZona = "+idZona);
+		try {
+			while(datosJuguetes.next()) {
+				Juguete j = new Juguete(datosJuguetes.getInt(1));
+				System.out.println(j.toString());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void mostrarPorId(int idBuscar) {
