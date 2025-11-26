@@ -1,5 +1,7 @@
 package hibernate;
 
+import java.awt.Robot;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -48,11 +50,46 @@ public class Principal {
 		 */
 		Session sesion = HibernateUtil.getSf().openSession();
 		Transaction t = sesion.beginTransaction();
-		Persona arnau = new Persona("Arnau", 19);
-		sesion.save(arnau);
-		t.commit();
+		insertarDatos(sesion, t);
+		int id = 1;
+		leerDato(sesion, t, 3);
+		
+		modificarDato(sesion, t, 4);
+		eliminarDato(sesion, t, 5);
+		try {
+			t.commit();
+		} catch (Exception e) {
+			t.rollback();
+		}
 		sesion.close();
 		HibernateUtil.shutdown();
+	}
+
+	private static void eliminarDato(Session sesion, Transaction t, int id) {
+		Persona personaBorrar = sesion.get(Persona.class, id);
+		if(personaBorrar!=null) {
+			sesion.remove(personaBorrar);
+		}
+	}
+
+	private static void modificarDato(Session sesion, Transaction t, int id) {
+		Persona personaModificar = sesion.get(Persona.class, id);
+		sesion.merge(personaModificar);
+		if(personaModificar!=null) {
+			personaModificar.setEdad(personaModificar.getEdad()+1);
+			System.out.println(personaModificar.toString());
+		}
+	}
+
+	private static void leerDato(Session sesion, Transaction t, int id) {
+		Persona personaResultante = sesion.get(Persona.class, id);
+		if(personaResultante!=null)
+			System.out.println(personaResultante.toString());
+	}
+
+	private static void insertarDatos(Session sesion, Transaction t) {
+		Persona arnau = new Persona("Arnau", 19);
+		sesion.save(arnau);
 	}
 
 }

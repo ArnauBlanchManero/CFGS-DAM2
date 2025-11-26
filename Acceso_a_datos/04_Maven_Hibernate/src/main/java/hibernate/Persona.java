@@ -22,6 +22,11 @@ public class Persona {
 		this.nombre = nombre;
 		this.edad = edad;
 	}
+	
+	@Override
+	public String toString() {
+		return "Persona [id=" + id + ", nombre=" + nombre + ", edad=" + edad + "]";
+	}
 	public Long getId() {
 		return id;
 	}
