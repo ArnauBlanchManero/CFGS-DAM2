@@ -249,7 +249,7 @@ public class Menu {
 		}while(nombre.length()<1);
 		do {
 		cargoS = Utilidades.preguntarCargoEmpleado();
-		} while (!cargoS.equals(""));
+		} while (cargoS.equals(""));
 		fecha = new Date(System.currentTimeMillis());
 		Empleado.registrarNuevoEmpleado(nombre, cargoS, fecha);
 		

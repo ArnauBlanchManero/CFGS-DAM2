@@ -187,7 +187,7 @@ public class Venta {
 		try {
 			while(datosVentasMes.next()) {
 				Juguete.mostrarPorId(datosVentasMes.getInt(1));
-				System.out.println("Cantidad: "+datosVentasMes.getInt(2));
+				System.out.println("\tCantidad: "+datosVentasMes.getInt(2));
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
@@ -198,9 +198,8 @@ public class Venta {
 		}
 	}
 
-	public void cambio(String idZonaStandOriginal, String idZonaStandNuevo, int idJugueteOriginal, int idJugueteNuevo, int idEmpleado) { //TODO esto es hacer un cambio, no se puede devolver un juguete
-		// INSERT INTO ambios (MOTIVO, Fecha, stock_stand_idStand_Original, stock_stand_zona_idZona_Original, stock_juguete_idJuguete_Original, stock_stand_idStand_Nuevo, stock_stand_zona_idZona_Nuevo, stock_juguete_idJuguete_Nuevo, empleado_idEmpleado) VALUES
-		String motivo = Utilidades.preguntarString("¿Cuál es el motivo del cambio?");
+	public void cambio(String idZonaStandOriginal, String idZonaStandNuevo, int idJugueteOriginal, int idJugueteNuevo, int idEmpleado) { 
+		String motivo = Utilidades.preguntarString("¿Cuál es el motivo del cambio? ");
 		Date fecha;
 		fecha = new Date(System.currentTimeMillis());
 		ArrayList<Object> param = new ArrayList<Object>();
@@ -219,7 +218,6 @@ public class Venta {
 		boolean cambiado = true;
 		if(BaseDatos.modificaSeguro(param, "INSERT INTO cambios (MOTIVO, Fecha, stock_stand_idStand_Original, stock_stand_zona_idZona_Original, stock_juguete_idJuguete_Original, stock_stand_idStand_Nuevo, stock_stand_zona_idZona_Nuevo, stock_juguete_idJuguete_Nuevo, empleado_idEmpleado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")==1) {
 			System.out.println("Cambio realizado");
-			//TODO revisar lo de restaurar el stock
 			ResultSet resultado1 = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idZonaStandO[1]+" AND stand_zona_idZona = "+idZonaStandO[0]+" AND juguete_idJuguete = "+idJugueteOriginal);
 			ResultSet resultado2 = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idZonaStandN[1]+" AND stand_zona_idZona = "+idZonaStandN[0]+" AND juguete_idJuguete = "+idJugueteNuevo);
 			int stockO = 0;
@@ -237,6 +235,8 @@ public class Venta {
 				}
 				int nuevoStockO = stockO + cantidad;
 				int nuevoStockN = stockN - cantidad;
+				if(nuevoStockN < 0)
+					nuevoStockN = 0;
 				if(BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStockO+" WHERE stand_idStand = "+idZonaStandO[1]+" AND stand_zona_idZona = "+idZonaStandO[0]+" AND juguete_idJuguete = "+idJugueteOriginal) == 1 && BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStockN+" WHERE stand_idStand = "+idZonaStandN[1]+" AND stand_zona_idZona = "+idZonaStandN[0]+" AND juguete_idJuguete = "+idJugueteNuevo) == 1 )
 					System.out.println("Juguete intercambiado correctamente.");
 				else 

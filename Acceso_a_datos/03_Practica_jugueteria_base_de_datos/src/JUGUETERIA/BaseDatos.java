@@ -42,7 +42,8 @@ public class BaseDatos {
 			String confirmacion = Utilidades.preguntarString("\n¿Quieres crear la base de datos jugueteria? (si o no): ");
 			if(confirmacion.equalsIgnoreCase("si")) {
 				crearBBDDJugueteria();
-				añadir_datos_por_defecto();
+				boolean [] tablasDatos = {true, true, true, true, true, true, true};
+				importar_datos_por_defecto(tablasDatos);
 			} else {
 				System.out.println("No se ha creado la base de datos.");
 			}
@@ -294,12 +295,12 @@ public class BaseDatos {
 
 		// INSERT ZONAS
 		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`zonas` (`Nombre`, `Descripcion`) VALUES" +
-		    "('Zona A', 'Sector principal de juguetes electrónicos')," +
-		    "('Zona B', 'Sector de muñecas y peluches')," +
-		    "('Zona C', 'Sector de juegos de mesa')," +
-		    "('Zona D', 'Sector de vehículos')," +
-		    "('Zona E', 'Sector misceláneo');"
+		    "INSERT INTO `jugueteria`.`zonas` (`idZona`, `Nombre`, `Descripcion`) VALUES" +
+		    "(1, 'Zona A', 'Sector principal de juguetes electrónicos')," +
+		    "(2, 'Zona B', 'Sector de muñecas y peluches')," +
+		    "(3, 'Zona C', 'Sector de juegos de mesa')," +
+		    "(4, 'Zona D', 'Sector de vehículos')," +
+		    "(5, 'Zona E', 'Sector misceláneo');"
 		)!=-1)
 		    System.out.println("Datos insertados en ZONAS");
 		else
@@ -307,16 +308,18 @@ public class BaseDatos {
 
 		// INSERT STANDS
 		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`stands` (`Nombre`, `Descripcion`, `zona_idZona`) VALUES" +
-		    "('Stand 1', 'Juguetes electrónicos premium', 1)," +
-		    "('Stand 2', 'Muñecas clásicas y modernas', 2)," +
-		    "('Stand 3', 'Peluche suaves', 2)," +
-		    "('Stand 4', 'Juegos de mesa familiares', 3)," +
-		    "('Stand 5', 'Autos y helicópteros', 4)," +
-		    "('Stand 6', 'Vehículos RC', 4)," +
-		    "('Stand 7', 'Juegos variados', 5)," +
-		    "('Stand 8', 'Coleccionables', 5)," +
-		    "('Stand 9', 'Figuras de acción', 5);"
+		    "INSERT INTO `jugueteria`.`stands` (`idStand`, `Nombre`, `Descripcion`, `zona_idZona`) VALUES" +
+		    "(1, 'Stand A', 'Juguetes premium', 1)," +
+		    "(2, 'Stand B', 'Juguetes electrónicos', 1)," +
+		    "(3, 'Stand A', 'Muñecas clásicas y modernas', 2)," +
+		    "(4, 'Stand B', 'Peluche suaves', 2)," +
+		    "(5, 'Stand A', 'Juegos de mesa familiares', 3)," +
+		    "(6, 'Stand B', 'Juegos de mesa en pareja', 3)," +
+		    "(7, 'Stand A', 'Autos y helicópteros', 4)," +
+		    "(8, 'Stand B', 'Vehículos RC', 4)," +
+		    "(9, 'Stand A', 'Coleccionables', 5)," +
+		    "(10, 'Stand B', 'Juegos variados', 5)," +
+		    "(11, 'Stand C', 'Figuras de acción', 5);"
 		)!=-1)
 		    System.out.println("Datos insertados en STANDS");
 		else
