@@ -152,7 +152,7 @@ public class BaseDatos {
 		    "`idVenta` INT NOT NULL AUTO_INCREMENT, " +
 		    "`Fecha` DATE NOT NULL, " +
 		    "`Monto` DOUBLE NOT NULL, " +
-		    "`tipo_pago` ENUM('Efectivo', 'Tarjeta', 'Paypal', 'Devolucion') NOT NULL, " +
+		    "`tipo_pago` ENUM('Efectivo', 'Tarjeta', 'Paypal') NOT NULL, " +
 		    "`juguete_idJuguete` INT NOT NULL, " +
 		    "`empleado_idEmpleado` INT UNSIGNED NULL, " +
 		    "`STAND_idStand` INT NOT NULL, " +

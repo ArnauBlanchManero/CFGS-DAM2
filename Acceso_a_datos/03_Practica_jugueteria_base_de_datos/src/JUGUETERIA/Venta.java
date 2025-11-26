@@ -23,9 +23,6 @@ public class Venta {
 		this.fecha = fecha;
 		this.monto = monto;
 		switch(pago.toLowerCase()) {
-			case "devolucion":
-				this.pago = TipoPago.DEVOLUCION;
-				break;
 			case "efectivo":
 				this.pago = TipoPago.EFECTIVO;
 				break;
@@ -88,7 +85,7 @@ public class Venta {
 	}
 
 	public static void empleadosMasVenden() {
-		ResultSet datosVentasMes = BaseDatos.consulta("SELECT empleado_idEmpleado, COUNT(empleado_idEmpleado) AS veces_vendido FROM ventas WHERE tipo_pago != 'Devolucion' GROUP BY empleado_idEmpleado ORDER BY veces_vendido DESC LIMIT 5");
+		ResultSet datosVentasMes = BaseDatos.consulta("SELECT empleado_idEmpleado, COUNT(empleado_idEmpleado) AS veces_vendido FROM ventas GROUP BY empleado_idEmpleado ORDER BY veces_vendido DESC LIMIT 5");
 		try {
 			while(datosVentasMes.next()) {
 				Empleado.mostrarPorId(datosVentasMes.getInt(1));
@@ -118,11 +115,10 @@ public class Venta {
 		}
 	}
 
-	public void devolver() {
+	public void devolver() { //TODO esto es hacer un cambio, no se puede devolver un juguete
 		ArrayList<Object> param = new ArrayList<Object>();
 		param.add(this.fecha);
 		param.add(this.monto * -1);
-		param.add(TipoPago.DEVOLUCION.toString());
 		param.add(this.idJuguete);
 		param.add(this.idEmpleado);
 		String[] idZonaStand = this.idStand.split(" ");

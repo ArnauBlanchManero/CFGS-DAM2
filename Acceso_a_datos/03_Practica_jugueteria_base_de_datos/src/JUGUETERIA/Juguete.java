@@ -190,7 +190,7 @@ public class Juguete {
 					idRet = datosJuguetes.getInt(1);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				System.out.println("La consulta no se ha ejecutado correctamente.");
 				e.printStackTrace();
 			}
 		} else {
@@ -207,7 +207,7 @@ public class Juguete {
 				System.out.println(j.toString());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("La consulta no se ha ejecutado correctamente.");
 			e.printStackTrace();
 		}
 	}
@@ -220,7 +220,7 @@ public class Juguete {
 				System.out.println(j.toString());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("La consulta no se ha ejecutado correctamente.");
 			e.printStackTrace();
 		}
 	}
