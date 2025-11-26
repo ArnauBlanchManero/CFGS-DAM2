@@ -78,6 +78,89 @@ public class Venta {
 
 
 
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	public int getIdEmpleado() {
+		return idEmpleado;
+	}
+
+
+
+	public void setIdEmpleado(int idEmpleado) {
+		this.idEmpleado = idEmpleado;
+	}
+
+
+	public int getIdJuguete() {
+		return idJuguete;
+	}
+
+
+
+	public void setIdJuguete(int idJuguete) {
+		this.idJuguete = idJuguete;
+	}
+
+
+
+	public String getIdStand() {
+		return idStand;
+	}
+
+
+
+	public void setIdStand(String idStand) {
+		this.idStand = idStand;
+	}
+
+
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+
+
+	public double getMonto() {
+		return monto;
+	}
+
+
+
+	public void setMonto(double monto) {
+		this.monto = monto;
+	}
+
+
+
+	public TipoPago getPago() {
+		return pago;
+	}
+
+
+
+	public void setPago(TipoPago pago) {
+		this.pago = pago;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Venta [id=" + id + ", idEmpleado=" + idEmpleado + ", idJuguete=" + idJuguete + ", idStand=" + idStand
@@ -115,37 +198,61 @@ public class Venta {
 		}
 	}
 
-	public void devolver() { //TODO esto es hacer un cambio, no se puede devolver un juguete
+	public void cambio(String idZonaStandOriginal, String idZonaStandNuevo, int idJugueteOriginal, int idJugueteNuevo, int idEmpleado) { //TODO esto es hacer un cambio, no se puede devolver un juguete
+		// INSERT INTO ambios (MOTIVO, Fecha, stock_stand_idStand_Original, stock_stand_zona_idZona_Original, stock_juguete_idJuguete_Original, stock_stand_idStand_Nuevo, stock_stand_zona_idZona_Nuevo, stock_juguete_idJuguete_Nuevo, empleado_idEmpleado) VALUES
+		String motivo = Utilidades.preguntarString("¿Cuál es el motivo del cambio?");
+		Date fecha;
+		fecha = new Date(System.currentTimeMillis());
 		ArrayList<Object> param = new ArrayList<Object>();
-		param.add(this.fecha);
-		param.add(this.monto * -1);
-		param.add(this.idJuguete);
-		param.add(this.idEmpleado);
-		String[] idZonaStand = this.idStand.split(" ");
-		param.add(Integer.parseInt(idZonaStand[1]));
-		param.add(Integer.parseInt(idZonaStand[0]));
-		if(BaseDatos.modificaSeguro(param, "INSERT INTO ventas (Fecha, Monto, tipo_pago, juguete_idJuguete, empleado_idEmpleado, STAND_idStand, STAND_zona_idZona) VALUES (?, ?, ?, ?, ?, ?, ?)")==1) {
-			System.out.println("Devolución realizada");
-			ResultSet resultado = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idZonaStand[1]+" AND stand_zona_idZona = "+idZonaStand[0]+" AND juguete_idJuguete = "+idJuguete);
-			int stock = 0;
+		param.add(motivo);
+		param.add(fecha);
+		String[] idZonaStandO = idZonaStandOriginal.split(" ");
+		String[] idZonaStandN = idZonaStandNuevo.split(" ");
+		param.add(Integer.parseInt(idZonaStandO[1]));
+		param.add(Integer.parseInt(idZonaStandO[0]));
+		param.add(idJugueteOriginal);
+		param.add(Integer.parseInt(idZonaStandN[1]));
+		param.add(Integer.parseInt(idZonaStandN[0]));
+		param.add(idJugueteNuevo);
+		param.add(idEmpleado);
+		int cantidad = 0;
+		boolean cambiado = true;
+		if(BaseDatos.modificaSeguro(param, "INSERT INTO cambios (MOTIVO, Fecha, stock_stand_idStand_Original, stock_stand_zona_idZona_Original, stock_juguete_idJuguete_Original, stock_stand_idStand_Nuevo, stock_stand_zona_idZona_Nuevo, stock_juguete_idJuguete_Nuevo, empleado_idEmpleado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")==1) {
+			System.out.println("Cambio realizado");
+			//TODO revisar lo de restaurar el stock
+			ResultSet resultado1 = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idZonaStandO[1]+" AND stand_zona_idZona = "+idZonaStandO[0]+" AND juguete_idJuguete = "+idJugueteOriginal);
+			ResultSet resultado2 = BaseDatos.consulta("SELECT cantidad FROM stocks WHERE stand_idStand = "+idZonaStandN[1]+" AND stand_zona_idZona = "+idZonaStandN[0]+" AND juguete_idJuguete = "+idJugueteNuevo);
+			int stockO = 0;
+			int stockN = 0;
 			try {
-				if (resultado.next()) {
-					stock = resultado.getInt(1);
+				if (resultado1.next()) {
+					stockO = resultado1.getInt(1);
 				}
-				ResultSet resultado2 = BaseDatos.consulta("SELECT monto, precio FROM ventas INNER JOIN (SELECT precio, idJuguete FROM juguetes)t1 on ventas.juguete_idJuguete = t1.idJuguete WHERE idVenta = "+id);
-				int cantidad = 0;
-					if (resultado2.next()) {
-						cantidad = (int) (resultado2.getDouble(1)/resultado2.getDouble(2));
-					}
-				int nuevoStock = stock + cantidad;
-				if(BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStock+" WHERE stand_idStand = "+idZonaStand[1]+" AND stand_zona_idZona = "+idZonaStand[0]+" AND juguete_idJuguete = "+idJuguete) == 1)
-					System.out.println("Stock actualizado correctamente.");
+				if (resultado2.next()) {
+					stockN = resultado2.getInt(1);
+				}
+				ResultSet resultado3 = BaseDatos.consulta("SELECT monto, precio FROM ventas INNER JOIN (SELECT precio, idJuguete FROM juguetes)t1 on ventas.juguete_idJuguete = t1.idJuguete WHERE idVenta = "+id);
+				if (resultado3.next()) {
+					cantidad = (int) (resultado3.getDouble(1)/resultado3.getDouble(2));
+				}
+				int nuevoStockO = stockO + cantidad;
+				int nuevoStockN = stockN - cantidad;
+				if(BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStockO+" WHERE stand_idStand = "+idZonaStandO[1]+" AND stand_zona_idZona = "+idZonaStandO[0]+" AND juguete_idJuguete = "+idJugueteOriginal) == 1 && BaseDatos.consultaModifica("UPDATE stocks SET cantidad = "+nuevoStockN+" WHERE stand_idStand = "+idZonaStandN[1]+" AND stand_zona_idZona = "+idZonaStandN[0]+" AND juguete_idJuguete = "+idJugueteNuevo) == 1 )
+					System.out.println("Juguete intercambiado correctamente.");
+				else 
+					cambiado = false;
 			} catch (SQLException e) {
 				System.out.println("Error en la ejecución de la consutla.");
-				stock = 0;
+				stockO = 0;
+				cambiado = false;
 				e.printStackTrace();
 			}
+		} else
+			cambiado = false;
+		if (!cambiado) {
+			System.out.println("Error al intercambiar el juguete.");
 		}
+		
 	}
 
 	public void vender(int cantidad) {

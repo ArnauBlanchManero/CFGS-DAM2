@@ -339,9 +339,16 @@ public class Menu {
 		System.out.println("\nDevolver un juguete");
 		System.out.println("¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯");
 		Venta venta;
-		int idVenta = Integer.valueOf(pedir_id("\nEscribe el id de la venta que quieras devolver: ", "las ventas realizadas", "idVenta", "ventas", "WHERE tipo_pago != 'Devolucion'"));
+		int idJuguete;
+		int idZona;
+		int idStand;
+		int idVenta = Integer.valueOf(pedir_id("\nEscribe el id de la venta que quieras devolver: ", "las ventas realizadas", "idVenta", "ventas", ""));
 		venta = new Venta(idVenta);
-		venta.devolver();
+		idJuguete = Integer.valueOf(pedir_id("\nEscribe el id del juguete por el que quieras cambiarlo: ", "todos los juguetes","idJuguete", "juguetes", " WHERE Visible = true"));
+		idZona = Integer.valueOf(pedir_id("\nEscribe el id de la zona donde se encuentra el juguete: ", "las zonas con ese juguete","stand_zona_idZona", "stocks", " WHERE juguete_idJuguete = "+idJuguete+" GROUP BY stand_zona_idZona"));
+		idStand = Integer.valueOf(pedir_id("\nEscribe el id del stand donde se encuentra el juguete: ", "los stands en la zona con ese juguete","stand_idStand", "stocks", " WHERE stand_zona_idZona = "+idZona+" AND juguete_idJuguete = "+idJuguete));
+		String idZonaStand = idZona +" "+idStand;
+		venta.cambio(venta.getIdStand(), idZonaStand, venta.getIdJuguete(), idJuguete, venta.getIdEmpleado());
 		
 	}
 
