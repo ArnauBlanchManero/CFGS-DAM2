@@ -88,11 +88,11 @@ public class GestorJugueteria {
 			if(datosEmpleados.next()) {
 				System.out.println("Datos de los empleados recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_empleados();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_empleados();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -104,11 +104,11 @@ public class GestorJugueteria {
 			if(datosJuguetes.next()) {
 				System.out.println("Datos de los juguetes recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_juguetes();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_juguetes();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -120,11 +120,11 @@ public class GestorJugueteria {
 			if(datosZonas.next()) {
 				System.out.println("Datos de las zonas recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_zonas();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_zonas();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -136,11 +136,11 @@ public class GestorJugueteria {
 			if(datosStands.next()) {
 				System.out.println("Datos de los stands recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_stands();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_stands();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -152,11 +152,11 @@ public class GestorJugueteria {
 			if(datosVentas.next()) {
 				System.out.println("Datos de las ventas recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_ventas();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_ventas();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -168,11 +168,11 @@ public class GestorJugueteria {
 			if(datosStocks.next()) {
 				System.out.println("Datos de los stocks recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_stocks();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_stocks();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");
@@ -184,11 +184,11 @@ public class GestorJugueteria {
 			if(datosCambios.next()) {
 				System.out.println("Datos de los cambios recolectados.");
 			} else {
-				jugueteriaBBDD.añadir_datos_por_defecto();
+				jugueteriaBBDD.insertar_cambios();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.añadir_datos_por_defecto();
+			jugueteriaBBDD.insertar_cambios();
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.println("No hay datos para leer");

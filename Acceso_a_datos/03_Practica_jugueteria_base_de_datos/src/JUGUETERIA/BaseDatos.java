@@ -42,7 +42,7 @@ public class BaseDatos {
 			String confirmacion = Utilidades.preguntarString("\n¿Quieres crear la base de datos jugueteria? (si o no): ");
 			if(confirmacion.equalsIgnoreCase("si")) {
 				crearBBDDJugueteria();
-				boolean [] tablasDatos = {true, true, true, true, true, true, true};
+				boolean [] tablasDatos = {false, false, true, true, false, false, false};
 				importar_datos_por_defecto(tablasDatos);
 			} else {
 				System.out.println("No se ha creado la base de datos.");
@@ -224,19 +224,19 @@ public class BaseDatos {
 		ResultSet cambioVacia = consulta("SELECT * FROM cambios");
 		
 		try {
-		    if (empleadoVacia == null || !empleadoVacia.next()) 
+		    if (!empleadoVacia.next()) 
 		        tablasDatos[0] = false;
-		    if (jugueteVacia == null || !jugueteVacia.next()) 
+		    if (!jugueteVacia.next()) 
 		        tablasDatos[1] = false;
-		    if (zonaVacia == null || !zonaVacia.next()) 
+		    if (!zonaVacia.next()) 
 		        tablasDatos[2] = false;
-		    if (standVacia == null || !standVacia.next()) 
+		    if (!standVacia.next()) 
 		        tablasDatos[3] = false;
-		    if (ventaVacia == null || !ventaVacia.next()) 
+		    if (!ventaVacia.next()) 
 		        tablasDatos[4] = false;
-		    if (stockVacia == null || !stockVacia.next()) 
+		    if (!stockVacia.next()) 
 		        tablasDatos[5] = false;
-		    if (cambioVacia == null || !cambioVacia.next()) 
+		    if (!cambioVacia.next()) 
 		        tablasDatos[6] = false;
 		} catch (NullPointerException e) {
 			System.out.println("Algo falla en la estructura de la Base de Datos");
@@ -258,55 +258,65 @@ public class BaseDatos {
 	public void importar_datos_por_defecto(boolean[] tablasDatos) {
 
 		// INSERT EMPLEADOS
-		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`empleados` (`Nombre`, `Cargo`, `Fecha_ingreso`) VALUES" +
-    		"('Javier Morales', 'jefe', '2018-08-03')," +
-    		"('Carlos Ruiz', 'jefe', '2019-11-20')," +
-		    "('María López', 'jefe', '2020-03-15')," +
-		    "('Héctor Silva', 'cajero', '2020-10-28')," +
-		    "('Sofía Martínez', 'cajero', '2021-04-30')," +
-		    "('Juan Pérez', 'cajero', '2021-06-10')," +
-		    "('Ana Torres', 'cajero', '2022-01-05')," +
-		    "('Diego Fernández', 'cajero', '2022-09-25')," +
-		    "('Lucía Gómez', 'cajero', '2023-02-12')," +
-		    "('Paula Ramírez', 'cajero', '2023-05-14');"
-		)!=-1)
-		    System.out.println("Datos insertados en EMPLEADOS");
-		else
-			System.out.println("Ya había datos en la tabla EMPLEADOS.");
+		if(tablasDatos[0])
+			insertar_empleados();
 
 		// INSERT JUGUETES
-		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`juguetes` (`Nombre`, `Descripcion`, `Precio`, `Cantidad_stock`, `Categoria`, `Visible`) VALUES" +
-		    "('Auto de Carrera', 'Auto a fricción rojo', 12.99, 50, 'Vehículos', TRUE)," +
-		    "('Muñeca Clara', 'Muñeca articulada con vestido', 18.50, 30, 'Muñecas', TRUE)," +
-		    "('Robot Tekno', 'Robot con luces y sonidos', 35.00, 20, 'Electronicos', TRUE)," +
-		    "('Peluche Oso', 'Oso de peluche marrón', 15.75, 40, 'Peluches', TRUE)," +
-		    "('Set de Construcción MiniBlocks', 'Caja con 150 piezas', 22.90, 25, 'Construccion', TRUE)," +
-		    "('Tablero de Ajedrez', 'Ajedrez de madera', 27.40, 15, 'Mesa', TRUE)," +
-		    "('Helicóptero Militar', 'Helicóptero verde con hélice giratoria', 14.99, 35, 'Vehículos', TRUE)," +
-		    "('Muñeca Sofi', 'Muñeca con accesorios', 21.10, 20, 'Muñecas', TRUE)," +
-		    "('Consola MiniPlay', 'Consola portátil retro', 49.99, 12, 'Electronicos', TRUE)," +
-		    "('Set de Superhéroes', 'Figuras articuladas', 29.90, 18, 'Accion', TRUE);"
-		)!=-1)
-		    System.out.println("Datos insertados en JUGUETES");
-		else
-			System.out.println("Ya había datos en la tabla JUGUETES.");
+		if(tablasDatos[1])
+			insertar_juguetes();
 
 		// INSERT ZONAS
-		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`zonas` (`idZona`, `Nombre`, `Descripcion`) VALUES" +
-		    "(1, 'Zona A', 'Sector principal de juguetes electrónicos')," +
-		    "(2, 'Zona B', 'Sector de muñecas y peluches')," +
-		    "(3, 'Zona C', 'Sector de juegos de mesa')," +
-		    "(4, 'Zona D', 'Sector de vehículos')," +
-		    "(5, 'Zona E', 'Sector misceláneo');"
-		)!=-1)
-		    System.out.println("Datos insertados en ZONAS");
-		else
-			System.out.println("Ya había datos en la tabla ZONAS.");
+		if(tablasDatos[2])
+			insertar_zonas();
 
 		// INSERT STANDS
+		if(tablasDatos[3])
+			insertar_stands();
+
+		// INSERT STOCKS
+		if(tablasDatos[4])
+			insertar_stocks();
+
+		// INSERT VENTAS
+		if(tablasDatos[5])
+			insertar_ventas();
+
+		// INSERT CAMBIOS
+		if(tablasDatos[6])
+			insertar_cambios();
+	}
+
+	public void insertar_cambios() {
+		if(consultaModifica(
+			"INSERT INTO `jugueteria`.`cambios` (`idCambio`, `MOTIVO`, `Fecha`, `stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`, `stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`, `empleado_idEmpleado`) VALUES" +
+			"(1, 'Reubicación por demanda', '2024-02-01', 5, 3, 1, 7, 4, 10, 1)," +
+			"(2, 'Optimización de espacio', '2024-02-02', 3, 2, 4, 4, 2, 6, 4)," +
+			"(3, 'Actualización de inventario', '2024-02-03', 2, 1, 2, 5, 3, 7, 2)," +
+			"(4, 'Producto mal ubicado', '2024-02-04', 4, 2, 6, 1, 1, 9, 3)," +
+			"(5, 'Cambio de categoría', '2024-02-05', 4, 2, 6, 9, 5, 5, 5);"
+
+		)!=-1)
+		    System.out.println("Datos insertados en CAMBIOS");
+	}
+
+	public void insertar_ventas() {
+		if(consultaModifica(
+		    "INSERT INTO `jugueteria`.`ventas` (`idVentas`, `Fecha`, `Monto`, `tipo_pago`, `juguete_idJuguete`, `empleado_idEmpleado`, `STAND_idStand`, `STAND_zona_idZona`) VALUES" +
+		    "(1, '2024-01-10', 12.99, 'efectivo', 1, 2, 5, 3)," +
+		    "(2, '2024-01-11', 35.00, 'tarjeta', 3, 3, 1, 1)," +
+		    "(3, '2024-01-12', 18.50, 'paypal', 2, 5, 2, 1)," +
+		    "(4, '2024-01-13', 27.40, 'efectivo', 6, 6, 4, 2)," +
+		    "(5, '2024-01-14', 49.99, 'tarjeta', 9, 1, 1, 1)," +
+		    "(6, '2024-01-15', 21.10, 'efectivo', 8, 4, 2, 1)," +
+		    "(7, '2024-01-16', 29.90, 'paypal', 10, 7, 7, 4)," +
+		    "(8, '2024-01-17', 14.99, 'efectivo', 7, 8, 5, 3)," +
+		    "(9, '2024-01-18', 15.75, 'efectivo', 4, 9, 3, 2)," +
+		    "(10, '2024-01-19', 22.90, 'tarjeta', 5, 10, 9, 5);"
+		)!=-1)
+		    System.out.println("Datos insertados en VENTAS");
+	}
+
+	public void insertar_stands() {
 		if(consultaModifica(
 		    "INSERT INTO `jugueteria`.`stands` (`idStand`, `Nombre`, `Descripcion`, `zona_idZona`) VALUES" +
 		    "(1, 'Stand A', 'Juguetes premium', 1)," +
@@ -322,81 +332,80 @@ public class BaseDatos {
 		    "(11, 'Stand C', 'Figuras de acción', 5);"
 		)!=-1)
 		    System.out.println("Datos insertados en STANDS");
-		else
-			System.out.println("Ya había datos en la tabla STANDS.");
+	}
 
-		// INSERT STOCKS
+	public void insertar_stocks() {
 		if(consultaModifica(
 		    "INSERT INTO `jugueteria`.`stocks` (`stand_idStand`, `stand_zona_idZona`, `juguete_idJuguete`, `cantidad`) VALUES" +
 		    "(1, 1, 3, 10)," +
 		    "(1, 1, 9, 6)," +
-		    "(2, 2, 2, 12)," +
-		    "(2, 2, 8, 8)," +
+		    "(2, 1, 2, 12)," +
+		    "(2, 1, 8, 8)," +
 		    "(3, 2, 4, 15)," +
 		    "(3, 2, 7, 5)," +
-		    "(4, 3, 6, 5)," +
-		    "(4, 3, 5, 9)," +
-		    "(5, 4, 1, 20)," +
-		    "(5, 4, 7, 10)," +
-		    "(6, 4, 1, 8)," +
-		    "(6, 4, 7, 4)," +
-		    "(6, 4, 4, 0)," + 
-		    "(7, 5, 10, 7)," +
-		    "(8, 5, 5, 9);"
+		    "(4, 2, 6, 17)," +
+		    "(4, 2, 5, 9)," +
+		    "(5, 3, 1, 20)," +
+		    "(5, 3, 7, 11)," +
+		    "(6, 3, 1, 18)," +
+		    "(6, 3, 7, 4)," +
+		    "(6, 3, 4, 1)," + 
+		    "(7, 4, 10, 7)," +
+		    "(8, 4, 5, 29)," +
+		    "(9, 5, 5, 21)," +
+		    "(10, 5, 5, 16)," +
+		    "(11, 5, 5, 13);"
 		)!=-1)
 		    System.out.println("Datos insertados en STOCKS");
-		else
-			System.out.println("Ya había datos en la tabla STOCKS.");
-
-		// INSERT VENTAS
-		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`ventas` (`Fecha`, `Monto`, `tipo_pago`, `juguete_idJuguete`, `empleado_idEmpleado`, `STAND_idStand`, `STAND_zona_idZona`) VALUES" +
-		    "('2024-01-10', 12.99, 'efectivo', 1, 2, 5, 4)," +
-		    "('2024-01-11', 35.00, 'tarjeta', 3, 3, 1, 1)," +
-		    "('2024-01-12', 18.50, 'paypal', 2, 5, 2, 2)," +
-		    "('2024-01-13', 27.40, 'efectivo', 6, 6, 4, 3)," +
-		    "('2024-01-14', 49.99, 'tarjeta', 9, 1, 1, 1)," +
-		    "('2024-01-15', 21.10, 'efectivo', 8, 4, 2, 2)," +
-		    "('2024-01-16', 29.90, 'paypal', 10, 7, 9, 5)," +
-		    "('2024-01-17', 14.99, 'efectivo', 7, 8, 5, 4)," +
-		    "('2024-01-18', 15.75, 'efectivo', 4, 9, 3, 2)," +
-		    "('2024-01-19', 22.90, 'tarjeta', 5, 10, 7, 5);"
-		)!=-1)
-		    System.out.println("Datos insertados en VENTAS");
-		else
-			System.out.println("Ya había datos en la tabla VENTAS.");
-
-		// INSERT CAMBIOS
-		if(consultaModifica(
-			"INSERT INTO `jugueteria`.`cambios` (`MOTIVO`, `Fecha`, `stock_stand_idStand_Original`, `stock_stand_zona_idZona_Original`, `stock_juguete_idJuguete_Original`, `stock_stand_idStand_Nuevo`, `stock_stand_zona_idZona_Nuevo`, `stock_juguete_idJuguete_Nuevo`, `empleado_idEmpleado`) VALUES" +
-			"('Reubicación por demanda', '2024-02-01', 5, 4, 1, 6, 4, 1, 1)," +
-			"('Optimización de espacio', '2024-02-02', 3, 2, 4, 4, 3, 6, 4)," +
-			"('Actualización de inventario', '2024-02-03', 2, 2, 2, 5, 4, 7, 2)," +
-			"('Producto mal ubicado', '2024-02-04', 4, 3, 6, 1, 1, 9, 3)," +
-			"('Cambio de categoría', '2024-02-05', 4, 3, 5, 8, 5, 5, 5);"
-
-		)!=-1)
-		    System.out.println("Datos insertados en CAMBIOS");
-		else
-			System.out.println("Ya había datos en la tabla CAMBIOS.");
 	}
 
-	/*
-	public static int nuevoEmpleado(String nombreNuevo, String cargoNuevo, Date fechaNueva) {
-		try {
-			String consulta = "INSERT INTO empleados (Nombre, Cargo, Fecha_ingreso) VALUES (?, ?, ?)";
-			PreparedStatement sentencia;
-			sentencia = conexion.prepareStatement(consulta);
-			sentencia.setString(1, nombreNuevo);
-			sentencia.setString(2, cargoNuevo);
-			sentencia.setDate(3, fechaNueva);
-			return sentencia.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
+	public void insertar_zonas() {
+		if(consultaModifica(
+		    "INSERT INTO `jugueteria`.`zonas` (`idZona`, `Nombre`, `Descripcion`) VALUES" +
+		    "(1, 'Zona A', 'Sector principal de juguetes electrónicos')," +
+		    "(2, 'Zona B', 'Sector de muñecas y peluches')," +
+		    "(3, 'Zona C', 'Sector de juegos de mesa')," +
+		    "(4, 'Zona D', 'Sector de vehículos')," +
+		    "(5, 'Zona E', 'Sector misceláneo');"
+		)!=-1)
+		    System.out.println("Datos insertados en ZONAS");
 	}
- */
+
+	public void insertar_juguetes() {
+		if (consultaModifica(
+			    "INSERT INTO `jugueteria`.`juguetes` (`idJuguete`, `Nombre`, `Descripcion`, `Precio`, `Cantidad_stock`, `Categoria`, `Visible`) VALUES" +
+					    "(1, 'Auto de Carrera', 'Auto a fricción rojo', 12.99, 50, 'Vehículos', TRUE)," +
+					    "(2, 'Muñeca Clara', 'Muñeca articulada con vestido', 18.50, 30, 'Muñecas', TRUE)," +
+					    "(3, 'Robot Tekno', 'Robot con luces y sonidos', 35.00, 20, 'Electronicos', TRUE)," +
+					    "(4, 'Peluche Oso', 'Oso de peluche marrón', 15.75, 40, 'Peluches', TRUE)," +
+					    "(5, 'Set de Construcción MiniBlocks', 'Caja con 150 piezas', 22.90, 25, 'Construccion', TRUE)," +
+					    "(6, 'Tablero de Ajedrez', 'Ajedrez de madera', 27.40, 15, 'Mesa', TRUE)," +
+					    "(7, 'Helicóptero Militar', 'Helicóptero verde con hélice giratoria', 14.99, 35, 'Vehículos', TRUE)," +
+					    "(8, 'Muñeca Sofi', 'Muñeca con accesorios', 21.10, 20, 'Muñecas', TRUE)," +
+					    "(9, 'Consola MiniPlay', 'Consola portátil retro', 49.99, 12, 'Electronicos', TRUE)," +
+					    "(10, 'Set de Superhéroes', 'Figuras articuladas', 29.90, 18, 'Accion', TRUE);"
+			)!=-1)
+		    System.out.println("Datos insertados en JUGUETES");
+
+	}
+
+	public void insertar_empleados() {
+		if(consultaModifica(
+		    "INSERT INTO `jugueteria`.`empleados` (`idEmpleado`, `Nombre`, `Cargo`, `Fecha_ingreso`) VALUES" +
+    		"(1, 'Javier Morales', 'jefe', '2018-08-03')," +
+    		"(2, 'Carlos Ruiz', 'jefe', '2019-11-20')," +
+		    "(3, 'María López', 'jefe', '2020-03-15')," +
+		    "(4, 'Héctor Silva', 'cajero', '2020-10-28')," +
+		    "(5, 'Sofía Martínez', 'cajero', '2021-04-30')," +
+		    "(6, 'Juan Pérez', 'cajero', '2021-06-10')," +
+		    "(7, 'Ana Torres', 'cajero', '2022-01-05')," +
+		    "(8, 'Diego Fernández', 'cajero', '2022-09-25')," +
+		    "(9, 'Lucía Gómez', 'cajero', '2023-02-12')," +
+		    "(10, 'Paula Ramírez', 'cajero', '2023-05-14');"
+			)!=-1)
+			    System.out.println("Datos insertados en EMPLEADOS");		
+	}
+
 	public static int modificaSeguro(ArrayList<Object> parametros, String consulta) {
 		try {
 			PreparedStatement sentencia;
@@ -410,23 +419,5 @@ public class BaseDatos {
 			return -1;
 		}
 	}
-	/*
-	public static int nuevoJuguete(String nombreNuevo, String descNueva, Double precioNuevo, int cantNueva,	String categoriaNueva) {
-		try {
-			String consulta = "INSERT INTO juguetes (Nombre, Descripcion, Precio, Cantidad_stock, Categoria, Visible) VALUES (?, ?, ?, ?, ?, TRUE)";
-			PreparedStatement sentencia;
-			sentencia = conexion.prepareStatement(consulta);
-			sentencia.setString(1, nombreNuevo);
-			sentencia.setString(2, descNueva);
-			sentencia.setDouble(3, precioNuevo);
-			sentencia.setInt(4, cantNueva);
-			sentencia.setString(5, categoriaNueva);
-			return sentencia.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	 */
 
 }
