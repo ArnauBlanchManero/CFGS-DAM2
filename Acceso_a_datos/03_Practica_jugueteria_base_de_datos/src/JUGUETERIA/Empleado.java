@@ -59,8 +59,10 @@ public class Empleado {
 
 	@Override
 	public String toString() {
-		return "Empleado [id=" + id + ", nombre=" + nombre + ", cargo=" + cargo + ", fechaIngreso=" + fechaIngreso
-				+ "]";
+		return nombre + " (ID: " + id +
+		           " • Cargo: " + cargo +
+		           " • Fecha de ingreso: " + fechaIngreso +
+		           ")";
 	}
 
 	public int getId() {

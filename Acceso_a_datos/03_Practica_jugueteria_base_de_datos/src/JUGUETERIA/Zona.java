@@ -17,7 +17,9 @@ public class Zona {
 
 	@Override
 	public String toString() {
-		return "Zona [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return nombre + " (ID: " + id +
+		           " • " + descripcion +
+		           ")";
 	}
 
 	public static void mostrarPorId(int idBuscar) {

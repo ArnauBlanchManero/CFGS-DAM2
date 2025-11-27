@@ -21,8 +21,10 @@ public class Stand {
 
 	@Override
 	public String toString() {
-		return "Stand [idStand=" + idStand + ", idZona=" + idZona + ", id=" + id + ", nombre=" + nombre
-				+ ", descripcion=" + descripcion + "]";
+		return nombre + " (ID: " + idStand +
+		           " • Zona: " + idZona +
+		           " • " + descripcion +
+		           ")";
 	}
 
 	public String getId() {

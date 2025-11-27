@@ -7,12 +7,12 @@ import java.util.ArrayList;
 public class GestorJugueteria {
 
 	public static void main(String[] args) {
-		System.out.println("  ☺  ʕ•ᴥ•ʔ  [°_°]    ☺  ʕ•ᴥ•ʔ  [°_°]  ");
-		System.out.println(" /|\\ ( • ) /|___|\\  /|\\ ( • ) /|___|\\ ");
-		System.out.println(" / \\ () ()   | |    / \\ () ()   | |   ");
+		System.out.println("  ☺  ʕ•ᴥ•ʔ  [°_°]   ☺  ʕ•ᴥ•ʔ  [°_°]  ");
+		System.out.println(" /|\\ ( • ) /|___|\\ /|\\ ( • ) /|___|\\ ");
+		System.out.println(" / \\ () ()   | |   / \\ () ()   | |   ");
 		System.out.println("BIENVENIDO AL GESTOR DE LA JUGUETERIA\n");
 		BaseDatos jugueteriaBBDD = conectarseBBDD();
-		crear_objetosBBDD(jugueteriaBBDD);
+		comprobar_datosBBDD(jugueteriaBBDD);
 		ArrayList<String> opcionesMenuGeneral = new ArrayList<String>();
 		opcionesMenuGeneral.add("Gestionar Juguetes");
 		opcionesMenuGeneral.add("Gestionar Empleados");
@@ -81,14 +81,20 @@ public class GestorJugueteria {
 		}
 	}
 
-	private static void crear_objetosBBDD(BaseDatos jugueteriaBBDD) {
+	private static void comprobar_datosBBDD(BaseDatos jugueteriaBBDD) {
+		boolean hayE = false, hayJ = false, hayV = false, hayS = false;
  		System.out.println("\nLeyendo datos de la base de datos...\n");
 		ResultSet datosEmpleados= BaseDatos.consulta("SELECT * FROM empleados");
 		try {
 			if(datosEmpleados.next()) {
 				System.out.println("Datos de los empleados recolectados.");
+				hayE = true;
 			} else {
-				jugueteriaBBDD.insertar_empleados();
+				String confirmacion = Utilidades.preguntarString("\n¿Quieres añadir los empleados por defecto? (si o no): ");
+				if(confirmacion.equalsIgnoreCase("si")) {
+					jugueteriaBBDD.insertar_empleados();
+					hayE = true;
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
@@ -104,7 +110,11 @@ public class GestorJugueteria {
 			if(datosJuguetes.next()) {
 				System.out.println("Datos de los juguetes recolectados.");
 			} else {
-				jugueteriaBBDD.insertar_juguetes();
+				String confirmacion = Utilidades.preguntarString("\n¿Quieres añadir los juguetes por defecto? (si o no): ");
+				if(confirmacion.equalsIgnoreCase("si")) {
+					jugueteriaBBDD.insertar_juguetes();
+					hayJ=true;
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
@@ -147,28 +157,14 @@ public class GestorJugueteria {
 			e.printStackTrace();
 		}
 		
-		ResultSet datosVentas = BaseDatos.consulta("SELECT * FROM ventas");
-		try {
-			if(datosVentas.next()) {
-				System.out.println("Datos de las ventas recolectados.");
-			} else {
-				jugueteriaBBDD.insertar_ventas();
-			}
-		} catch (SQLException e) {
-			System.out.println("La consulta no se ha ejecutado correctamente.");
-			jugueteriaBBDD.insertar_ventas();
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			System.out.println("No hay datos para leer");
-			e.printStackTrace();
-		}
-		
 		ResultSet datosStocks = BaseDatos.consulta("SELECT * FROM stocks");
 		try {
 			if(datosStocks.next()) {
 				System.out.println("Datos de los stocks recolectados.");
-			} else {
+				hayS=true;
+			} else if(hayJ){
 				jugueteriaBBDD.insertar_stocks();
+				hayS=true;
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");
@@ -179,12 +175,35 @@ public class GestorJugueteria {
 			e.printStackTrace();
 		}
 		
+		ResultSet datosVentas = BaseDatos.consulta("SELECT * FROM ventas");
+		try {
+			if(datosVentas.next()) {
+				System.out.println("Datos de las ventas recolectados.");
+				hayV=true;
+			} else if(hayS && hayE){
+				String confirmacion = Utilidades.preguntarString("\n¿Quieres añadir las ventas por defecto? (si o no): ");
+				if(confirmacion.equalsIgnoreCase("si")) {
+					jugueteriaBBDD.insertar_ventas();
+					hayV=true;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("La consulta no se ha ejecutado correctamente.");
+			jugueteriaBBDD.insertar_ventas();
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("No hay datos para leer");
+			e.printStackTrace();
+		}
+		
 		ResultSet datosCambios = BaseDatos.consulta("SELECT * FROM cambios");
 		try {
 			if(datosCambios.next()) {
 				System.out.println("Datos de los cambios recolectados.");
-			} else {
-				jugueteriaBBDD.insertar_cambios();
+			} else if(hayV){
+				String confirmacion = Utilidades.preguntarString("\n¿Quieres añadir los cambios por defecto? (si o no): ");
+				if(confirmacion.equalsIgnoreCase("si"))
+					jugueteriaBBDD.insertar_cambios();
 			}
 		} catch (SQLException e) {
 			System.out.println("La consulta no se ha ejecutado correctamente.");

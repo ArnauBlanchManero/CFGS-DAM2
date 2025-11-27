@@ -163,8 +163,13 @@ public class Venta {
 
 	@Override
 	public String toString() {
-		return "Venta [id=" + id + ", idEmpleado=" + idEmpleado + ", idJuguete=" + idJuguete + ", idStand=" + idStand
-				+ ", fecha=" + fecha + ", monto=" + monto + ", pago=" + pago + "]";
+		return "Venta " + id +
+		           " (Juguete: " + idJuguete +
+		           " • Empleado: " + idEmpleado +
+		           " • Monto: " + monto + "€" +
+		           " • Pago: " + pago +
+		           " • Fecha: " + fecha +
+		           ")";
 	}
 
 	public static void empleadosMasVenden() {

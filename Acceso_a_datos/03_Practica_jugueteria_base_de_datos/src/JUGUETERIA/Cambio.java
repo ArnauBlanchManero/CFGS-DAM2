@@ -29,9 +29,12 @@ public class Cambio {
 
 	@Override
 	public String toString() {
-		return "Cambio [id=" + id + ", idEmpleado=" + idEmpleado + ", idJugueteOriginal=" + idJugueteOriginal
-				+ ", idJugueteNuevo=" + idJugueteNuevo + ", motivo=" + motivo + ", fecha=" + fecha + ", idStandOrigen="
-				+ idStandOrigen + ", idStandDestino=" + idStandDestino + "]";
+		return "Cambio " + id +
+		           " (ID original: " + idJugueteOriginal +
+		           " • ID nuevo: " + idJugueteNuevo +
+		           " • Motivo: " + motivo +
+		           " • Fecha: " + fecha +
+		           ")";
 	}
 
 	public static void datosEmpleado(int idEmpleadoBuscar) {

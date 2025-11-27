@@ -120,8 +120,11 @@ public class Juguete {
 	@Override
 	public String toString() {
 		if(visible)
-			return "Juguete [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio
-				+ ", cantidad=" + cantidad + ", categoria=" + categoria + "]";
+			return nombre + " (ID: " + id +
+			           " • Precio: " + precio + "€" +
+			           " • Stock: " + cantidad +
+			           " • Categoría: " + categoria +
+			           ")";
 		return "Juguete con id "+id+" no disponible";
 	}
 

@@ -301,7 +301,7 @@ public class BaseDatos {
 
 	public void insertar_ventas() {
 		if(consultaModifica(
-		    "INSERT INTO `jugueteria`.`ventas` (`idVentas`, `Fecha`, `Monto`, `tipo_pago`, `juguete_idJuguete`, `empleado_idEmpleado`, `STAND_idStand`, `STAND_zona_idZona`) VALUES" +
+		    "INSERT INTO `jugueteria`.`ventas` (`idVenta`, `Fecha`, `Monto`, `tipo_pago`, `juguete_idJuguete`, `empleado_idEmpleado`, `STAND_idStand`, `STAND_zona_idZona`) VALUES" +
 		    "(1, '2024-01-10', 12.99, 'efectivo', 1, 2, 5, 3)," +
 		    "(2, '2024-01-11', 35.00, 'tarjeta', 3, 3, 1, 1)," +
 		    "(3, '2024-01-12', 18.50, 'paypal', 2, 5, 2, 1)," +
