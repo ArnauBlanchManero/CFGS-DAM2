@@ -14,10 +14,10 @@ public class Panel extends JPanel{
 		setLayout(null);
 		JLabel info = new JLabel();
 		add(info);
-		info.setBounds(10, 10, 500, 10);
+		info.setBounds(10, 10, 428, 278);
 		info.setText(mensaje);
-//		info.setHorizontalAlignment(SwingConstants.CENTER);
-//		info.setVerticalAlignment(SwingConstants.CENTER);
+		info.setHorizontalAlignment(SwingConstants.CENTER);
+		info.setVerticalAlignment(SwingConstants.TOP);
 	}
 
 	public Panel() {

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +22,10 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.border.SoftBevelBorder;
+
+import txt.LeerTxt;
+import usuarios.Usuario;
+
 import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -35,14 +40,12 @@ public class Ventana extends JFrame{
 	private JTextField txtNombre;
 	private JTextField txtContrasea;
 	private Timer tiempo;
+	public static ArrayList<Usuario> usuarios;
+	public static int rolUsuario = -1;
 	
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public Ventana(int x, int y) throws HeadlessException, IOException {
+	public Ventana(int x, int y) {
 		super();
 		setUndecorated(true);
-//		setTitle("Cargando...");
 		setSize(x, y);
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -53,37 +56,59 @@ public class Ventana extends JFrame{
 		barraProgreso.setStringPainted(true);
 		barraProgreso.setBounds(10, 300, 620, 20);
 		panelCarga.add(barraProgreso);
-		tiempo = new Timer(100, new ActionListener() {
+		tiempo = new Timer(200, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				barraProgreso.setValue(barraProgreso.getValue()+1);
+				barraProgreso.setValue(barraProgreso.getValue()+4);
 				if(barraProgreso.getValue()==100) {
 					tiempo.stop();
-					notify();
-					panelCarga.setVisible(false);
+					Ventana ventanaPrincipal = new Ventana("Noticias diarias");
+					ventanaPrincipal.setVisible(true);
+					dispose();
+				}
+				if(barraProgreso.getValue()==80) {
+					try {
+						usuarios = LeerTxt.leerTodosUsuarios();
+					} catch (IOException e1) {
+						usuarios = new ArrayList<Usuario>();
+						e1.printStackTrace();
+					}
+					if (usuarios.size() <=0) {
+						tiempo.stop();
+						barraProgreso.setValue(100);
+						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
+						ventanaError.setVisible(true);
+						dispose();
+					}
 				}
 			}
 		});
 		tiempo.start();
 	}
 
-	private Panel buscarImagen() throws IOException {
+	private Panel buscarImagen() {
 		BufferedImage fondo = null;
 		Panel panelConFondo = null;
 		// Cargar la imagen
 		File ruta = new File("src/ventanas/fondoPlaya.jpg");
 		ruta.setReadable(true);
-		fondo = ImageIO.read(ruta);
-		// asignar la imagen a un jpanel
-		Image foto = fondo;
-		panelConFondo=new Panel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(foto.getScaledInstance(640, 323, Image.SCALE_SMOOTH), 0, 0, 640, 323, null);
-			}
-		};
+		try {
+			fondo = ImageIO.read(ruta);
+			// asignar la imagen a un jpanel
+			Image foto = fondo;
+			panelConFondo=new Panel() {
+				@Override
+				protected void paintComponent(Graphics g) {
+					super.paintComponent(g);
+					g.drawImage(foto.getScaledInstance(640, 323, Image.SCALE_SMOOTH), 0, 0, 640, 323, null);
+				}
+			};
+		} catch (IOException e) {
+			panelConFondo=new Panel("Error al cargar la imagen");
+//			panelConFondo.setBackground(new Color(255, 118, 114));
+			e.printStackTrace();
+		}
 		return panelConFondo;
 	}
 	
@@ -96,15 +121,17 @@ public class Ventana extends JFrame{
 		Panel informacionError = new Panel(mensaje);
 		getContentPane().add(informacionError);
 		informacionError.setVisible(true);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("errorLogo.png")));
 	}
 
 	public Ventana(String title) throws HeadlessException {
 		super();
 		setTitle(title);
-		int numUsuario = iniciar_sesion();
+		iniciar_sesion();
+		System.out.println(rolUsuario);
 	}
 	
-	private int iniciar_sesion() {
+	private void iniciar_sesion() {
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
@@ -155,9 +182,8 @@ public class Ventana extends JFrame{
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
 		panelInicioSesion.add(btnEntrar);
-		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre.getText(), txtContrasea.getText(), lblSesionIncorrecta);
+		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios);
 		btnEntrar.addActionListener(comprobarSesion);
 		
-		return 0;
 	}
 }
