@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.Timer;
 
 public class Evento implements ActionListener{
 	String accion;
@@ -30,7 +32,6 @@ public class Evento implements ActionListener{
 		case "comprobar sesion":
 			comprobar_inicio_sesion();
 			break;
-
 		default:
 			break;
 		}

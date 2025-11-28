@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class Panel extends JPanel{
-/*
+	
 	public Panel(String mensaje) {
 		super();
 		setBackground(new Color(255, 118, 114));
@@ -19,7 +19,7 @@ public class Panel extends JPanel{
 //		info.setHorizontalAlignment(SwingConstants.CENTER);
 //		info.setVerticalAlignment(SwingConstants.CENTER);
 	}
-	*/
+
 	public Panel() {
 		super();
 		setBackground(new Color(133, 239, 237));
