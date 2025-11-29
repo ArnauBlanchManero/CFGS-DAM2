@@ -12,7 +12,6 @@ public class Main {
 				try {
 					Ventana ventanaCarga = new Ventana(640, 323);
 					ventanaCarga.setVisible(true);
-					System.out.println("Acabé");
 				} catch (Exception e){
 					Ventana ventanaError = new Ventana(e.getMessage(), 450, 200);
 					ventanaError.setVisible(true);

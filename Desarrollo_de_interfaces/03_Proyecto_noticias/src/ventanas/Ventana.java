@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
@@ -20,6 +21,7 @@ import javax.swing.Timer;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 
 import javax.swing.border.SoftBevelBorder;
 
@@ -34,17 +36,21 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JTextField;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import java.awt.BorderLayout;
 
 
 public class Ventana extends JFrame{
 	private JTextField txtNombre;
 	private JTextField txtContrasea;
+	private JLabel lblSesionIncorrecta;
 	private Timer tiempo;
+	private JLayeredPane todosPaneles;
 	public static ArrayList<Usuario> usuarios;
 	public static int rolUsuario = -1;
 	
 	public Ventana(int x, int y) {
 		super();
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		setUndecorated(true);
 		setSize(x, y);
 		setResizable(false);
@@ -62,10 +68,10 @@ public class Ventana extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				barraProgreso.setValue(barraProgreso.getValue()+4);
 				if(barraProgreso.getValue()==100) {
-					tiempo.stop();
+					dispose();
 					Ventana ventanaPrincipal = new Ventana("Noticias diarias");
 					ventanaPrincipal.setVisible(true);
-					dispose();
+					tiempo.stop();
 				}
 				if(barraProgreso.getValue()==80) {
 					try {
@@ -124,14 +130,11 @@ public class Ventana extends JFrame{
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("errorLogo.png")));
 	}
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public Ventana(String title) throws HeadlessException {
 		super();
-		setTitle(title);
-		iniciar_sesion();
-		System.out.println(rolUsuario);
-	}
-	
-	private void iniciar_sesion() {
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
@@ -139,8 +142,72 @@ public class Ventana extends JFrame{
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		
+		setTitle(title);
+		todosPaneles = new JLayeredPane();
+		todosPaneles.setSize(700, 700);
+		todosPaneles.setLayout(null);
+		getContentPane().add(todosPaneles);
 		Panel panelInicioSesion = new Panel();
-		getContentPane().add(panelInicioSesion);
+		panelInicioSesion.setBounds(0, 0, 700, 700);
+		todosPaneles.setLayer(panelInicioSesion, 5);
+		Panel panelCategoriasFavoritas = new Panel();
+		panelCategoriasFavoritas.setBounds(0, 0, 700, 700);
+		todosPaneles.setLayer(panelCategoriasFavoritas, 4);
+		Panel panelGeneralAdmin = new Panel();
+		panelGeneralAdmin.setBounds(0, 0, 700, 700);
+		todosPaneles.setLayer(panelGeneralAdmin, 2);
+
+		iniciar_sesion(panelInicioSesion);
+		
+
+		categorias_favoritas(panelCategoriasFavoritas);
+		
+		panel_administracion(panelGeneralAdmin);
+		JButton btnEntrar = new JButton("Entrar");
+		btnEntrar.setBounds(294, 468, 117, 25);
+		panelInicioSesion.add(btnEntrar);
+		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles);
+		btnEntrar.addActionListener(comprobarSesion);
+
+		todosPaneles.add(panelInicioSesion);
+		todosPaneles.add(panelCategoriasFavoritas);
+		todosPaneles.add(panelGeneralAdmin);
+	}
+	
+	private void panel_administracion(Panel panelGeneralAdmin) {
+		
+		JLabel lblCategoriasFavoritas = new JLabel("Administración");
+		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
+		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
+		lblCategoriasFavoritas.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(28, 113, 216), new Color(0, 0, 0)));
+		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
+		lblCategoriasFavoritas.setOpaque(true);
+		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriasFavoritas.setBounds(193, 89, 312, 64);
+		panelGeneralAdmin.add(lblCategoriasFavoritas);		
+	}
+
+	private void categorias_favoritas(Panel panelCategoriasFavoritas) {
+		
+		JLabel lblCategoriasFavoritas = new JLabel("Categorías");
+		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
+		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
+		lblCategoriasFavoritas.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(28, 113, 216), new Color(0, 0, 0)));
+		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
+		lblCategoriasFavoritas.setOpaque(true);
+		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriasFavoritas.setBounds(193, 89, 312, 64);
+		panelCategoriasFavoritas.add(lblCategoriasFavoritas);
+		
+	}
+
+	private void iniciar_sesion(Panel panelInicioSesion) {
+//		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
+//		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
+//		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
+//		setBounds(ancho, alto, 700, 700);
+//		setResizable(false);
+//		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		
 		JLabel lblTituloIniciaSesion = new JLabel("Inicia sesión");
 		lblTituloIniciaSesion.setForeground(new Color(36, 31, 49));
@@ -172,18 +239,13 @@ public class Ventana extends JFrame{
 		panelInicioSesion.add(txtContrasea);
 		txtContrasea.setColumns(10);
 	
-		JLabel lblSesionIncorrecta = new JLabel("El nombre o la contraseña no es correcto");
+		lblSesionIncorrecta = new JLabel("El nombre o la contraseña no es correcto");
 		lblSesionIncorrecta.setVisible(false);
 		lblSesionIncorrecta.setForeground(new Color(237, 51, 59));
 		lblSesionIncorrecta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSesionIncorrecta.setBounds(193, 427, 312, 15);
 		panelInicioSesion.add(lblSesionIncorrecta);
 		
-		JButton btnEntrar = new JButton("Entrar");
-		btnEntrar.setBounds(294, 468, 117, 25);
-		panelInicioSesion.add(btnEntrar);
-		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios);
-		btnEntrar.addActionListener(comprobarSesion);
 		
 	}
 }

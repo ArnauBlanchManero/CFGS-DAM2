@@ -22,7 +22,8 @@ public class LeerTxt {
 			String contenidoLinea;
 			while((contenidoLinea=br.readLine())!=null) {
 				String [] lineaSeparada = contenidoLinea.split("·!·");
-				usuarios.add(new Usuario(lineaSeparada[0], lineaSeparada[1], lineaSeparada[2], lineaSeparada[3].equals("1"), Integer.parseInt(lineaSeparada[4])));
+				if (lineaSeparada.length == 6)
+					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), Integer.parseInt(lineaSeparada[5])));
 			}
 		}
 
