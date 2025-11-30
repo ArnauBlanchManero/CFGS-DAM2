@@ -29,4 +29,229 @@ public class LeerTxt {
 
 		return usuarios;
 	}
+
+	public static ArrayList<String> leerTodasNoticias() {
+		return null;
+		String urlEconomia1 = "https://elpais.com/economia/";
+		String urlEconomia2 = "https://esradio.libertaddigital.com/economia-para-todos/";
+		String urlEconomia3 = "https://www.eleconomista.es/economia/";
+		
+		String urlDeportes1 = "https://www.marca.com/otros-deportes";
+		String urlDeportes2 = "https://elpais.com/deportes/";
+		String urlDeportes4 = "https://www.mundodeportivo.com/";
+		
+		String urlNacional1 = "https://www.miteco.gob.es/es/prensa/ultimas-noticias.html";
+		String urlNacional4 = "https://www.elmundo.es/espana.html";
+		String urlNacional5 = "https://www.eldiario.es/";
+
+		String urlInterNacional1 = "https://www.telemundo.com/";
+		String urlInterNacional2 = "https://www.bbc.com/mundo";
+		String urlInterNacional4 = "https://www.dw.com/es/";
+		
+		String urlMusica2 = "https://www.elmundo.es/cultura/musica.html";
+		String urlMusica3 = "https://elpais.com/noticias/musica/";
+		String urlMusica4 = "https://www.xataka.com/categoria/musica";
+		
+		String urlMedioAmbiente1 = "https://www.farodevigo.es/medio-ambiente/";
+		String urlMedioAmbiente3 = "https://www.infolibre.es/medioambiente/";
+		String urlMedioAmbiente4 = "https://www.elespanol.com/ciencia/medio-ambiente/";
+		
+		// ECONOMÍA
+		System.out.println("---ECONOMIA---");
+		try {
+			System.out.println(urlEconomia1);
+		    Document doc = Jsoup.connect(urlEconomia1).get();
+		    obtenerTitular(doc, "main#main-content div section div article header h2 a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlEconomia1 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlEconomia2);
+		    Document doc = Jsoup.connect(urlEconomia2).get();
+		    obtenerTitular(doc, "div.ultimos-audios ul li a strong");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlEconomia2 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		try {
+			System.out.println(urlEconomia3);
+		    Document doc = Jsoup.connect(urlEconomia3).get();
+		    obtenerTitular(doc, "div.articleHeadLine h2 a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlEconomia3 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		// DEPORTES
+		System.out.println("---DEPORTES---");
+		try {
+			System.out.println(urlDeportes1);
+		    Document doc = Jsoup.connect(urlDeportes1).get();
+		    obtenerTitular(doc, "div.ue-c-cover-content__main header a h2");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlDeportes1 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		try {
+			System.out.println(urlDeportes2);
+		    Document doc = Jsoup.connect(urlDeportes2).get();
+		    obtenerTitular(doc, "main#main-content div section div article header h2 a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlDeportes2 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlDeportes4);
+			Document doc = Jsoup.connect(urlDeportes4).get();
+			obtenerTitular(doc, "h2.title a");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlDeportes4 + " no encontrada");
+			e.printStackTrace();
+		}
+		
+		System.out.println("···");
+		// NACIONAL
+		System.out.println("---NACIONAL---");
+		try {
+			System.out.println(urlNacional1);
+		    Document doc = Jsoup.connect(urlNacional1).get();
+		    obtenerTitular(doc, "div#container-9f8ef9b042 div section div div.flex-column-reverse div ul li a div.search-results__content div");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlNacional1 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlNacional4);
+			Document doc = Jsoup.connect(urlNacional4).get();
+			obtenerTitular(doc, "h2.ue-c-cover-content__headline");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlNacional4 + " no encontrada");
+			e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlNacional5);
+			Document doc = Jsoup.connect(urlNacional5).get();
+			obtenerTitular(doc, "h2.ni-title a");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlNacional5 + " no encontrada");
+			e.printStackTrace();
+		}
+		System.out.println("···");
+
+		// INTERNACIONAL
+		System.out.println("---INTERNACIONAL---");
+		try {
+			System.out.println(urlInterNacional1);
+		    Document doc = Jsoup.connect(urlInterNacional1).get();
+		    obtenerTitular(doc, "span.tease-card__headline");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlInterNacional1 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		try {
+			System.out.println(urlInterNacional2);
+		    Document doc = Jsoup.connect(urlInterNacional2).get();
+		    obtenerTitular(doc, "div#main-wrapper div main div div section div div ul li div div.promo-text h3 a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlInterNacional2 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		try {
+			System.out.println(urlInterNacional4);
+			Document doc = Jsoup.connect(urlInterNacional4).get();
+			obtenerTitular(doc, "section#top-story-64426818 div h3 a");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlInterNacional4 + " no encontrada");
+			e.printStackTrace();
+		}
+
+		System.out.println("···");
+		// MÚSICA
+		System.out.println("---MUSICA---");
+
+		try {
+			System.out.println(urlMusica2);
+		    Document doc = Jsoup.connect(urlMusica2).get();
+		    obtenerTitular(doc, "h2.ue-c-cover-content__headline");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlMusica2 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+
+		try {
+			System.out.println(urlMusica3);
+		    Document doc = Jsoup.connect(urlMusica3).get();
+		    obtenerTitular(doc, "h2.c_t a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlMusica3 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlMusica4);
+			Document doc = Jsoup.connect(urlMusica4).get();
+			obtenerTitular(doc, "h2.abstract-title a");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlMusica4 + " no encontrada");
+			e.printStackTrace();
+		}
+		System.out.println("···");
+
+		// MEDIO AMBIENTE
+		System.out.println("---MEDIO AMBIENTE---");
+		try {
+			System.out.println(urlMedioAmbiente1);
+		    Document doc = Jsoup.connect(urlMedioAmbiente1).get();
+		    obtenerTitular(doc, "h2.ft-org-cardHome__mainTitle a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlMedioAmbiente1 + " no encontrada");
+		    e.printStackTrace();
+		}
+
+		System.out.println("···");
+		try {
+			System.out.println(urlMedioAmbiente3);
+		    Document doc = Jsoup.connect(urlMedioAmbiente3).get();
+		    obtenerTitular(doc, "h2.ni-title  a");
+		} catch (IOException e) {
+		    System.err.println("ERROR. Página " + urlMedioAmbiente3 + " no encontrada");
+		    e.printStackTrace();
+		}
+		System.out.println("···");
+		try {
+			System.out.println(urlMedioAmbiente4);
+			Document doc = Jsoup.connect(urlMedioAmbiente4).get();
+			obtenerTitular(doc, "h2.art__title  a");
+		} catch (IOException e) {
+			System.err.println("ERROR. Página " + urlMedioAmbiente4 + " no encontrada");
+			e.printStackTrace();
+		}
+		System.out.println("···");
+
+	}
+
+	private static void obtenerTitular(Document doc, String encontrar) {
+		Element titular = doc.selectFirst(encontrar);
+		if (titular == null) {
+			System.err.println("ERROR. Titular no encontrado");
+		} else {
+			System.out.println(titular.html());
+		}
+		
+	}
 }
