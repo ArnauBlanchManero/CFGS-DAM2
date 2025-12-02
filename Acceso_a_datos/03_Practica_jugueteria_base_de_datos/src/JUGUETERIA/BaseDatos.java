@@ -29,14 +29,14 @@ public class BaseDatos {
 		}
 		try {
 			// Carga el drive de la BBDD
-			Class.forName("com.mysql.cj.jdbc.Driver");
+//			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			// Conectar
 			conexionTMP = DriverManager.getConnection(url, usuario, password);
 			System.out.println("Conexión realizada a "+nombreBBDD);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Comprueba que tengas las librerías añadidas");
-			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			System.out.println("Comprueba que tengas las librerías añadidas");
+//			e.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println("Conexión fallida a "+nombre);
 			String confirmacion = Utilidades.preguntarString("\n¿Quieres crear la base de datos jugueteria? (si o no): ");

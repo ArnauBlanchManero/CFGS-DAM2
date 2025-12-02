@@ -941,7 +941,7 @@ public class GestorTienda {
 			Ticket infoTicket = new Ticket(i);
 			String contenido = infoTicket.devolverContenido();
 			if (!contenido.equals("Ticket " + i + " no encontrado.")) {
-				String paso1[] = contenido.split("unitario\n");
+				String paso1[] = contenido.split("unitario");
 				String paso2[] = paso1[1].split("····················································");
 				String paso3[] = paso2[0].split("€\n");
 				for (int j = 0; j < paso3.length - 1; j++) {
