@@ -24,6 +24,7 @@ public class Panel extends JPanel{
 		super();
 		setBackground(new Color(133, 239, 237));
 		setLayout(null);
+		//TODO poner una barra de Menú con un “Acerca de” con los datos de la versión y	el desarrollador. (preguntar a Sergio que quiere)
 	}
 
 }

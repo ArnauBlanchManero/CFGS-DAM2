@@ -79,15 +79,23 @@ public class Ventana extends JFrame{
 					try {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						usuarios = LeerTxt.leerTodosUsuarios();
-//						titulares = LeerTxt.leerTodasNoticias();
+						titulares = LeerTxt.leerTodasNoticias();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
 						e1.printStackTrace();
 					}
-					if (usuarios.size() <=0) {
+					if (usuarios.size() < 4) {
+						//TODO comprobar que haya 1 admin y 3 usuarios
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
+						ventanaError.setVisible(true);
+						dispose();
+					}
+					if (titulares == null) {
+						tiempo.stop();
+						barraProgreso.setValue(100);
+						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
 						ventanaError.setVisible(true);
 						dispose();
 					}

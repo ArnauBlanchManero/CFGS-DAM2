@@ -1,10 +1,11 @@
 package noticias;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 
 public class Titular {
@@ -16,18 +17,19 @@ public class Titular {
 		this.parametro = parametro;
 	}
 	
-	public String devolverTitular() {
+	public String devolverTitular(int posicion) {
 		String titularDevolver = "ERROR. Titular no encontrado";
 		try {
 			Document doc = Jsoup.connect(url).get();
-			Element titularEncontrado = doc.selectFirst(parametro);
-			if (titularEncontrado != null) {
-				titularDevolver = titularEncontrado.html();
+			Elements titularesEncontrados = doc.select(parametro);
+			if (titularesEncontrados != null && titularesEncontrados.size() >= posicion) {
+				titularDevolver = titularesEncontrados.get(posicion).html();
 			}
 		} catch (IOException e) {
 			titularDevolver = "ERROR. Titular no encontrado";
-			e.printStackTrace();
 		}
+		//TODO eliminar este print
+		System.out.println(titularDevolver);
 		return titularDevolver;
 	}
 }
