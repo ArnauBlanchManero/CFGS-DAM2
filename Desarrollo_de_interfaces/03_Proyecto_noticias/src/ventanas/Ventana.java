@@ -37,14 +37,18 @@ import javax.swing.JTextField;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
+
 import javax.swing.JCheckBox;
 import javax.swing.border.MatteBorder;
 
 
 public class Ventana extends JFrame{
+	public static final int CANTIDAD_CATEGORIAS = 18;
 	private JTextField txtNombre;
 	private JTextField txtContrasea;
 	private JLabel lblSesionIncorrecta;
+	private JLabel lblCategoriasIncorrectas;
 	private Timer tiempo;
 	private JLayeredPane todosPaneles;
 	public static ArrayList<Usuario> usuarios;
@@ -173,7 +177,7 @@ public class Ventana extends JFrame{
 		iniciar_sesion(panelInicioSesion);
 		
 
-		categorias_favoritas(panelCategoriasFavoritas);
+		JCheckBox[] todosCheckboxes = categorias_favoritas(panelCategoriasFavoritas);
 		
 		panel_administracion(panelGeneralAdmin);
 		JButton btnEntrar = new JButton("Entrar");
@@ -186,14 +190,11 @@ public class Ventana extends JFrame{
 		JButton btnGuardarcategorias = new JButton("Guardar");
 		btnGuardarcategorias.setBounds(314, 615, 117, 25);
 		panelCategoriasFavoritas.add(btnGuardarcategorias);
-		System.out.println("checkboxes: "+ panelCategoriasFavoritas.getComponentCount());
-		System.out.println("checkbox 8: "+ panelCategoriasFavoritas.getComponent(8).getName()); // que checkbox es este
-		System.out.println("checkbox 25: "+ panelCategoriasFavoritas.getComponent(25).getName()); // y que checkbox es este
-		Evento guardarCategorias = new Evento("guardar categorias", panelCategoriasFavoritas.getComponents(), todosPaneles);
+		Evento guardarCategorias = new Evento("guardar categorias", todosCheckboxes, lblCategoriasIncorrectas);
 		btnGuardarcategorias.addActionListener(guardarCategorias);
 		
 		
-//		todosPaneles.add(panelInicioSesion);
+		todosPaneles.add(panelInicioSesion);
 		todosPaneles.add(panelCategoriasFavoritas);
 		todosPaneles.add(panelGeneralAdmin);
 	}
@@ -211,7 +212,7 @@ public class Ventana extends JFrame{
 		panelGeneralAdmin.add(lblCategoriasFavoritas);		
 	}
 
-	private void categorias_favoritas(Panel panelCategoriasFavoritas) {
+	private JCheckBox [] categorias_favoritas(Panel panelCategoriasFavoritas) {
 		
 		JLabel lblCategoriasFavoritas = new JLabel("Categorías");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
@@ -258,7 +259,8 @@ public class Ventana extends JFrame{
 		lblMedioAmbiente.setFont(new Font("Fira Sans", Font.BOLD, 20));
 		lblMedioAmbiente.setBounds(468, 453, 207, 41);
 		panelCategoriasFavoritas.add(lblMedioAmbiente);
-		
+
+		JCheckBox [] todosCheckboxes = new JCheckBox[CANTIDAD_CATEGORIAS];
 		
 		JCheckBox chckbxEconomia1 = new JCheckBox("El país");
 		chckbxEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -267,8 +269,8 @@ public class Ventana extends JFrame{
 		chckbxEconomia1.setBackground(new Color(255, 190, 111));
 		chckbxEconomia1.setBounds(152, 183, 129, 23);
 		panelCategoriasFavoritas.add(chckbxEconomia1); // [8] 
-//		boolean [] categoriasUsuario = new boolean[18];
-//		categoriasUsuario[0] = chckbxEconomia1.isEnabled();
+		todosCheckboxes[0] = chckbxEconomia1;
+//		chckbxEconomia1.isSelected();
 
 		JCheckBox chckbxEconomia2 = new JCheckBox("Es radio");
 		chckbxEconomia2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -277,6 +279,7 @@ public class Ventana extends JFrame{
 		chckbxEconomia2.setBackground(new Color(255, 190, 111));
 		chckbxEconomia2.setBounds(152, 210, 129, 23);
 		panelCategoriasFavoritas.add(chckbxEconomia2);
+		todosCheckboxes[1] = chckbxEconomia2;
 		
 		JCheckBox chckbxEconomia3 = new JCheckBox("El economista");
 		chckbxEconomia3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -285,6 +288,7 @@ public class Ventana extends JFrame{
 		chckbxEconomia3.setBackground(new Color(255, 190, 111));
 		chckbxEconomia3.setBounds(152, 237, 129, 23);
 		panelCategoriasFavoritas.add(chckbxEconomia3);
+		todosCheckboxes[2] = chckbxEconomia3;
 		
 		JCheckBox chckbxDeportes1 = new JCheckBox("Marca");
 		chckbxDeportes1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -293,6 +297,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes1.setBackground(new Color(255, 190, 111));
 		chckbxDeportes1.setBounds(468, 183, 129, 23);
 		panelCategoriasFavoritas.add(chckbxDeportes1);
+		todosCheckboxes[3] = chckbxDeportes1;
 		
 		JCheckBox chckbxDeportes2 = new JCheckBox("El país");
 		chckbxDeportes2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -301,6 +306,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes2.setBackground(new Color(255, 190, 111));
 		chckbxDeportes2.setBounds(468, 210, 129, 23);
 		panelCategoriasFavoritas.add(chckbxDeportes2);
+		todosCheckboxes[4] = chckbxDeportes2;
 		
 		JCheckBox chckbxDeportes3 = new JCheckBox("Mundo deportivo");
 		chckbxDeportes3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -309,6 +315,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes3.setBackground(new Color(255, 190, 111));
 		chckbxDeportes3.setBounds(468, 237, 129, 23);
 		panelCategoriasFavoritas.add(chckbxDeportes3);
+		todosCheckboxes[5] = chckbxDeportes3;
 		
 		JCheckBox chckbxNacional1 = new JCheckBox("Miteco");
 		chckbxNacional1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -317,6 +324,7 @@ public class Ventana extends JFrame{
 		chckbxNacional1.setBackground(new Color(255, 190, 111));
 		chckbxNacional1.setBounds(152, 335, 129, 23);
 		panelCategoriasFavoritas.add(chckbxNacional1);
+		todosCheckboxes[6] = chckbxNacional1;
 		
 		JCheckBox chckbxNacional2 = new JCheckBox("El mundo");
 		chckbxNacional2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -325,6 +333,7 @@ public class Ventana extends JFrame{
 		chckbxNacional2.setBackground(new Color(255, 190, 111));
 		chckbxNacional2.setBounds(152, 362, 129, 23);
 		panelCategoriasFavoritas.add(chckbxNacional2);
+		todosCheckboxes[7] = chckbxNacional2;
 		
 		JCheckBox chckbxNacional3 = new JCheckBox("El diario");
 		chckbxNacional3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -333,6 +342,7 @@ public class Ventana extends JFrame{
 		chckbxNacional3.setBackground(new Color(255, 190, 111));
 		chckbxNacional3.setBounds(152, 389, 129, 23);
 		panelCategoriasFavoritas.add(chckbxNacional3);
+		todosCheckboxes[8] = chckbxNacional3;
 		
 		JCheckBox chckbxInternacional1 = new JCheckBox("Telemundo");
 		chckbxInternacional1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -341,6 +351,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional1.setBackground(new Color(255, 190, 111));
 		chckbxInternacional1.setBounds(468, 335, 129, 23);
 		panelCategoriasFavoritas.add(chckbxInternacional1);
+		todosCheckboxes[9] = chckbxInternacional1;
 		
 		JCheckBox chckbxInternacional2 = new JCheckBox("BBC");
 		chckbxInternacional2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -349,6 +360,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional2.setBackground(new Color(255, 190, 111));
 		chckbxInternacional2.setBounds(468, 362, 129, 23);
 		panelCategoriasFavoritas.add(chckbxInternacional2);
+		todosCheckboxes[10] = chckbxInternacional2;
 		
 		JCheckBox chckbxInternacional3 = new JCheckBox("DW");
 		chckbxInternacional3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -357,6 +369,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional3.setBackground(new Color(255, 190, 111));
 		chckbxInternacional3.setBounds(468, 389, 129, 23);
 		panelCategoriasFavoritas.add(chckbxInternacional3);
+		todosCheckboxes[11] = chckbxInternacional3;
 		
 		JCheckBox chckbxMusica1 = new JCheckBox("El mundo");
 		chckbxMusica1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -365,6 +378,7 @@ public class Ventana extends JFrame{
 		chckbxMusica1.setBackground(new Color(255, 190, 111));
 		chckbxMusica1.setBounds(152, 502, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMusica1);
+		todosCheckboxes[12] = chckbxMusica1;
 		
 		JCheckBox chckbxMusica2 = new JCheckBox("El país");
 		chckbxMusica2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -373,6 +387,7 @@ public class Ventana extends JFrame{
 		chckbxMusica2.setBackground(new Color(255, 190, 111));
 		chckbxMusica2.setBounds(152, 529, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMusica2);
+		todosCheckboxes[13] = chckbxMusica2;
 		
 		JCheckBox chckbxMusica3 = new JCheckBox("Xataka");
 		chckbxMusica3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -381,6 +396,7 @@ public class Ventana extends JFrame{
 		chckbxMusica3.setBackground(new Color(255, 190, 111));
 		chckbxMusica3.setBounds(152, 556, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMusica3);
+		todosCheckboxes[14] = chckbxMusica3;
 		
 		JCheckBox chckbxMedioambiente1 = new JCheckBox("Faro de vigo");
 		chckbxMedioambiente1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -389,6 +405,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente1.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente1.setBounds(468, 502, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMedioambiente1);
+		todosCheckboxes[15] = chckbxMedioambiente1;
 		
 		JCheckBox chckbxMedioambiente2 = new JCheckBox("Info libre");
 		chckbxMedioambiente2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -397,6 +414,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente2.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente2.setBounds(468, 529, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMedioambiente2);
+		todosCheckboxes[16] = chckbxMedioambiente2;
 		
 		JCheckBox chckbxMedioambiente3 = new JCheckBox("El español");
 		chckbxMedioambiente3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -405,6 +423,16 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente3.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente3.setBounds(468, 556, 129, 23);
 		panelCategoriasFavoritas.add(chckbxMedioambiente3); // [25] 
+		todosCheckboxes[17] = chckbxMedioambiente3;
+
+		lblCategoriasIncorrectas = new JLabel("Por favor, seleccione al menos un periódico");
+		lblCategoriasIncorrectas.setForeground(new Color(237, 51, 59));
+		lblCategoriasIncorrectas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriasIncorrectas.setBounds(152, 593, 445, 15);
+		lblCategoriasIncorrectas.setVisible(false);
+		panelCategoriasFavoritas.add(lblCategoriasIncorrectas);
+		
+		return todosCheckboxes;
 	}
 
 	private void iniciar_sesion(Panel panelInicioSesion) {
