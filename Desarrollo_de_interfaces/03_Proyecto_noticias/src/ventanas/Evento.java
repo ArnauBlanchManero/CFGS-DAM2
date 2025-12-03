@@ -1,5 +1,6 @@
 package ventanas;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 
-import txt.LeerTxt;
 import usuarios.Usuario;
 
 public class Evento implements ActionListener{
@@ -18,6 +18,7 @@ public class Evento implements ActionListener{
 	JLabel lblSesionIncorrecta;
 	ArrayList<Usuario> usuarios;
 	JLayeredPane todosPaneles;
+	Component[] componentes;
 	
 	public Evento(String accion, JLayeredPane todosPaneles) {
 		super();
@@ -35,20 +36,35 @@ public class Evento implements ActionListener{
 		this.todosPaneles = todosPaneles;
 	}
 
+	public Evento(String accion, Component[] components, JLayeredPane todosPaneles) {
+		super();
+		this.accion = accion;
+		this.componentes = components;
+		this.todosPaneles = todosPaneles;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (accion) {
 		case "comprobar sesion":
 			comprobar_inicio_sesion();
 			break;
+		case "guardar categorias":
+			comprobar_categorias_seleccionadas();
+			break;
 		default:
 			break;
 		}
 	}
 
+	private void comprobar_categorias_seleccionadas() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void comprobar_inicio_sesion() {
 //		TODO pasar por parametro los Panel para cambiar y los tengo aquí para futuros botones.
-		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, 0);
+		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, 0, null);
 		int cargo = sesion.comprobarCredenciales(usuarios);
 		if(cargo == -1) {
 			lblSesionIncorrecta.setVisible(true);

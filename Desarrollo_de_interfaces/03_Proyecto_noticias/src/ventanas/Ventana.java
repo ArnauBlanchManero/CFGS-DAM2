@@ -57,6 +57,7 @@ public class Ventana extends JFrame{
 		setSize(x, y);
 		setResizable(false);
 		setLocationRelativeTo(null);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		Panel panelCarga = buscarImagen();
 		getContentPane().add(panelCarga);
 		panelCarga.setVisible(true);
@@ -79,15 +80,23 @@ public class Ventana extends JFrame{
 					try {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						usuarios = LeerTxt.leerTodosUsuarios();
-//						titulares = LeerTxt.leerTodasNoticias();
+						titulares = LeerTxt.leerTodasNoticias();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
 						e1.printStackTrace();
 					}
-					if (usuarios.size() <=0) {
+					if (usuarios.size() < 4) {
+						//TODO comprobar que haya 1 admin y 3 usuarios
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
+						ventanaError.setVisible(true);
+						dispose();
+					}
+					if (titulares == null) {
+						tiempo.stop();
+						barraProgreso.setValue(100);
+						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
 						ventanaError.setVisible(true);
 						dispose();
 					}
@@ -173,14 +182,19 @@ public class Ventana extends JFrame{
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles);
 		btnEntrar.addActionListener(comprobarSesion);
 
-//		todosPaneles.add(panelInicioSesion);
-		todosPaneles.add(panelCategoriasFavoritas);
 		
 		JButton btnGuardarcategorias = new JButton("Guardar");
 		btnGuardarcategorias.setBounds(314, 615, 117, 25);
 		panelCategoriasFavoritas.add(btnGuardarcategorias);
+		System.out.println("checkboxes: "+ panelCategoriasFavoritas.getComponentCount());
+		System.out.println("checkbox 8: "+ panelCategoriasFavoritas.getComponent(8).getName()); // que checkbox es este
+		System.out.println("checkbox 25: "+ panelCategoriasFavoritas.getComponent(25).getName()); // y que checkbox es este
+		Evento guardarCategorias = new Evento("guardar categorias", panelCategoriasFavoritas.getComponents(), todosPaneles);
+		btnGuardarcategorias.addActionListener(guardarCategorias);
 		
 		
+//		todosPaneles.add(panelInicioSesion);
+		todosPaneles.add(panelCategoriasFavoritas);
 		todosPaneles.add(panelGeneralAdmin);
 	}
 	
@@ -245,13 +259,16 @@ public class Ventana extends JFrame{
 		lblMedioAmbiente.setBounds(468, 453, 207, 41);
 		panelCategoriasFavoritas.add(lblMedioAmbiente);
 		
+		
 		JCheckBox chckbxEconomia1 = new JCheckBox("El país");
 		chckbxEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		chckbxEconomia1.setForeground(new Color(0, 0, 0));
 		chckbxEconomia1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxEconomia1.setBackground(new Color(255, 190, 111));
 		chckbxEconomia1.setBounds(152, 183, 129, 23);
-		panelCategoriasFavoritas.add(chckbxEconomia1);
+		panelCategoriasFavoritas.add(chckbxEconomia1); // [8] 
+//		boolean [] categoriasUsuario = new boolean[18];
+//		categoriasUsuario[0] = chckbxEconomia1.isEnabled();
 
 		JCheckBox chckbxEconomia2 = new JCheckBox("Es radio");
 		chckbxEconomia2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -387,7 +404,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMedioambiente3.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente3.setBounds(468, 556, 129, 23);
-		panelCategoriasFavoritas.add(chckbxMedioambiente3);
+		panelCategoriasFavoritas.add(chckbxMedioambiente3); // [25] 
 	}
 
 	private void iniciar_sesion(Panel panelInicioSesion) {

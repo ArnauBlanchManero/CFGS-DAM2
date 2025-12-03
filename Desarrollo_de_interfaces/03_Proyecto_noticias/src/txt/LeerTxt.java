@@ -2,10 +2,13 @@ package txt;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 
+import noticias.Titular;
 import usuarios.Usuario;
 
 public class LeerTxt {
@@ -23,52 +26,60 @@ public class LeerTxt {
 			while((contenidoLinea=br.readLine())!=null) {
 				String [] lineaSeparada = contenidoLinea.split("·!·");
 				if (lineaSeparada.length == 6)
-					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), Integer.parseInt(lineaSeparada[5])));
+					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), Integer.parseInt(lineaSeparada[5]), leerCategorias(Integer.parseInt(lineaSeparada[0]))));
 			}
 		}
 
 		return usuarios;
 	}
 
-	public static ArrayList<String> leerTodasNoticias() {
+	private static boolean[] leerCategorias(int id) {
+		// TODO leer fichero y devolver categorias usuario segun su id
 		return null;
-		ArrayList<String> urls = leerUrls();
-		ArrayList<String> titulares = new ArrayList<String>();
-		ArrayList<String> parametros = new ArrayList<String>();
-		parametros.add("main#main-content div section div article header h2 a");
-		parametros.add("div.ultimos-audios ul li a strong");
-		parametros.add("div.articleHeadLine h2 a");
-		parametros.add("div.ue-c-cover-content__main header a h2");
-		parametros.add("main#main-content div section div article header h2 a");
-		parametros.add("h2.title a");
-		parametros.add("div#container-9f8ef9b042 div section div div.flex-column-reverse div ul li a div.search-results__content div");
-		parametros.add("h2.ue-c-cover-content__headline");
-		parametros.add("h2.ni-title a");
-		parametros.add("span.tease-card__headline");
-		parametros.add("div#main-wrapper div main div div section div div ul li div div.promo-text h3 a");
-		parametros.add("section#top-story-64426818 div h3 a");
-		parametros.add("h2.ue-c-cover-content__headline");
-		parametros.add("h2.c_t a");
-		parametros.add("h2.abstract-title a");
-		parametros.add("h2.ft-org-cardHome__mainTitle a");
-		parametros.add("h2.ni-title  a");
-		parametros.add("h2.art__title  a");
 	}
 
-	private static ArrayList<String> leerUrls() {
-		File fichero = new File("src/txt/urlsNoticias.txt");
-		ArrayList<String> urls = new ArrayList<String>();
-		int vuelta = 0;
-		if (fichero.exists() && fichero.canRead()) {
-			FileReader lector;
-			lector = new FileReader(fichero);
-			BufferedReader br = new BufferedReader(lector);
-			String contenidoLinea;
-			while((contenidoLinea=br.readLine())!=null) {
-					urls.add(contenidoLinea);
+	public static ArrayList<String> leerTodasNoticias() {
+		ArrayList<String> urlsParametrosPosicion = leerUrlsParametrosPosicion();
+		ArrayList<String> titulares = new ArrayList<String>();
+		for (int i = 0; i < urlsParametrosPosicion.size(); i++) {
+			// TODO manejo de error si no hay url en txt
+			String infoTitular [] = urlsParametrosPosicion.get(i).split(";");
+			if(infoTitular.length >= 3) {
+				Titular titular = new Titular(infoTitular[0], infoTitular[1]);
+				try {
+					titulares.add(titular.devolverTitular(Integer.parseInt(infoTitular[2])));
+				if(titulares.get(i).equals("ERROR. Titular no encontrado"))
+					return null;
+				} catch (NumberFormatException | IndexOutOfBoundsException e) {
+					titulares.add(titular.devolverTitular(0));
+					if(titulares.get(i).equals("ERROR. Titular no encontrado"))
+						return null;
+				}
 			}
 		}
+		return titulares;
+	}
 
-		return urls;
+	private static ArrayList<String> leerUrlsParametrosPosicion() {
+		File fichero = new File("src/txt/urlsNoticias.txt");
+		ArrayList<String> lineas = new ArrayList<String>();
+		if (fichero.exists() && fichero.canRead()) {
+			FileReader lector;
+			try {
+				lector = new FileReader(fichero);
+				BufferedReader br = new BufferedReader(lector);
+				String contenidoLinea;
+				while((contenidoLinea=br.readLine())!=null) {
+					lineas.add(contenidoLinea);
+				}
+			} catch (IOException e) {
+				lineas.add("");
+				e.printStackTrace();
+			}
+		} else {
+			lineas.add("");
+		}
+
+		return lineas;
 	}
 }

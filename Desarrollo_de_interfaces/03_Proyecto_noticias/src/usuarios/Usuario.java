@@ -9,8 +9,9 @@ public class Usuario {
 	private String passwd;
 	private boolean admin;
 	private int vecesLogueado;
+	private boolean [] categorias;
 	
-	public Usuario(int id, String nombre, String correo, String passwd, boolean admin, int vecesLogueado) {
+	public Usuario(int id, String nombre, String correo, String passwd, boolean admin, int vecesLogueado, boolean [] categorias) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -18,6 +19,7 @@ public class Usuario {
 		this.passwd = passwd;
 		this.admin = admin;
 		this.vecesLogueado = vecesLogueado;
+		this.categorias = categorias;
 	}
 	
 	public int getId() {
@@ -60,6 +62,14 @@ public class Usuario {
 		this.vecesLogueado = vecesLogueado;
 	}
 
+	public boolean[] getCategorias() {
+		return categorias;
+	}
+
+	public void setCategorias(boolean[] categorias) {
+		this.categorias = categorias;
+	}
+
 	public int comprobarCredenciales(ArrayList<Usuario> listaUsuarios) {
 		boolean nombreCorrecto = false;
 		boolean contraseñaCorrecta = false;
@@ -71,6 +81,7 @@ public class Usuario {
 				this.correo = usuario.correo;
 				this.vecesLogueado = usuario.vecesLogueado;
 				this.admin = usuario.admin;
+				this.categorias = usuario.categorias;
 			}
 		}
 		if (nombreCorrecto && contraseñaCorrecta) {
