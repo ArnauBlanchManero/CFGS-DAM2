@@ -2,23 +2,23 @@ package usuarios;
 
 import java.util.ArrayList;
 
+import txt.LeerTxt;
+
 public class Usuario {
 	private int id;
 	private String nombre;
 	private String correo;
 	private String passwd;
 	private boolean admin;
-	private int vecesLogueado;
 	private boolean [] categorias;
 	
-	public Usuario(int id, String nombre, String correo, String passwd, boolean admin, int vecesLogueado, boolean [] categorias) {
+	public Usuario(int id, String nombre, String correo, String passwd, boolean admin, boolean [] categorias) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.correo = correo;
 		this.passwd = passwd;
 		this.admin = admin;
-		this.vecesLogueado = vecesLogueado;
 		this.categorias = categorias;
 	}
 	
@@ -54,14 +54,6 @@ public class Usuario {
 		this.admin = admin;
 	}
 
-	public int getVecesLogueado() {
-		return vecesLogueado;
-	}
-
-	public void setVecesLogueado(int vecesLogueado) {
-		this.vecesLogueado = vecesLogueado;
-	}
-
 	public boolean[] getCategorias() {
 		return categorias;
 	}
@@ -71,20 +63,17 @@ public class Usuario {
 	}
 
 	public int comprobarCredenciales(ArrayList<Usuario> listaUsuarios) {
-		boolean nombreCorrecto = false;
-		boolean contraseñaCorrecta = false;
+		boolean inicioCorrecto = false;
 		for (Usuario usuario : listaUsuarios) {
 			if (usuario.nombre.equals(this.nombre) && usuario.passwd.equals(this.passwd)) {
-				nombreCorrecto = true;
-				contraseñaCorrecta = true;
+				inicioCorrecto = true;
 				this.id = usuario.id;
 				this.correo = usuario.correo;
-				this.vecesLogueado = usuario.vecesLogueado;
 				this.admin = usuario.admin;
-				this.categorias = usuario.categorias;
+				this.categorias = LeerTxt.leerCategorias(usuario.id);
 			}
 		}
-		if (nombreCorrecto && contraseñaCorrecta) {
+		if (inicioCorrecto) {
 			if (this.admin) {
 				return 1;
 			}

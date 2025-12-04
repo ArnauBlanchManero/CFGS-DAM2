@@ -165,40 +165,105 @@ public class Ventana extends JFrame{
 		todosPaneles.setLayout(null);
 		getContentPane().add(todosPaneles);
 		Panel panelInicioSesion = new Panel();
-		panelInicioSesion.setBounds(0, 0, 700, 700);
-		todosPaneles.setLayer(panelInicioSesion, 5);
+		todosPaneles.setLayer(panelInicioSesion, 6);
 		Panel panelCategoriasFavoritas = new Panel();
-		panelCategoriasFavoritas.setBounds(0, 0, 700, 700);
+		todosPaneles.setLayer(panelCategoriasFavoritas, 5);
+		Panel panelMostrarCategorias = new Panel();
 		todosPaneles.setLayer(panelCategoriasFavoritas, 4);
 		Panel panelGeneralAdmin = new Panel();
-		panelGeneralAdmin.setBounds(0, 0, 700, 700);
-		todosPaneles.setLayer(panelGeneralAdmin, 2);
+		todosPaneles.setLayer(panelGeneralAdmin, 3);
 
 		iniciar_sesion(panelInicioSesion);
 		
-
 		JCheckBox[] todosCheckboxes = categorias_favoritas(panelCategoriasFavoritas);
 		
+		mostrar_categorias_usuario(panelMostrarCategorias);
+		
 		panel_administracion(panelGeneralAdmin);
+	
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
 		panelInicioSesion.add(btnEntrar);
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles);
 		btnEntrar.addActionListener(comprobarSesion);
 
-		
-		JButton btnGuardarcategorias = new JButton("Guardar");
-		btnGuardarcategorias.setBounds(314, 615, 117, 25);
-		panelCategoriasFavoritas.add(btnGuardarcategorias);
+
+		JButton btnGuardarCategorias = new JButton("Guardar");
+		btnGuardarCategorias.setBounds(314, 615, 117, 25);
+		panelCategoriasFavoritas.add(btnGuardarCategorias);
 		Evento guardarCategorias = new Evento("guardar categorias", todosCheckboxes, lblCategoriasIncorrectas);
-		btnGuardarcategorias.addActionListener(guardarCategorias);
+		btnGuardarCategorias.addActionListener(guardarCategorias);
+
+		JButton btnMostrarCategorias = new JButton("Mostrar");
+		btnMostrarCategorias.setBounds(300, 300, 117, 75);
+		panelMostrarCategorias.add(btnMostrarCategorias);
+		Evento mostrarCategorias = new Evento("mostrar categorias", panelCategoriasFavoritas.getComponents());
+		btnMostrarCategorias.addActionListener(mostrarCategorias);
+		
+		JButton btnEnviarCategorias = new JButton("Enviar");
+		btnEnviarCategorias.setBounds(314, 615, 117, 25);
+		panelGeneralAdmin.add(btnEnviarCategorias);
+		Evento enviarCategorias = new Evento("enviar categorias");
+		btnEnviarCategorias.addActionListener(enviarCategorias);
 		
 		
 		todosPaneles.add(panelInicioSesion);
 		todosPaneles.add(panelCategoriasFavoritas);
+		todosPaneles.add(panelMostrarCategorias);
 		todosPaneles.add(panelGeneralAdmin);
 	}
 	
+	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
+		// TODO Auto-generated method stub
+		JLabel lblCategoriasFavoritas = new JLabel("Tus noticias");
+		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
+		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
+		lblCategoriasFavoritas.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(28, 113, 216), new Color(0, 0, 0)));
+		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
+		lblCategoriasFavoritas.setOpaque(true);
+		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriasFavoritas.setBounds(193, 89, 312, 64);
+		panelMostrarCategorias.add(lblCategoriasFavoritas);	
+
+		JLabel lblEconomia = new JLabel("Economía");
+		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblEconomia.setBounds(152, 134, 149, 41);
+		lblEconomia.setVisible(false);
+		panelMostrarCategorias.add(lblEconomia);
+		
+		JLabel lblDeportes = new JLabel("Deportes");
+		lblDeportes.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblDeportes.setBounds(468, 134, 149, 41);
+		lblDeportes.setVisible(false);
+		panelMostrarCategorias.add(lblDeportes);
+		
+		JLabel lblNacional = new JLabel("Nacional");
+		lblNacional.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblNacional.setBounds(152, 286, 149, 41);
+		lblNacional.setVisible(false);
+		panelMostrarCategorias.add(lblNacional);
+		
+		JLabel lblInternacional = new JLabel("Internacional");
+		lblInternacional.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblInternacional.setBounds(468, 286, 182, 41);
+		lblInternacional.setVisible(false);
+		panelMostrarCategorias.add(lblInternacional);
+		
+		JLabel lblMusica = new JLabel("Música");
+		lblMusica.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblMusica.setBounds(152, 453, 149, 41);
+		lblMusica.setVisible(false);
+		panelMostrarCategorias.add(lblMusica);
+		
+		JLabel lblMedioAmbiente = new JLabel("Medio Ambiente");
+		lblMedioAmbiente.setFont(new Font("Fira Sans", Font.BOLD, 20));
+		lblMedioAmbiente.setBounds(468, 453, 207, 41);
+		lblMedioAmbiente.setVisible(false);
+		panelMostrarCategorias.add(lblMedioAmbiente);
+
+//		boolean[] categoriasMostrar = Evento.usuarioLogueado.getCategorias();
+	}
+
 	private void panel_administracion(Panel panelGeneralAdmin) {
 		
 		JLabel lblCategoriasFavoritas = new JLabel("Administración");

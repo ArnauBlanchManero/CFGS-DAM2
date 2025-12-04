@@ -23,11 +23,13 @@ public class Evento implements ActionListener{
 	JLabel lblSesionIncorrecta;
 	JCheckBox[] checkboxes;
 	JLabel lblCategoriasIncorrectas;
+	private boolean[] categorias;
+	private Component[] componentesCategorias;
+	private String correoEnviar;
 	
-	public Evento(String accion, JLayeredPane LayeredPane) {
+	public Evento(String accion) {
 		super();
 		this.accion = accion;
-		todosPaneles = LayeredPane;
 	}
 	
 	public Evento(String accion, JTextField txtNombre, JTextField txtContrasea, JLabel lblSesionIncorrecta, ArrayList<Usuario> arrayUsuarios, JLayeredPane LayeredPane) {
@@ -47,6 +49,18 @@ public class Evento implements ActionListener{
 		this.lblCategoriasIncorrectas = lblCategoriasIncorrectas;
 	}
 
+	public Evento(String accion, Component[] components) {
+		super();
+		this.accion = accion;
+		this.componentesCategorias = components;
+	}
+
+	public Evento(String accion, String correo) {
+		super();
+		this.accion = accion;
+		this.correoEnviar = correo;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (accion) {
@@ -56,9 +70,27 @@ public class Evento implements ActionListener{
 		case "guardar categorias":
 			comprobar_categorias_seleccionadas();
 			break;
+		case "mostrar categorias":
+			mostrar_categorias_seleccionadas();
+			break;
+		case "enviar categorias":
+			enviar_categorias_seleccionadas();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void enviar_categorias_seleccionadas() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void mostrar_categorias_seleccionadas() {
+		for (int i = 0; i < Ventana.CANTIDAD_CATEGORIAS; i++) {
+			componentesCategorias[i].setVisible(true);
+		}
+		
 	}
 
 	private void comprobar_categorias_seleccionadas() {
@@ -79,6 +111,7 @@ public class Evento implements ActionListener{
 			usuarioLogueado.setCategorias(periodicosUsuario);
 			// TODO guardar periodicos favoritos
 			EscribirTxt.escribirCategorias(usuarioLogueado.getId(), periodicosUsuario);
+//			EscribirTxt.sumarVecesLogueado(usuarioLogueado.getId(), usuarioLogueado.getCategorias());
 			// TODO cambiar de panel
 		}
 		
@@ -86,7 +119,7 @@ public class Evento implements ActionListener{
 
 	private void comprobar_inicio_sesion() {
 //		TODO pasar por parametro los Panel para cambiar y los tengo aquí para futuros botones.
-		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, 0, null);
+		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, null);
 		int cargo = sesion.comprobarCredenciales(usuarios);
 		if(cargo == -1) {
 			lblSesionIncorrecta.setVisible(true);
@@ -94,15 +127,17 @@ public class Evento implements ActionListener{
 			usuarioLogueado = sesion;
 			todosPaneles.setLayer(todosPaneles.getComponent(0), 0);
 			if (cargo == 0){
-				if (sesion.getVecesLogueado()==0) {
+				if (sesion.getCategorias()==null) {
 					todosPaneles.setLayer(todosPaneles.getComponent(0), 5); // Esto del getComponent es inestable porque los valores van combiando xd
+				} else {
+					todosPaneles.setLayer(todosPaneles.getComponent(2), 5);
+					System.out.println("Ya tienes categorias favoritas");
 				}
 			} else if (cargo == 1){
+				// TODO poner los paneles del admin mas arriba y los del usuario mas abajo.
 				todosPaneles.setLayer(todosPaneles.getComponent(1), 5);
 			}
 		}
-		//TODO devolver los datos del usuario que ha iniciado sesion?
-		//return sesion;
 	}
 
 

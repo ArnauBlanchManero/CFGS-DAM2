@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import noticias.Titular;
 import usuarios.Usuario;
+import ventanas.Ventana;
 
 public class LeerTxt {
 	
@@ -25,17 +26,49 @@ public class LeerTxt {
 			String contenidoLinea;
 			while((contenidoLinea=br.readLine())!=null) {
 				String [] lineaSeparada = contenidoLinea.split("·!·");
-				if (lineaSeparada.length == 6)
-					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), Integer.parseInt(lineaSeparada[5]), leerCategorias(Integer.parseInt(lineaSeparada[0]))));
+				if (lineaSeparada.length == 5)
+					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), leerCategorias(Integer.parseInt(lineaSeparada[0]))));
 			}
 		}
 
 		return usuarios;
 	}
 
-	private static boolean[] leerCategorias(int id) {
+	public static boolean[] leerCategorias(int id) {
 		// TODO leer fichero y devolver categorias usuario segun su id
-		return null;
+		boolean[] categorias = new boolean[Ventana.CANTIDAD_CATEGORIAS];
+		File fichero = new File("src/txt/noticiasUsuarios.txt");
+		if (fichero.exists() && fichero.canRead()) {
+			FileReader lector;
+			try {
+				lector = new FileReader(fichero);
+				BufferedReader br = new BufferedReader(lector);
+				String contenidoLinea;
+				boolean idEncontrado = false;
+				while((contenidoLinea=br.readLine())!=null) {
+					String [] lineaSeparada = contenidoLinea.split(":");
+					if (lineaSeparada.length == 2) {
+						if (Integer.parseInt(lineaSeparada[0].charAt(1)+"") == id ){
+							idEncontrado = true;
+							for (int i = 0; i < Ventana.CANTIDAD_CATEGORIAS; i++) {
+								if(lineaSeparada[1].charAt(i)=='0') {
+									categorias[i] = false;
+								} else {
+									categorias[i] = true;
+								}
+							}
+						}
+					}
+				}
+				if(!idEncontrado) {
+					categorias = null;
+				}
+			} catch (IOException | NumberFormatException e) {
+				categorias = null;
+//				e.printStackTrace();
+			}
+		}
+		return categorias;
 	}
 
 	public static ArrayList<String> leerTodasNoticias() {
