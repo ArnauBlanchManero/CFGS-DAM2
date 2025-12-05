@@ -41,6 +41,7 @@ import java.awt.Checkbox;
 
 import javax.swing.JCheckBox;
 import javax.swing.border.MatteBorder;
+import javax.swing.JTextArea;
 
 
 public class Ventana extends JFrame{
@@ -236,43 +237,312 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCategoriasFavoritas.setBounds(193, 12, 312, 64);
 		panelMostrarCategorias.add(lblCategoriasFavoritas);	
-
+		
+		for (String string : titulares) {
+			System.out.println(string);
+			System.out.println(string.length());
+		}
+		
 		JLabel lblEconomia = new JLabel("Economía");
-		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblEconomia.setBounds(50, 100, 149, 41);
+		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblEconomia.setBounds(50, 100, 150, 30);
 		lblEconomia.setVisible(false);
 		panelMostrarCategorias.add(lblEconomia);
+
+			JTextArea textEconomia1 = new JTextArea("- "+titulares.get(0));
+			textEconomia1.setOpaque(false);
+			textEconomia1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia1.setEditable(false);
+			textEconomia1.setEnabled(false);
+			textEconomia1.setDisabledTextColor(new Color(0, 0, 0));
+			textEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(0).length()<125)
+				textEconomia1.setBounds(50, 100, 600, 16);
+			else
+				textEconomia1.setBounds(50, 100, 600, 33);
+			textEconomia1.setLineWrap(true);
+			textEconomia1.setVisible(false);
+			panelMostrarCategorias.add(textEconomia1);
+			JTextArea textEconomia2 = new JTextArea("- "+titulares.get(1));
+			textEconomia2.setOpaque(false);
+			textEconomia2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia2.setEditable(false);
+			textEconomia2.setEnabled(false);
+			textEconomia2.setDisabledTextColor(new Color(0, 0, 0));
+			textEconomia2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(1).length()<125)
+				textEconomia2.setBounds(50, 100, 600, 16);
+			else
+				textEconomia2.setBounds(50, 100, 600, 33);
+			textEconomia2.setLineWrap(true);
+			textEconomia2.setVisible(false);
+			panelMostrarCategorias.add(textEconomia2);
+			JTextArea textEconomia3 = new JTextArea("- "+titulares.get(2));
+			textEconomia3.setOpaque(false);
+			textEconomia3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia3.setEditable(false);
+			textEconomia3.setEnabled(false);
+			textEconomia3.setDisabledTextColor(new Color(0, 0, 0));
+			textEconomia3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(2).length()<125)
+				textEconomia3.setBounds(50, 100, 600, 16);
+			else
+				textEconomia3.setBounds(50, 100, 600, 33);
+			textEconomia3.setLineWrap(true);
+			textEconomia3.setVisible(false);
+			panelMostrarCategorias.add(textEconomia3);
 		
 		JLabel lblDeportes = new JLabel("Deportes");
-		lblDeportes.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblDeportes.setBounds(50, 100, 149, 41);
+		lblDeportes.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblDeportes.setBounds(50, 100, 150, 30);
 		lblDeportes.setVisible(false);
 		panelMostrarCategorias.add(lblDeportes);
+
+			JTextArea textDeportes1 = new JTextArea("- "+titulares.get(3));
+			textDeportes1.setOpaque(false);
+			textDeportes1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes1.setEditable(false);
+			textDeportes1.setEnabled(false);
+			textDeportes1.setDisabledTextColor(new Color(0, 0, 0));
+			textDeportes1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(3).length()<125)
+				textDeportes1.setBounds(50, 100, 600, 16);
+			else
+				textDeportes1.setBounds(50, 100, 600, 33);
+			textDeportes1.setLineWrap(true);
+			textDeportes1.setVisible(false);
+			panelMostrarCategorias.add(textDeportes1);
+			JTextArea textDeportes2 = new JTextArea("- "+titulares.get(4));
+			textDeportes2.setOpaque(false);
+			textDeportes2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes2.setEditable(false);
+			textDeportes2.setEnabled(false);
+			textDeportes2.setDisabledTextColor(new Color(0, 0, 0));
+			textDeportes2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(4).length()<125)
+				textDeportes2.setBounds(50, 100, 600, 16);
+			else
+				textDeportes2.setBounds(50, 100, 600, 33);
+			textDeportes2.setLineWrap(true);
+			textDeportes2.setVisible(false);
+			panelMostrarCategorias.add(textDeportes2);
+			JTextArea textDeportes3 = new JTextArea("- "+titulares.get(5));
+			textDeportes3.setOpaque(false);
+			textDeportes3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes3.setEditable(false);
+			textDeportes3.setEnabled(false);
+			textDeportes3.setDisabledTextColor(new Color(0, 0, 0));
+			textDeportes3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(5).length()<125)
+				textDeportes3.setBounds(50, 100, 600, 16);
+			else
+				textDeportes3.setBounds(50, 100, 600, 33);
+			textDeportes3.setLineWrap(true);
+			textDeportes3.setVisible(false);
+			panelMostrarCategorias.add(textDeportes3);
+
 		
 		JLabel lblNacional = new JLabel("Nacional");
-		lblNacional.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblNacional.setBounds(50, 100, 149, 41);
+		lblNacional.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblNacional.setBounds(50, 100, 150, 30);
 		lblNacional.setVisible(false);
 		panelMostrarCategorias.add(lblNacional);
+
+
+			JTextArea textNacional1 = new JTextArea("- "+titulares.get(6));
+			textNacional1.setOpaque(false);
+			textNacional1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional1.setEditable(false);
+			textNacional1.setEnabled(false);
+			textNacional1.setDisabledTextColor(new Color(0, 0, 0));
+			textNacional1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(6).length()<125)
+				textNacional1.setBounds(50, 100, 600, 16);
+			else
+				textNacional1.setBounds(50, 100, 600, 33);
+			textNacional1.setLineWrap(true);
+			textNacional1.setVisible(false);
+			panelMostrarCategorias.add(textNacional1);
+			JTextArea textNacional2 = new JTextArea("- "+titulares.get(7));
+			textNacional2.setOpaque(false);
+			textNacional2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional2.setEditable(false);
+			textNacional2.setEnabled(false);
+			textNacional2.setDisabledTextColor(new Color(0, 0, 0));
+			textNacional2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(7).length()<125)
+				textNacional2.setBounds(50, 100, 600, 16);
+			else
+				textNacional2.setBounds(50, 100, 600, 33);
+			textNacional2.setLineWrap(true);
+			textNacional2.setVisible(false);
+			panelMostrarCategorias.add(textNacional2);
+			JTextArea textNacional3 = new JTextArea("- "+titulares.get(8));
+			textNacional3.setOpaque(false);
+			textNacional3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional3.setEditable(false);
+			textNacional3.setEnabled(false);
+			textNacional3.setDisabledTextColor(new Color(0, 0, 0));
+			textNacional3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(8).length()<125)
+				textNacional3.setBounds(50, 100, 600, 16);
+			else
+				textNacional3.setBounds(50, 100, 600, 33);
+			textNacional3.setLineWrap(true);
+			textNacional3.setVisible(false);
+			panelMostrarCategorias.add(textNacional3);
+
 		
 		JLabel lblInternacional = new JLabel("Internacional");
-		lblInternacional.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblInternacional.setBounds(50, 100, 182, 41);
+		lblInternacional.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblInternacional.setBounds(50, 100, 150, 30);
 		lblInternacional.setVisible(false);
 		panelMostrarCategorias.add(lblInternacional);
+
+			JTextArea textInternacional1 = new JTextArea("- "+titulares.get(9));
+			textInternacional1.setOpaque(false);
+			textInternacional1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional1.setEditable(false);
+			textInternacional1.setEnabled(false);
+			textInternacional1.setDisabledTextColor(new Color(0, 0, 0));
+			textInternacional1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(9).length()<125)
+				textInternacional1.setBounds(50, 100, 600, 16);
+			else
+				textInternacional1.setBounds(50, 100, 600, 33);
+			textInternacional1.setLineWrap(true);
+			textInternacional1.setVisible(false);
+			panelMostrarCategorias.add(textInternacional1);
+			JTextArea textInternacional2 = new JTextArea("- "+titulares.get(10));
+			textInternacional2.setOpaque(false);
+			textInternacional2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional2.setEditable(false);
+			textInternacional2.setEnabled(false);
+			textInternacional2.setDisabledTextColor(new Color(0, 0, 0));
+			textInternacional2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(10).length()<125)
+				textInternacional2.setBounds(50, 100, 600, 16);
+			else
+				textInternacional2.setBounds(50, 100, 600, 33);
+			textInternacional2.setLineWrap(true);
+			textInternacional2.setVisible(false);
+			panelMostrarCategorias.add(textInternacional2);
+			JTextArea textInternacional3 = new JTextArea("- "+titulares.get(11));
+			textInternacional3.setOpaque(false);
+			textInternacional3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional3.setEditable(false);
+			textInternacional3.setEnabled(false);
+			textInternacional3.setDisabledTextColor(new Color(0, 0, 0));
+			textInternacional3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(11).length()<125)
+				textInternacional3.setBounds(50, 100, 600, 16);
+			else
+				textInternacional3.setBounds(50, 100, 600, 33);
+			textInternacional3.setLineWrap(true);
+			textInternacional3.setVisible(false);
+			panelMostrarCategorias.add(textInternacional3);
 		
 		JLabel lblMusica = new JLabel("Música");
-		lblMusica.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblMusica.setBounds(50, 100, 149, 41);
+		lblMusica.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblMusica.setBounds(50, 100, 150, 30);
 		lblMusica.setVisible(false);
 		panelMostrarCategorias.add(lblMusica);
+
+
+			JTextArea textMusica1 = new JTextArea("- "+titulares.get(12));
+			textMusica1.setOpaque(false);
+			textMusica1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica1.setEditable(false);
+			textMusica1.setEnabled(false);
+			textMusica1.setDisabledTextColor(new Color(0, 0, 0));
+			textMusica1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(12).length()<125)
+				textMusica1.setBounds(50, 100, 600, 16);
+			else
+				textMusica1.setBounds(50, 100, 600, 33);
+			textMusica1.setLineWrap(true);
+			textMusica1.setVisible(false);
+			panelMostrarCategorias.add(textMusica1);
+			JTextArea textMusica2 = new JTextArea("- "+titulares.get(13));
+			textMusica2.setOpaque(false);
+			textMusica2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica2.setEditable(false);
+			textMusica2.setEnabled(false);
+			textMusica2.setDisabledTextColor(new Color(0, 0, 0));
+			textMusica2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(13).length()<125)
+				textMusica2.setBounds(50, 100, 600, 16);
+			else
+				textMusica2.setBounds(50, 100, 600, 33);
+			textMusica2.setLineWrap(true);
+			textMusica2.setVisible(false);
+			panelMostrarCategorias.add(textMusica2);
+			JTextArea textMusica3 = new JTextArea("- "+titulares.get(14));
+			textMusica3.setOpaque(false);
+			textMusica3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica3.setEditable(false);
+			textMusica3.setEnabled(false);
+			textMusica3.setDisabledTextColor(new Color(0, 0, 0));
+			textMusica3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(14).length()<125)
+				textMusica3.setBounds(50, 100, 600, 16);
+			else
+				textMusica3.setBounds(50, 100, 600, 33);
+			textMusica3.setLineWrap(true);
+			textMusica3.setVisible(false);
+			panelMostrarCategorias.add(textMusica3);
 		
 		JLabel lblMedioAmbiente = new JLabel("Medio Ambiente");
-		lblMedioAmbiente.setFont(new Font("Fira Sans", Font.BOLD, 20));
-		lblMedioAmbiente.setBounds(50, 100, 207, 41);
+		lblMedioAmbiente.setFont(new Font("Fira Sans", Font.BOLD, 15));
+		lblMedioAmbiente.setBounds(50, 100, 150, 30);
 		lblMedioAmbiente.setVisible(false);
 		panelMostrarCategorias.add(lblMedioAmbiente);
 
+
+			JTextArea textMedioambiente1 = new JTextArea("- "+titulares.get(15));
+			textMedioambiente1.setOpaque(false);
+			textMedioambiente1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente1.setEditable(false);
+			textMedioambiente1.setEnabled(false);
+			textMedioambiente1.setDisabledTextColor(new Color(0, 0, 0));
+			textMedioambiente1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(15).length()<125)
+				textMedioambiente1.setBounds(50, 100, 600, 16);
+			else
+				textMedioambiente1.setBounds(50, 100, 600, 33);
+			textMedioambiente1.setLineWrap(true);
+			textMedioambiente1.setVisible(false);
+			panelMostrarCategorias.add(textMedioambiente1);
+			JTextArea textMedioambiente2 = new JTextArea("- "+titulares.get(16));
+			textMedioambiente2.setOpaque(false);
+			textMedioambiente2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente2.setEditable(false);
+			textMedioambiente2.setEnabled(false);
+			textMedioambiente2.setDisabledTextColor(new Color(0, 0, 0));
+			textMedioambiente2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(16).length()<125)
+				textMedioambiente2.setBounds(50, 100, 600, 16);
+			else
+				textMedioambiente2.setBounds(50, 100, 600, 33);
+			textMedioambiente2.setLineWrap(true);
+			textMedioambiente2.setVisible(false);
+			panelMostrarCategorias.add(textMedioambiente2);
+			JTextArea textMedioambiente3 = new JTextArea("- "+titulares.get(17));
+			textMedioambiente3.setOpaque(false);
+			textMedioambiente3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente3.setEditable(false);
+			textMedioambiente3.setEnabled(false);
+			textMedioambiente3.setDisabledTextColor(new Color(0, 0, 0));
+			textMedioambiente3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			if(titulares.get(17).length()<125)
+				textMedioambiente3.setBounds(50, 100, 600, 16);
+			else
+				textMedioambiente3.setBounds(50, 100, 600, 33);
+			textMedioambiente3.setLineWrap(true);
+			textMedioambiente3.setVisible(false);
+			panelMostrarCategorias.add(textMedioambiente3);
+		
+		
 //		boolean[] categoriasMostrar = Evento.usuarioLogueado.getCategorias();
 	}
 
