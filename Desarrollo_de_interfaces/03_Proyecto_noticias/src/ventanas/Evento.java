@@ -64,6 +64,12 @@ public class Evento implements ActionListener{
 		this.correoEnviar = correo;
 	}
 
+	public Evento(String accion, ArrayList<JButton> todosBotones) {
+		super();
+		this.accion = accion;
+		this.todosBotones = todosBotones;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (accion) {
@@ -76,11 +82,27 @@ public class Evento implements ActionListener{
 		case "mostrar categorias":
 			mostrar_categorias_seleccionadas();
 			break;
+		case "cerrar sesion":
+			cerrar_sesion();
+			break;
 		case "enviar categorias":
 			enviar_categorias_seleccionadas();
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void cerrar_sesion() {
+		// TODO Auto-generated method stub
+		usuarioLogueado = null;
+		todosPaneles.setLayer(todosPaneles.getComponent(0), 4);
+		todosPaneles.setLayer(todosPaneles.getComponent(1), 3);
+		todosPaneles.setLayer(todosPaneles.getComponent(2), 2);
+		todosPaneles.setLayer(todosPaneles.getComponent(3), 5);
+		todosBotones.get(0).setEnabled(true);
+		for (int i = 1; i < todosBotones.size(); i++) {
+			todosBotones.get(i).setEnabled(false);
 		}
 	}
 
@@ -93,7 +115,7 @@ public class Evento implements ActionListener{
 		int y = 20;
 		int i, j = 0;
 		componentesCategorias[0].setVisible(!componentesCategorias[0].isVisible());
-		for (i = 1; i < componentesCategorias.length-2; i++) {
+		for (i = 1; i < componentesCategorias.length-4; i++) {
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
 				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
@@ -125,6 +147,9 @@ public class Evento implements ActionListener{
 			}
 			j++;
 		}
+		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
+		i++;
 		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
 		i++;
@@ -181,6 +206,7 @@ public class Evento implements ActionListener{
 				todosPaneles.setLayer(todosPaneles.getComponent(1), 5);
 			}
 			todosBotones.get(0).setEnabled(false);
+			todosBotones.get(5).setEnabled(true);
 		}
 	}
 

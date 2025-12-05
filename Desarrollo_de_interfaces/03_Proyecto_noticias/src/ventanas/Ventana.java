@@ -195,23 +195,38 @@ public class Ventana extends JFrame{
 		btnMostrarCategorias.setBounds(250, 300, 180, 75);
 		panelMostrarCategorias.add(btnMostrarCategorias);
 		btnMostrarCategorias.setEnabled(false);
-		
+
 		JButton btnEsconderCategorias = new JButton("Atrás");
 		btnEsconderCategorias.setBounds(70, 630, 110, 25);
 		panelMostrarCategorias.add(btnEsconderCategorias);
 		btnEsconderCategorias.setEnabled(false);
 		btnEsconderCategorias.setVisible(false);
+		JButton btnEnviarCategorias = new JButton("Guardar");
+		btnEnviarCategorias.setBounds(300, 630, 110, 25);
+		panelMostrarCategorias.add(btnEnviarCategorias);
+		btnEnviarCategorias.setEnabled(false);
+		btnEnviarCategorias.setVisible(false);
+		// este boton lo podría poner en la creacion del panel? porque solo me sale en un panel
+		JButton btnCerrarSesion = new JButton("Cerrar sesión");
+		btnCerrarSesion.setBounds(530, 630, 110, 25);
+		btnCerrarSesion.setEnabled(false);
+		btnCerrarSesion.setVisible(true);
+		panelMostrarCategorias.add(btnCerrarSesion);
+		panelGeneralAdmin.add(btnCerrarSesion);
+		panelCategoriasFavoritas.add(btnCerrarSesion);
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
 		btnEsconderCategorias.addActionListener(mostrarCategorias);
-		
+		Evento enviarCategorias = new Evento("enviar categorias");
+		btnEsconderCategorias.addActionListener(enviarCategorias);
+		/*
 		JButton btnEnviarCategorias = new JButton("Enviar");
 		btnEnviarCategorias.setBounds(314, 615, 117, 25);
 		panelGeneralAdmin.add(btnEnviarCategorias);
 		btnEnviarCategorias.setEnabled(false);
 		Evento enviarCategorias = new Evento("enviar categorias");
 		btnEnviarCategorias.addActionListener(enviarCategorias);
-		
+		*/
 		
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
@@ -224,7 +239,10 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnMostrarCategorias);
 		todosBotones.add(btnEsconderCategorias);
 		todosBotones.add(btnEnviarCategorias);
-		
+		todosBotones.add(btnCerrarSesion);
+
+		Evento cerrarSesion = new Evento("cerrar sesion", todosBotones);
+		btnCerrarSesion.addActionListener(cerrarSesion);
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones);
 		btnEntrar.addActionListener(comprobarSesion);
 		
