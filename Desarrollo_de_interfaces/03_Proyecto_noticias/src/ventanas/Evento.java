@@ -92,26 +92,17 @@ public class Evento implements ActionListener{
 	private void mostrar_categorias_seleccionadas() {
 		int y = 20;
 		int i, j = 0;
-		componentesCategorias[0].setVisible(false);
-		for (i = 1; i < componentesCategorias.length-1; i++) {
-			// TODO si hay alguna noticia de una categoria mostrar el titulo y las noticias favoritas del usuario
+		componentesCategorias[0].setVisible(!componentesCategorias[0].isVisible());
+		for (i = 1; i < componentesCategorias.length-2; i++) {
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
-				componentesCategorias[i].setVisible(true);
+				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
 			}
 			i++;
 			if(usuarioLogueado.getCategorias()[j]) {
-				componentesCategorias[i].setVisible(true);
-				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
-				y += componentesCategorias[i].getHeight();
-				System.out.println("Mostrando..."+i);
-			}
-			j++;
-			i++;
-			if(usuarioLogueado.getCategorias()[j]) {
-				componentesCategorias[i].setVisible(true);
+				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
@@ -119,14 +110,26 @@ public class Evento implements ActionListener{
 			j++;
 			i++;
 			if(usuarioLogueado.getCategorias()[j]) {
-				componentesCategorias[i].setVisible(true);
+				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
+				y += componentesCategorias[i].getHeight();
+				System.out.println("Mostrando..."+i);
+			}
+			j++;
+			i++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
 			}
 			j++;
 		}
-		componentesCategorias[i].setVisible(false);
+		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
+		i++;
+		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
 	}
 
 	private void comprobar_categorias_seleccionadas() {

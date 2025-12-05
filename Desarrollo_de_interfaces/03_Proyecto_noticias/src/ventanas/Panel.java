@@ -24,7 +24,7 @@ public class Panel extends JPanel{
 		super();
 		setBackground(new Color(133, 239, 237));
 		setLayout(null);
-		setBounds(0, 0, 684, 661);
+		setBounds(0, 0, 700, 700);
 		//TODO poner una barra de Menú con un “Acerca de” con los datos de la versión y	el desarrollador. (preguntar a Sergio que quiere)
 		/*
 		 * La barra de arriba del eclipse que pone Help y luego About y te salta una ventana con info

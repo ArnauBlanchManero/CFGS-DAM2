@@ -192,11 +192,18 @@ public class Ventana extends JFrame{
 		btnGuardarCategorias.addActionListener(guardarCategorias);
 
 		JButton btnMostrarCategorias = new JButton("Mostrar");
-		btnMostrarCategorias.setBounds(300, 300, 117, 75);
+		btnMostrarCategorias.setBounds(250, 300, 180, 75);
 		panelMostrarCategorias.add(btnMostrarCategorias);
 		btnMostrarCategorias.setEnabled(false);
+		
+		JButton btnEsconderCategorias = new JButton("Atrás");
+		btnEsconderCategorias.setBounds(70, 630, 110, 25);
+		panelMostrarCategorias.add(btnEsconderCategorias);
+		btnEsconderCategorias.setEnabled(false);
+		btnEsconderCategorias.setVisible(false);
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
+		btnEsconderCategorias.addActionListener(mostrarCategorias);
 		
 		JButton btnEnviarCategorias = new JButton("Enviar");
 		btnEnviarCategorias.setBounds(314, 615, 117, 25);
@@ -215,6 +222,7 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnEntrar);
 		todosBotones.add(btnGuardarCategorias);
 		todosBotones.add(btnMostrarCategorias);
+		todosBotones.add(btnEsconderCategorias);
 		todosBotones.add(btnEnviarCategorias);
 		
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones);
@@ -235,7 +243,7 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
 		lblCategoriasFavoritas.setOpaque(true);
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCategoriasFavoritas.setBounds(193, 12, 312, 64);
+		lblCategoriasFavoritas.setBounds(193, 200, 312, 64);
 		panelMostrarCategorias.add(lblCategoriasFavoritas);	
 		
 		for (String string : titulares) {
