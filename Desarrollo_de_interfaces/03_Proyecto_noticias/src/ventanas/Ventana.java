@@ -206,14 +206,22 @@ public class Ventana extends JFrame{
 		panelMostrarCategorias.add(btnEnviarCategorias);
 		btnEnviarCategorias.setEnabled(false);
 		btnEnviarCategorias.setVisible(false);
-		// este boton lo podría poner en la creacion del panel? porque solo me sale en un panel
-		JButton btnCerrarSesion = new JButton("Cerrar sesión");
-		btnCerrarSesion.setBounds(530, 630, 110, 25);
-		btnCerrarSesion.setEnabled(false);
-		btnCerrarSesion.setVisible(true);
-		panelMostrarCategorias.add(btnCerrarSesion);
-		panelGeneralAdmin.add(btnCerrarSesion);
-		panelCategoriasFavoritas.add(btnCerrarSesion);
+		
+		JButton btnCerrarSesionMostrarCategorias = new JButton("Cerrar sesión");
+		btnCerrarSesionMostrarCategorias.setBounds(530, 630, 150, 25);
+		btnCerrarSesionMostrarCategorias.setEnabled(false);
+		btnCerrarSesionMostrarCategorias.setVisible(true);
+		panelMostrarCategorias.add(btnCerrarSesionMostrarCategorias);
+		JButton btnCerrarSesionGeneralAdmin = new JButton("Cerrar sesión");
+		btnCerrarSesionGeneralAdmin.setBounds(450, 580, 150, 25);
+		btnCerrarSesionGeneralAdmin.setEnabled(false);
+		btnCerrarSesionGeneralAdmin.setVisible(true);
+		panelGeneralAdmin.add(btnCerrarSesionGeneralAdmin);
+		JButton btnCerrarSesionCategoriasFavoritas = new JButton("Cerrar sesión");
+		btnCerrarSesionCategoriasFavoritas.setBounds(500, 615, 150, 25);
+		btnCerrarSesionCategoriasFavoritas.setEnabled(false);
+		btnCerrarSesionCategoriasFavoritas.setVisible(true);
+		panelCategoriasFavoritas.add(btnCerrarSesionCategoriasFavoritas);
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
 		btnEsconderCategorias.addActionListener(mostrarCategorias);
@@ -234,16 +242,20 @@ public class Ventana extends JFrame{
 		panelInicioSesion.setEnabled(true);
 		
 		ArrayList<JButton> todosBotones = new ArrayList<JButton>();
-		todosBotones.add(btnEntrar);
-		todosBotones.add(btnGuardarCategorias);
-		todosBotones.add(btnMostrarCategorias);
-		todosBotones.add(btnEsconderCategorias);
-		todosBotones.add(btnEnviarCategorias);
-		todosBotones.add(btnCerrarSesion);
+		todosBotones.add(btnEntrar); //0
+		todosBotones.add(btnGuardarCategorias); //1
+		todosBotones.add(btnMostrarCategorias); //2
+		todosBotones.add(btnEsconderCategorias); //3
+		todosBotones.add(btnEnviarCategorias); //4
+		todosBotones.add(btnCerrarSesionMostrarCategorias); //5
+		todosBotones.add(btnCerrarSesionCategoriasFavoritas); //6
+		todosBotones.add(btnCerrarSesionGeneralAdmin); //7
 
 		Evento cerrarSesion = new Evento("cerrar sesion", todosBotones);
-		btnCerrarSesion.addActionListener(cerrarSesion);
-		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones);
+		btnCerrarSesionMostrarCategorias.addActionListener(cerrarSesion);
+		btnCerrarSesionCategoriasFavoritas.addActionListener(cerrarSesion);
+		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
+		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);
 		btnEntrar.addActionListener(comprobarSesion);
 		
 		todosPaneles.add(panelInicioSesion);
@@ -253,7 +265,7 @@ public class Ventana extends JFrame{
 	}
 	
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
-		// TODO Auto-generated method stub
+
 		JLabel lblCategoriasFavoritas = new JLabel("Tus noticias");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
 		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
@@ -263,7 +275,7 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCategoriasFavoritas.setBounds(193, 200, 312, 64);
 		panelMostrarCategorias.add(lblCategoriasFavoritas);	
-		
+		// TODO eliminar esto
 		for (String string : titulares) {
 			System.out.println(string);
 			System.out.println(string.length());
@@ -271,98 +283,98 @@ public class Ventana extends JFrame{
 		
 		JLabel lblEconomia = new JLabel("Economía");
 		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblEconomia.setBounds(50, 100, 150, 30);
+		lblEconomia.setBounds(50, 100, 150, 25);
 		lblEconomia.setVisible(false);
 		panelMostrarCategorias.add(lblEconomia);
 
 			JTextArea textEconomia1 = new JTextArea("- "+titulares.get(0));
 			textEconomia1.setOpaque(false);
-			textEconomia1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textEconomia1.setEditable(false);
 			textEconomia1.setEnabled(false);
 			textEconomia1.setDisabledTextColor(new Color(0, 0, 0));
 			textEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(0).length()<125)
-				textEconomia1.setBounds(50, 100, 600, 16);
+			if(titulares.get(0).length()<102)
+				textEconomia1.setBounds(50, 100, 620, 16);
 			else
-				textEconomia1.setBounds(50, 100, 600, 33);
+				textEconomia1.setBounds(50, 100, 620, 30);
 			textEconomia1.setLineWrap(true);
 			textEconomia1.setVisible(false);
 			panelMostrarCategorias.add(textEconomia1);
 			JTextArea textEconomia2 = new JTextArea("- "+titulares.get(1));
 			textEconomia2.setOpaque(false);
-			textEconomia2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textEconomia2.setEditable(false);
 			textEconomia2.setEnabled(false);
 			textEconomia2.setDisabledTextColor(new Color(0, 0, 0));
 			textEconomia2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(1).length()<125)
-				textEconomia2.setBounds(50, 100, 600, 16);
+			if(titulares.get(1).length()<102)
+				textEconomia2.setBounds(50, 100, 620, 16);
 			else
-				textEconomia2.setBounds(50, 100, 600, 33);
+				textEconomia2.setBounds(50, 100, 620, 30);
 			textEconomia2.setLineWrap(true);
 			textEconomia2.setVisible(false);
 			panelMostrarCategorias.add(textEconomia2);
 			JTextArea textEconomia3 = new JTextArea("- "+titulares.get(2));
 			textEconomia3.setOpaque(false);
-			textEconomia3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textEconomia3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textEconomia3.setEditable(false);
 			textEconomia3.setEnabled(false);
 			textEconomia3.setDisabledTextColor(new Color(0, 0, 0));
 			textEconomia3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(2).length()<125)
-				textEconomia3.setBounds(50, 100, 600, 16);
+			if(titulares.get(2).length()<102)
+				textEconomia3.setBounds(50, 100, 620, 16);
 			else
-				textEconomia3.setBounds(50, 100, 600, 33);
+				textEconomia3.setBounds(50, 100, 620, 30);
 			textEconomia3.setLineWrap(true);
 			textEconomia3.setVisible(false);
 			panelMostrarCategorias.add(textEconomia3);
 		
 		JLabel lblDeportes = new JLabel("Deportes");
 		lblDeportes.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblDeportes.setBounds(50, 100, 150, 30);
+		lblDeportes.setBounds(50, 100, 150, 25);
 		lblDeportes.setVisible(false);
 		panelMostrarCategorias.add(lblDeportes);
 
 			JTextArea textDeportes1 = new JTextArea("- "+titulares.get(3));
 			textDeportes1.setOpaque(false);
-			textDeportes1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textDeportes1.setEditable(false);
 			textDeportes1.setEnabled(false);
 			textDeportes1.setDisabledTextColor(new Color(0, 0, 0));
 			textDeportes1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(3).length()<125)
-				textDeportes1.setBounds(50, 100, 600, 16);
+			if(titulares.get(3).length()<102)
+				textDeportes1.setBounds(50, 100, 620, 16);
 			else
-				textDeportes1.setBounds(50, 100, 600, 33);
+				textDeportes1.setBounds(50, 100, 620, 30);
 			textDeportes1.setLineWrap(true);
 			textDeportes1.setVisible(false);
 			panelMostrarCategorias.add(textDeportes1);
 			JTextArea textDeportes2 = new JTextArea("- "+titulares.get(4));
 			textDeportes2.setOpaque(false);
-			textDeportes2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textDeportes2.setEditable(false);
 			textDeportes2.setEnabled(false);
 			textDeportes2.setDisabledTextColor(new Color(0, 0, 0));
 			textDeportes2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(4).length()<125)
-				textDeportes2.setBounds(50, 100, 600, 16);
+			if(titulares.get(4).length()<102)
+				textDeportes2.setBounds(50, 100, 620, 16);
 			else
-				textDeportes2.setBounds(50, 100, 600, 33);
+				textDeportes2.setBounds(50, 100, 620, 30);
 			textDeportes2.setLineWrap(true);
 			textDeportes2.setVisible(false);
 			panelMostrarCategorias.add(textDeportes2);
 			JTextArea textDeportes3 = new JTextArea("- "+titulares.get(5));
 			textDeportes3.setOpaque(false);
-			textDeportes3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textDeportes3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textDeportes3.setEditable(false);
 			textDeportes3.setEnabled(false);
 			textDeportes3.setDisabledTextColor(new Color(0, 0, 0));
 			textDeportes3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(5).length()<125)
-				textDeportes3.setBounds(50, 100, 600, 16);
+			if(titulares.get(5).length()<102)
+				textDeportes3.setBounds(50, 100, 620, 16);
 			else
-				textDeportes3.setBounds(50, 100, 600, 33);
+				textDeportes3.setBounds(50, 100, 620, 30);
 			textDeportes3.setLineWrap(true);
 			textDeportes3.setVisible(false);
 			panelMostrarCategorias.add(textDeportes3);
@@ -370,50 +382,50 @@ public class Ventana extends JFrame{
 		
 		JLabel lblNacional = new JLabel("Nacional");
 		lblNacional.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblNacional.setBounds(50, 100, 150, 30);
+		lblNacional.setBounds(50, 100, 150, 25);
 		lblNacional.setVisible(false);
 		panelMostrarCategorias.add(lblNacional);
 
 
 			JTextArea textNacional1 = new JTextArea("- "+titulares.get(6));
 			textNacional1.setOpaque(false);
-			textNacional1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textNacional1.setEditable(false);
 			textNacional1.setEnabled(false);
 			textNacional1.setDisabledTextColor(new Color(0, 0, 0));
 			textNacional1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(6).length()<125)
-				textNacional1.setBounds(50, 100, 600, 16);
+			if(titulares.get(6).length()<102)
+				textNacional1.setBounds(50, 100, 620, 16);
 			else
-				textNacional1.setBounds(50, 100, 600, 33);
+				textNacional1.setBounds(50, 100, 620, 30);
 			textNacional1.setLineWrap(true);
 			textNacional1.setVisible(false);
 			panelMostrarCategorias.add(textNacional1);
 			JTextArea textNacional2 = new JTextArea("- "+titulares.get(7));
 			textNacional2.setOpaque(false);
-			textNacional2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textNacional2.setEditable(false);
 			textNacional2.setEnabled(false);
 			textNacional2.setDisabledTextColor(new Color(0, 0, 0));
 			textNacional2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(7).length()<125)
-				textNacional2.setBounds(50, 100, 600, 16);
+			if(titulares.get(7).length()<102)
+				textNacional2.setBounds(50, 100, 620, 16);
 			else
-				textNacional2.setBounds(50, 100, 600, 33);
+				textNacional2.setBounds(50, 100, 620, 30);
 			textNacional2.setLineWrap(true);
 			textNacional2.setVisible(false);
 			panelMostrarCategorias.add(textNacional2);
 			JTextArea textNacional3 = new JTextArea("- "+titulares.get(8));
 			textNacional3.setOpaque(false);
-			textNacional3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textNacional3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textNacional3.setEditable(false);
 			textNacional3.setEnabled(false);
 			textNacional3.setDisabledTextColor(new Color(0, 0, 0));
 			textNacional3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(8).length()<125)
-				textNacional3.setBounds(50, 100, 600, 16);
+			if(titulares.get(8).length()<102)
+				textNacional3.setBounds(50, 100, 620, 16);
 			else
-				textNacional3.setBounds(50, 100, 600, 33);
+				textNacional3.setBounds(50, 100, 620, 30);
 			textNacional3.setLineWrap(true);
 			textNacional3.setVisible(false);
 			panelMostrarCategorias.add(textNacional3);
@@ -421,149 +433,149 @@ public class Ventana extends JFrame{
 		
 		JLabel lblInternacional = new JLabel("Internacional");
 		lblInternacional.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblInternacional.setBounds(50, 100, 150, 30);
+		lblInternacional.setBounds(50, 100, 150, 25);
 		lblInternacional.setVisible(false);
 		panelMostrarCategorias.add(lblInternacional);
 
 			JTextArea textInternacional1 = new JTextArea("- "+titulares.get(9));
 			textInternacional1.setOpaque(false);
-			textInternacional1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textInternacional1.setEditable(false);
 			textInternacional1.setEnabled(false);
 			textInternacional1.setDisabledTextColor(new Color(0, 0, 0));
 			textInternacional1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(9).length()<125)
-				textInternacional1.setBounds(50, 100, 600, 16);
+			if(titulares.get(9).length()<102)
+				textInternacional1.setBounds(50, 100, 620, 16);
 			else
-				textInternacional1.setBounds(50, 100, 600, 33);
+				textInternacional1.setBounds(50, 100, 620, 30);
 			textInternacional1.setLineWrap(true);
 			textInternacional1.setVisible(false);
 			panelMostrarCategorias.add(textInternacional1);
 			JTextArea textInternacional2 = new JTextArea("- "+titulares.get(10));
 			textInternacional2.setOpaque(false);
-			textInternacional2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textInternacional2.setEditable(false);
 			textInternacional2.setEnabled(false);
 			textInternacional2.setDisabledTextColor(new Color(0, 0, 0));
 			textInternacional2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(10).length()<125)
-				textInternacional2.setBounds(50, 100, 600, 16);
+			if(titulares.get(10).length()<102)
+				textInternacional2.setBounds(50, 100, 620, 16);
 			else
-				textInternacional2.setBounds(50, 100, 600, 33);
+				textInternacional2.setBounds(50, 100, 620, 30);
 			textInternacional2.setLineWrap(true);
 			textInternacional2.setVisible(false);
 			panelMostrarCategorias.add(textInternacional2);
 			JTextArea textInternacional3 = new JTextArea("- "+titulares.get(11));
 			textInternacional3.setOpaque(false);
-			textInternacional3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textInternacional3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textInternacional3.setEditable(false);
 			textInternacional3.setEnabled(false);
 			textInternacional3.setDisabledTextColor(new Color(0, 0, 0));
 			textInternacional3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(11).length()<125)
-				textInternacional3.setBounds(50, 100, 600, 16);
+			if(titulares.get(11).length()<102)
+				textInternacional3.setBounds(50, 100, 620, 16);
 			else
-				textInternacional3.setBounds(50, 100, 600, 33);
+				textInternacional3.setBounds(50, 100, 620, 30);
 			textInternacional3.setLineWrap(true);
 			textInternacional3.setVisible(false);
 			panelMostrarCategorias.add(textInternacional3);
 		
 		JLabel lblMusica = new JLabel("Música");
 		lblMusica.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblMusica.setBounds(50, 100, 150, 30);
+		lblMusica.setBounds(50, 100, 150, 25);
 		lblMusica.setVisible(false);
 		panelMostrarCategorias.add(lblMusica);
 
 
 			JTextArea textMusica1 = new JTextArea("- "+titulares.get(12));
 			textMusica1.setOpaque(false);
-			textMusica1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMusica1.setEditable(false);
 			textMusica1.setEnabled(false);
 			textMusica1.setDisabledTextColor(new Color(0, 0, 0));
 			textMusica1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(12).length()<125)
-				textMusica1.setBounds(50, 100, 600, 16);
+			if(titulares.get(12).length()<102)
+				textMusica1.setBounds(50, 100, 620, 16);
 			else
-				textMusica1.setBounds(50, 100, 600, 33);
+				textMusica1.setBounds(50, 100, 620, 30);
 			textMusica1.setLineWrap(true);
 			textMusica1.setVisible(false);
 			panelMostrarCategorias.add(textMusica1);
 			JTextArea textMusica2 = new JTextArea("- "+titulares.get(13));
 			textMusica2.setOpaque(false);
-			textMusica2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMusica2.setEditable(false);
 			textMusica2.setEnabled(false);
 			textMusica2.setDisabledTextColor(new Color(0, 0, 0));
 			textMusica2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(13).length()<125)
-				textMusica2.setBounds(50, 100, 600, 16);
+			if(titulares.get(13).length()<102)
+				textMusica2.setBounds(50, 100, 620, 16);
 			else
-				textMusica2.setBounds(50, 100, 600, 33);
+				textMusica2.setBounds(50, 100, 620, 30);
 			textMusica2.setLineWrap(true);
 			textMusica2.setVisible(false);
 			panelMostrarCategorias.add(textMusica2);
 			JTextArea textMusica3 = new JTextArea("- "+titulares.get(14));
 			textMusica3.setOpaque(false);
-			textMusica3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMusica3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMusica3.setEditable(false);
 			textMusica3.setEnabled(false);
 			textMusica3.setDisabledTextColor(new Color(0, 0, 0));
 			textMusica3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(14).length()<125)
-				textMusica3.setBounds(50, 100, 600, 16);
+			if(titulares.get(14).length()<102)
+				textMusica3.setBounds(50, 100, 620, 16);
 			else
-				textMusica3.setBounds(50, 100, 600, 33);
+				textMusica3.setBounds(50, 100, 620, 30);
 			textMusica3.setLineWrap(true);
 			textMusica3.setVisible(false);
 			panelMostrarCategorias.add(textMusica3);
 		
 		JLabel lblMedioAmbiente = new JLabel("Medio Ambiente");
 		lblMedioAmbiente.setFont(new Font("Fira Sans", Font.BOLD, 15));
-		lblMedioAmbiente.setBounds(50, 100, 150, 30);
+		lblMedioAmbiente.setBounds(50, 100, 150, 25);
 		lblMedioAmbiente.setVisible(false);
 		panelMostrarCategorias.add(lblMedioAmbiente);
 
 
 			JTextArea textMedioambiente1 = new JTextArea("- "+titulares.get(15));
 			textMedioambiente1.setOpaque(false);
-			textMedioambiente1.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente1.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMedioambiente1.setEditable(false);
 			textMedioambiente1.setEnabled(false);
 			textMedioambiente1.setDisabledTextColor(new Color(0, 0, 0));
 			textMedioambiente1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(15).length()<125)
-				textMedioambiente1.setBounds(50, 100, 600, 16);
+			if(titulares.get(15).length()<102)
+				textMedioambiente1.setBounds(50, 100, 620, 16);
 			else
-				textMedioambiente1.setBounds(50, 100, 600, 33);
+				textMedioambiente1.setBounds(50, 100, 620, 30);
 			textMedioambiente1.setLineWrap(true);
 			textMedioambiente1.setVisible(false);
 			panelMostrarCategorias.add(textMedioambiente1);
 			JTextArea textMedioambiente2 = new JTextArea("- "+titulares.get(16));
 			textMedioambiente2.setOpaque(false);
-			textMedioambiente2.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente2.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMedioambiente2.setEditable(false);
 			textMedioambiente2.setEnabled(false);
 			textMedioambiente2.setDisabledTextColor(new Color(0, 0, 0));
 			textMedioambiente2.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(16).length()<125)
-				textMedioambiente2.setBounds(50, 100, 600, 16);
+			if(titulares.get(16).length()<102)
+				textMedioambiente2.setBounds(50, 100, 620, 16);
 			else
-				textMedioambiente2.setBounds(50, 100, 600, 33);
+				textMedioambiente2.setBounds(50, 100, 620, 30);
 			textMedioambiente2.setLineWrap(true);
 			textMedioambiente2.setVisible(false);
 			panelMostrarCategorias.add(textMedioambiente2);
 			JTextArea textMedioambiente3 = new JTextArea("- "+titulares.get(17));
 			textMedioambiente3.setOpaque(false);
-			textMedioambiente3.setFont(new Font("Cantarell", Font.PLAIN, 11));
+			textMedioambiente3.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 			textMedioambiente3.setEditable(false);
 			textMedioambiente3.setEnabled(false);
 			textMedioambiente3.setDisabledTextColor(new Color(0, 0, 0));
 			textMedioambiente3.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			if(titulares.get(17).length()<125)
-				textMedioambiente3.setBounds(50, 100, 600, 16);
+			if(titulares.get(17).length()<102)
+				textMedioambiente3.setBounds(50, 100, 620, 16);
 			else
-				textMedioambiente3.setBounds(50, 100, 600, 33);
+				textMedioambiente3.setBounds(50, 100, 620, 30);
 			textMedioambiente3.setLineWrap(true);
 			textMedioambiente3.setVisible(false);
 			panelMostrarCategorias.add(textMedioambiente3);
@@ -641,6 +653,7 @@ public class Ventana extends JFrame{
 		chckbxEconomia1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxEconomia1.setBackground(new Color(255, 190, 111));
 		chckbxEconomia1.setBounds(152, 183, 129, 23);
+		chckbxEconomia1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxEconomia1); // [8] 
 		todosCheckboxes[0] = chckbxEconomia1;
 //		chckbxEconomia1.isSelected();
@@ -651,6 +664,7 @@ public class Ventana extends JFrame{
 		chckbxEconomia2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxEconomia2.setBackground(new Color(255, 190, 111));
 		chckbxEconomia2.setBounds(152, 210, 129, 23);
+		chckbxEconomia2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxEconomia2);
 		todosCheckboxes[1] = chckbxEconomia2;
 		
@@ -660,6 +674,7 @@ public class Ventana extends JFrame{
 		chckbxEconomia3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxEconomia3.setBackground(new Color(255, 190, 111));
 		chckbxEconomia3.setBounds(152, 237, 129, 23);
+		chckbxEconomia3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxEconomia3);
 		todosCheckboxes[2] = chckbxEconomia3;
 		
@@ -669,6 +684,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxDeportes1.setBackground(new Color(255, 190, 111));
 		chckbxDeportes1.setBounds(468, 183, 129, 23);
+		chckbxDeportes1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxDeportes1);
 		todosCheckboxes[3] = chckbxDeportes1;
 		
@@ -678,6 +694,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxDeportes2.setBackground(new Color(255, 190, 111));
 		chckbxDeportes2.setBounds(468, 210, 129, 23);
+		chckbxDeportes2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxDeportes2);
 		todosCheckboxes[4] = chckbxDeportes2;
 		
@@ -687,6 +704,7 @@ public class Ventana extends JFrame{
 		chckbxDeportes3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxDeportes3.setBackground(new Color(255, 190, 111));
 		chckbxDeportes3.setBounds(468, 237, 129, 23);
+		chckbxDeportes3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxDeportes3);
 		todosCheckboxes[5] = chckbxDeportes3;
 		
@@ -696,6 +714,7 @@ public class Ventana extends JFrame{
 		chckbxNacional1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxNacional1.setBackground(new Color(255, 190, 111));
 		chckbxNacional1.setBounds(152, 335, 129, 23);
+		chckbxNacional1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxNacional1);
 		todosCheckboxes[6] = chckbxNacional1;
 		
@@ -705,6 +724,7 @@ public class Ventana extends JFrame{
 		chckbxNacional2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxNacional2.setBackground(new Color(255, 190, 111));
 		chckbxNacional2.setBounds(152, 362, 129, 23);
+		chckbxNacional2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxNacional2);
 		todosCheckboxes[7] = chckbxNacional2;
 		
@@ -714,6 +734,7 @@ public class Ventana extends JFrame{
 		chckbxNacional3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxNacional3.setBackground(new Color(255, 190, 111));
 		chckbxNacional3.setBounds(152, 389, 129, 23);
+		chckbxNacional3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxNacional3);
 		todosCheckboxes[8] = chckbxNacional3;
 		
@@ -723,6 +744,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxInternacional1.setBackground(new Color(255, 190, 111));
 		chckbxInternacional1.setBounds(468, 335, 129, 23);
+		chckbxInternacional1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxInternacional1);
 		todosCheckboxes[9] = chckbxInternacional1;
 		
@@ -732,6 +754,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxInternacional2.setBackground(new Color(255, 190, 111));
 		chckbxInternacional2.setBounds(468, 362, 129, 23);
+		chckbxInternacional2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxInternacional2);
 		todosCheckboxes[10] = chckbxInternacional2;
 		
@@ -741,6 +764,7 @@ public class Ventana extends JFrame{
 		chckbxInternacional3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxInternacional3.setBackground(new Color(255, 190, 111));
 		chckbxInternacional3.setBounds(468, 389, 129, 23);
+		chckbxInternacional3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxInternacional3);
 		todosCheckboxes[11] = chckbxInternacional3;
 		
@@ -750,6 +774,7 @@ public class Ventana extends JFrame{
 		chckbxMusica1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMusica1.setBackground(new Color(255, 190, 111));
 		chckbxMusica1.setBounds(152, 502, 129, 23);
+		chckbxMusica1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMusica1);
 		todosCheckboxes[12] = chckbxMusica1;
 		
@@ -759,6 +784,7 @@ public class Ventana extends JFrame{
 		chckbxMusica2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMusica2.setBackground(new Color(255, 190, 111));
 		chckbxMusica2.setBounds(152, 529, 129, 23);
+		chckbxMusica2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMusica2);
 		todosCheckboxes[13] = chckbxMusica2;
 		
@@ -768,6 +794,7 @@ public class Ventana extends JFrame{
 		chckbxMusica3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMusica3.setBackground(new Color(255, 190, 111));
 		chckbxMusica3.setBounds(152, 556, 129, 23);
+		chckbxMusica3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMusica3);
 		todosCheckboxes[14] = chckbxMusica3;
 		
@@ -777,6 +804,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente1.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMedioambiente1.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente1.setBounds(468, 502, 129, 23);
+		chckbxMedioambiente1.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMedioambiente1);
 		todosCheckboxes[15] = chckbxMedioambiente1;
 		
@@ -786,6 +814,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente2.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMedioambiente2.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente2.setBounds(468, 529, 129, 23);
+		chckbxMedioambiente2.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMedioambiente2);
 		todosCheckboxes[16] = chckbxMedioambiente2;
 		
@@ -795,6 +824,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente3.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		chckbxMedioambiente3.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente3.setBounds(468, 556, 129, 23);
+		chckbxMedioambiente3.setEnabled(false);
 		panelCategoriasFavoritas.add(chckbxMedioambiente3); // [25] 
 		todosCheckboxes[17] = chckbxMedioambiente3;
 

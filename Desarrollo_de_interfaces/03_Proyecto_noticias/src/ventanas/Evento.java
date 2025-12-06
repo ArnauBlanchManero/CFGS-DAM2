@@ -34,7 +34,7 @@ public class Evento implements ActionListener{
 		this.accion = accion;
 	}
 	
-	public Evento(String accion, JTextField txtNombre, JTextField txtContrasea, JLabel lblSesionIncorrecta, ArrayList<Usuario> arrayUsuarios, JLayeredPane LayeredPane, ArrayList<JButton> todosBotones) {
+	public Evento(String accion, JTextField txtNombre, JTextField txtContrasea, JLabel lblSesionIncorrecta, ArrayList<Usuario> arrayUsuarios, JLayeredPane LayeredPane, ArrayList<JButton> todosBotones, JCheckBox[] checkboxes) {
 		super();
 		this.accion = accion;
 		this.nombreUsuario = txtNombre;
@@ -43,6 +43,7 @@ public class Evento implements ActionListener{
 		usuarios = arrayUsuarios;
 		todosPaneles = LayeredPane;
 		this.todosBotones = todosBotones;
+		this.checkboxes = checkboxes;
 	}
 
 	public Evento(String accion, JCheckBox[] checkboxes, JLabel lblCategoriasIncorrectas) {
@@ -118,22 +119,14 @@ public class Evento implements ActionListener{
 		for (i = 1; i < componentesCategorias.length-4; i++) {
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
 				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
-				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
+				componentesCategorias[i].setBounds(30, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
 			}
 			i++;
 			if(usuarioLogueado.getCategorias()[j]) {
 				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
-				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
-				y += componentesCategorias[i].getHeight();
-				System.out.println("Mostrando..."+i);
-			}
-			j++;
-			i++;
-			if(usuarioLogueado.getCategorias()[j]) {
-				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
-				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
+				componentesCategorias[i].setBounds(30, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
 			}
@@ -141,12 +134,23 @@ public class Evento implements ActionListener{
 			i++;
 			if(usuarioLogueado.getCategorias()[j]) {
 				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
-				componentesCategorias[i].setBounds(35, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
+				componentesCategorias[i].setBounds(30, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
+				y += componentesCategorias[i].getHeight();
+				System.out.println("Mostrando..."+i);
+			}
+			j++;
+			i++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+				componentesCategorias[i].setBounds(30, y, componentesCategorias[i].getWidth(), componentesCategorias[i].getHeight());
 				y += componentesCategorias[i].getHeight();
 				System.out.println("Mostrando..."+i);
 			}
 			j++;
 		}
+		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
+		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
+		i++;
 		componentesCategorias[i].setVisible(!componentesCategorias[i].isVisible());
 		componentesCategorias[i].setEnabled(!componentesCategorias[i].isEnabled());
 		i++;
@@ -196,17 +200,23 @@ public class Evento implements ActionListener{
 				if (sesion.getCategorias()==null) {
 					todosPaneles.setLayer(todosPaneles.getComponent(0), 5); // Esto del getComponent es inestable porque los valores van combiando xd
 					todosBotones.get(1).setEnabled(true);
+					todosBotones.get(6).setEnabled(true);
+					for (JCheckBox chck : checkboxes) {
+						chck.setEnabled(true);
+						chck.setSelected(false);
+					}
 				} else {
 					todosPaneles.setLayer(todosPaneles.getComponent(2), 5);
 					todosBotones.get(2).setEnabled(true);
+					todosBotones.get(5).setEnabled(true);
 					System.out.println("Ya tienes categorias favoritas");
 				}
 			} else if (cargo == 1){
 				// TODO poner los paneles del admin mas arriba y los del usuario mas abajo.
 				todosPaneles.setLayer(todosPaneles.getComponent(1), 5);
+				todosBotones.get(7).setEnabled(true);
 			}
 			todosBotones.get(0).setEnabled(false);
-			todosBotones.get(5).setEnabled(true);
 		}
 	}
 
