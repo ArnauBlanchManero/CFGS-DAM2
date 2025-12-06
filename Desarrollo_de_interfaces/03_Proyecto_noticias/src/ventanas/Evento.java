@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import txt.EscribirTxt;
@@ -19,27 +21,27 @@ public class Evento implements ActionListener{
 	static Usuario usuarioLogueado;
 	static ArrayList<Usuario> usuarios;
 	static JLayeredPane todosPaneles;
-	JTextField nombreUsuario;
-	JTextField contraseñaUsuario;
-	JLabel lblSesionIncorrecta;
+	static JTextField nombreUsuario;
+	static JPasswordField contraseñaUsuario;
+	static JLabel lblSesionIncorrecta;
 	JCheckBox[] checkboxes;
 	JLabel lblCategoriasIncorrectas;
 	ArrayList<JButton> todosBotones;
-	private boolean[] categorias;
 	private Component[] componentesCategorias;
 	private String correoEnviar;
+	private JRadioButton mostrarContrasenia;
 	
 	public Evento(String accion) {
 		super();
 		this.accion = accion;
 	}
 	
-	public Evento(String accion, JTextField txtNombre, JTextField txtContrasea, JLabel lblSesionIncorrecta, ArrayList<Usuario> arrayUsuarios, JLayeredPane LayeredPane, ArrayList<JButton> todosBotones, JCheckBox[] checkboxes) {
+	public Evento(String accion, JTextField txtNombre, JPasswordField pswdContrasea, JLabel lblSesionNoCorrecta, ArrayList<Usuario> arrayUsuarios, JLayeredPane LayeredPane, ArrayList<JButton> todosBotones, JCheckBox[] checkboxes) {
 		super();
 		this.accion = accion;
-		this.nombreUsuario = txtNombre;
-		this.contraseñaUsuario = txtContrasea;
-		this.lblSesionIncorrecta = lblSesionIncorrecta;
+		nombreUsuario = txtNombre;
+		contraseñaUsuario = pswdContrasea;
+		lblSesionIncorrecta = lblSesionNoCorrecta;
 		usuarios = arrayUsuarios;
 		todosPaneles = LayeredPane;
 		this.todosBotones = todosBotones;
@@ -71,9 +73,19 @@ public class Evento implements ActionListener{
 		this.todosBotones = todosBotones;
 	}
 
+	public Evento(String accion, JRadioButton mostrarContrasenia,JPasswordField pwdContrasenia) {
+		super();
+		this.accion = accion;
+		this.mostrarContrasenia = mostrarContrasenia;
+		contraseñaUsuario = pwdContrasenia;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (accion) {
+		case "mostrar ocultar contraseña":
+			mostrar_ocultar_contrasenia();
+			break;
 		case "comprobar sesion":
 			comprobar_inicio_sesion();
 			break;
@@ -94,6 +106,16 @@ public class Evento implements ActionListener{
 		}
 	}
 
+	private void mostrar_ocultar_contrasenia() {
+		if(contraseñaUsuario.getEchoChar() == 0) {
+			contraseñaUsuario.setEchoChar('•');
+			mostrarContrasenia.setText("Mostrar");
+		} else {
+			contraseñaUsuario.setEchoChar((char)0);
+			mostrarContrasenia.setText("Esconder");
+		}
+	}
+
 	private void cerrar_sesion() {
 		// TODO Auto-generated method stub
 		usuarioLogueado = null;
@@ -105,6 +127,9 @@ public class Evento implements ActionListener{
 		for (int i = 1; i < todosBotones.size(); i++) {
 			todosBotones.get(i).setEnabled(false);
 		}
+		nombreUsuario.setText("");
+		contraseñaUsuario.setText("");
+		lblSesionIncorrecta.setVisible(false);
 	}
 
 	private void enviar_categorias_seleccionadas() {

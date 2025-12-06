@@ -42,12 +42,15 @@ import java.awt.Checkbox;
 import javax.swing.JCheckBox;
 import javax.swing.border.MatteBorder;
 import javax.swing.JTextArea;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 
 
 public class Ventana extends JFrame{
 	public static final int CANTIDAD_CATEGORIAS = 18;
 	private JTextField txtNombre;
-	private JTextField txtContrasea;
+//	private JTextField txtContrasea;
+	private JPasswordField pwdContrasenia;
 	private JLabel lblSesionIncorrecta;
 	private JLabel lblCategoriasIncorrectas;
 	private Timer tiempo;
@@ -255,7 +258,7 @@ public class Ventana extends JFrame{
 		btnCerrarSesionMostrarCategorias.addActionListener(cerrarSesion);
 		btnCerrarSesionCategoriasFavoritas.addActionListener(cerrarSesion);
 		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
-		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, txtContrasea, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);
+		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, pwdContrasenia, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);
 		btnEntrar.addActionListener(comprobarSesion);
 		
 		todosPaneles.add(panelInicioSesion);
@@ -870,12 +873,15 @@ public class Ventana extends JFrame{
 		txtNombre.setBounds(368, 261, 137, 19);
 		panelInicioSesion.add(txtNombre);
 		txtNombre.setColumns(10);
-		
+		pwdContrasenia = new JPasswordField();
+		pwdContrasenia.setBounds(368, 353, 137, 19);
+		panelInicioSesion.add(pwdContrasenia);
+		/*
 		txtContrasea = new JTextField();
 		txtContrasea.setBounds(368, 353, 137, 19);
 		panelInicioSesion.add(txtContrasea);
 		txtContrasea.setColumns(10);
-	
+	*/
 		lblSesionIncorrecta = new JLabel("El nombre o la contraseña no es correcto");
 		lblSesionIncorrecta.setVisible(false);
 		lblSesionIncorrecta.setForeground(new Color(237, 51, 59));
@@ -883,6 +889,12 @@ public class Ventana extends JFrame{
 		lblSesionIncorrecta.setBounds(193, 427, 312, 15);
 		panelInicioSesion.add(lblSesionIncorrecta);
 		
-		
+		JRadioButton rdbtnMostrar = new JRadioButton("Mostrar");
+		rdbtnMostrar.setOpaque(false);
+		rdbtnMostrar.setBounds(513, 351, 153, 23);
+		rdbtnMostrar.setSelected(false);
+		panelInicioSesion.add(rdbtnMostrar);
+		Evento mostrarOcultarContraseña = new Evento("mostrar ocultar contraseña", rdbtnMostrar,pwdContrasenia);
+		rdbtnMostrar.addActionListener(mostrarOcultarContraseña);
 	}
 }
