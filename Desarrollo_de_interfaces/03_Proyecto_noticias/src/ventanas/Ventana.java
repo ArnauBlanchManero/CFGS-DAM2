@@ -45,6 +45,9 @@ import javax.swing.JTextArea;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 
+/*
+ * Trabajo realizado por Arnau Blanch Manero
+ */
 
 public class Ventana extends JFrame{
 	public static final int CANTIDAD_CATEGORIAS = 18;
@@ -60,12 +63,14 @@ public class Ventana extends JFrame{
 	public static int rolUsuario = -1;
 	
 	public Ventana(int x, int y) {
+		// Este es el constructor de la ventana de carga
 		super();
 		setUndecorated(true);
 		setSize(x, y);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		// Es obligatorio poner una imagen en este panel
 		Panel panelCarga = buscarImagen();
 		getContentPane().add(panelCarga);
 		panelCarga.setVisible(true);
@@ -73,36 +78,39 @@ public class Ventana extends JFrame{
 		barraProgreso.setStringPainted(true);
 		barraProgreso.setBounds(10, 300, 620, 20);
 		panelCarga.add(barraProgreso);
+		// Configuro que la barra de progreso aumente 4 cada 200 segundos lo que da un total de 5 segundos
 		tiempo = new Timer(200, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				barraProgreso.setValue(barraProgreso.getValue()+4);
 				if(barraProgreso.getValue()==100) {
+					// Cuando ha acabado de cargar elimino esta ventana y creo la vntana principal de la aplicación.
 					dispose();
 					Ventana ventanaPrincipal = new Ventana("Noticias diarias");
 					ventanaPrincipal.setVisible(true);
 					tiempo.stop();
 				}
 				if(barraProgreso.getValue()==80) {
+					// Cuando lleva 4 segundos cargando leo los ficheros de los usuarios y de las noticias para comprobar que está todo bien.
 					try {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						usuarios = LeerTxt.leerTodosUsuarios();
+						System.out.println(usuarios.size());
 						titulares = LeerTxt.leerTodasNoticias();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
 						e1.printStackTrace();
 					}
-					if (usuarios.size() < 4) {
-						//TODO comprobar que haya 1 admin y 3 usuarios
+					// Si alguna de las dos lecturas falla, muestro una ventana de error.
+					if (usuarios.size() < 4 || !contarAdminsUsuarios(usuarios)) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
 						ventanaError.setVisible(true);
 						dispose();
 					}
-					if (titulares == null) {
-						// Comprobar que el array este vacio 
+					if (titulares == null || titulares.size()==0) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
@@ -115,15 +123,28 @@ public class Ventana extends JFrame{
 		tiempo.start();
 	}
 
+	protected boolean contarAdminsUsuarios(ArrayList<Usuario> usuarios) {
+		int cantidadAdmin = 0;
+		int cantidadUsuario = 0;
+		for (Usuario usuario : usuarios) {
+			if (usuario.isAdmin()) {
+				cantidadAdmin++;
+			} else {
+				cantidadUsuario++;
+			}
+		}
+		// Compruebo que haya un admin y 3 o más usuarios 
+		return cantidadAdmin == 1 && cantidadUsuario >= 3;
+	}
+
 	private Panel buscarImagen() {
+		// En esta función le asigno una imagen al panel
 		BufferedImage fondo = null;
 		Panel panelConFondo = null;
-		// Cargar la imagen
 		File ruta = new File("src/ventanas/fondoPlaya.jpg");
 		ruta.setReadable(true);
 		try {
 			fondo = ImageIO.read(ruta);
-			// asignar la imagen a un jpanel
 			Image foto = fondo;
 			panelConFondo=new Panel() {
 				@Override
@@ -133,15 +154,15 @@ public class Ventana extends JFrame{
 				}
 			};
 		} catch (IOException e) {
+			// Si hay un error al gargar la imagen lo pongo en un texto y el resto de la aplicación sigue funcionando.
 			panelConFondo=new Panel("Error al cargar la imagen");
-//			panelConFondo.setBackground(new Color(255, 118, 114));
-			e.printStackTrace();
 		}
 		return panelConFondo;
 	}
 	
 	public Ventana(String mensaje, int x, int y) {
 		super();
+		// La ventana que se muestra si ocurre algún error
 		setTitle("ERROR");
 		setSize(x, y);
 		setResizable(false);
@@ -157,14 +178,16 @@ public class Ventana extends JFrame{
 	 */
 	public Ventana(String title) throws HeadlessException {
 		super();
+		// La ventana principal
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
 		setBounds(ancho, alto, 700, 700);
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
-		
 		setTitle(title);
+		
+		// Organizo los paneles en un JLayeredPane
 		todosPaneles = new JLayeredPane();
 		todosPaneles.setSize(700, 700);
 		todosPaneles.setLayout(null);
@@ -178,38 +201,48 @@ public class Ventana extends JFrame{
 		Panel panelGeneralAdmin = new Panel();
 		todosPaneles.setLayer(panelGeneralAdmin, 3);
 
+		// Le pongo los componentes al panel de iniciar sesión
 		iniciar_sesion(panelInicioSesion);
-		
+
+		// Le pongo los componentes al panel de seleccionar las categorías favoritas
 		JCheckBox[] todosCheckboxes = categorias_favoritas(panelCategoriasFavoritas);
-		
+
+		// Le pongo los componentes al panel de mostrar las categorías
 		mostrar_categorias_usuario(panelMostrarCategorias);
-		
+
+		// Le pongo los componentes al panel de administración
 		panel_administracion(panelGeneralAdmin);
 
-
+		// Organizo los botones de cada panel y los deshabilito para que no se puedan pulsar desde otros paneles
+		
+		// Este boton lo añado al panel de seleccionar las categorías favoritas
 		JButton btnGuardarCategorias = new JButton("Guardar");
 		btnGuardarCategorias.setBounds(314, 615, 117, 25);
 		panelCategoriasFavoritas.add(btnGuardarCategorias);
 		btnGuardarCategorias.setEnabled(false);
+		// Añado el evento del botón para guardar sus categorias favoritas en un txt
 		Evento guardarCategorias = new Evento("guardar categorias", todosCheckboxes, lblCategoriasIncorrectas);
 		btnGuardarCategorias.addActionListener(guardarCategorias);
 
+		// Este botón muestra los titulares de las categorías favoriatas del usuario
 		JButton btnMostrarCategorias = new JButton("Mostrar");
 		btnMostrarCategorias.setBounds(250, 300, 180, 75);
 		panelMostrarCategorias.add(btnMostrarCategorias);
 		btnMostrarCategorias.setEnabled(false);
-
+		// Este botón esconde los titulares y vuelve a mostrar el botón de Mostrar
 		JButton btnEsconderCategorias = new JButton("Atrás");
 		btnEsconderCategorias.setBounds(70, 630, 110, 25);
 		panelMostrarCategorias.add(btnEsconderCategorias);
 		btnEsconderCategorias.setEnabled(false);
 		btnEsconderCategorias.setVisible(false);
+		// Este botón escribe en un txt los titulares actuales en forma de histórico para el usuario y le envía un correo con esos titulares
 		JButton btnEnviarCategorias = new JButton("Guardar");
 		btnEnviarCategorias.setBounds(300, 630, 110, 25);
 		panelMostrarCategorias.add(btnEnviarCategorias);
 		btnEnviarCategorias.setEnabled(false);
 		btnEnviarCategorias.setVisible(false);
 		
+		// He creado un botón de cerrar sesión para cada panel pero que llama al mismo evento
 		JButton btnCerrarSesionMostrarCategorias = new JButton("Cerrar sesión");
 		btnCerrarSesionMostrarCategorias.setBounds(530, 630, 150, 25);
 		btnCerrarSesionMostrarCategorias.setEnabled(false);
@@ -225,12 +258,16 @@ public class Ventana extends JFrame{
 		btnCerrarSesionCategoriasFavoritas.setEnabled(false);
 		btnCerrarSesionCategoriasFavoritas.setVisible(true);
 		panelCategoriasFavoritas.add(btnCerrarSesionCategoriasFavoritas);
+		
+		// Este evento muestra u oculta los titulares dependiendo del botón que lo pulsa
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
 		btnEsconderCategorias.addActionListener(mostrarCategorias);
+		// Envía el correo electrónico con los titulares
 		Evento enviarCategorias = new Evento("enviar categorias");
 		btnEsconderCategorias.addActionListener(enviarCategorias);
 		/*
+		// TODO eliminar esta parte de codigo
 		JButton btnEnviarCategorias = new JButton("Enviar");
 		btnEnviarCategorias.setBounds(314, 615, 117, 25);
 		panelGeneralAdmin.add(btnEnviarCategorias);
@@ -239,11 +276,13 @@ public class Ventana extends JFrame{
 		btnEnviarCategorias.addActionListener(enviarCategorias);
 		*/
 		
+		// El botón del inicio de sesión es el único habilitado 
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
 		panelInicioSesion.add(btnEntrar);
 		panelInicioSesion.setEnabled(true);
 		
+		// Hago un array de botones para poder acceder a todos desde una variable
 		ArrayList<JButton> todosBotones = new ArrayList<JButton>();
 		todosBotones.add(btnEntrar); //0
 		todosBotones.add(btnGuardarCategorias); //1
@@ -254,13 +293,16 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnCerrarSesionCategoriasFavoritas); //6
 		todosBotones.add(btnCerrarSesionGeneralAdmin); //7
 
-		Evento cerrarSesion = new Evento("cerrar sesion", todosBotones);
+		// El evento de cerrar sesión que organiza los paneles para que se vea el de iniciar sesión
+		Evento cerrarSesion = new Evento("cerrar sesion");
 		btnCerrarSesionMostrarCategorias.addActionListener(cerrarSesion);
 		btnCerrarSesionCategoriasFavoritas.addActionListener(cerrarSesion);
 		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
+		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, pwdContrasenia, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);
 		btnEntrar.addActionListener(comprobarSesion);
 		
+		// Añado los paneles al JLayederPane
 		todosPaneles.add(panelInicioSesion);
 		todosPaneles.add(panelCategoriasFavoritas);
 		todosPaneles.add(panelMostrarCategorias);
@@ -268,7 +310,7 @@ public class Ventana extends JFrame{
 	}
 	
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
-
+		// El título del panel
 		JLabel lblCategoriasFavoritas = new JLabel("Tus noticias");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
 		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
@@ -278,12 +320,8 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCategoriasFavoritas.setBounds(193, 200, 312, 64);
 		panelMostrarCategorias.add(lblCategoriasFavoritas);	
-		// TODO eliminar esto
-		for (String string : titulares) {
-			System.out.println(string);
-			System.out.println(string.length());
-		}
 		
+		// Pongo las categorías y sus titulares ocultos para que, dependiendo del usuario, se muestren los que ha seleccionado como favoritos
 		JLabel lblEconomia = new JLabel("Economía");
 		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 15));
 		lblEconomia.setBounds(50, 100, 150, 25);
@@ -297,6 +335,7 @@ public class Ventana extends JFrame{
 			textEconomia1.setEnabled(false);
 			textEconomia1.setDisabledTextColor(new Color(0, 0, 0));
 			textEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			// Dependiendo de su longitud, le voy a dar más o menos espacio para que no haya líneas en blanco y aprovechar el espacio
 			if(titulares.get(0).length()<102)
 				textEconomia1.setBounds(50, 100, 620, 16);
 			else
@@ -582,13 +621,10 @@ public class Ventana extends JFrame{
 			textMedioambiente3.setLineWrap(true);
 			textMedioambiente3.setVisible(false);
 			panelMostrarCategorias.add(textMedioambiente3);
-		
-		
-//		boolean[] categoriasMostrar = Evento.usuarioLogueado.getCategorias();
 	}
 
 	private void panel_administracion(Panel panelGeneralAdmin) {
-		
+		// Título del panel
 		JLabel lblCategoriasFavoritas = new JLabel("Administración");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
 		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
@@ -601,7 +637,7 @@ public class Ventana extends JFrame{
 	}
 
 	private JCheckBox [] categorias_favoritas(Panel panelCategoriasFavoritas) {
-		
+		// Título del panel
 		JLabel lblCategoriasFavoritas = new JLabel("Categorías");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
 		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
@@ -617,7 +653,8 @@ public class Ventana extends JFrame{
 		lblInfoseleccion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfoseleccion.setBounds(12, 107, 676, 15);
 		panelCategoriasFavoritas.add(lblInfoseleccion);
-
+		
+		// Las categorías
 		JLabel lblEconomia = new JLabel("Economía");
 		lblEconomia.setFont(new Font("Fira Sans", Font.BOLD, 20));
 		lblEconomia.setBounds(152, 134, 149, 41);
@@ -650,6 +687,7 @@ public class Ventana extends JFrame{
 
 		JCheckBox [] todosCheckboxes = new JCheckBox[CANTIDAD_CATEGORIAS];
 		
+		// El usuario seleccionará los periódicos que quiera
 		JCheckBox chckbxEconomia1 = new JCheckBox("El país");
 		chckbxEconomia1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		chckbxEconomia1.setForeground(new Color(0, 0, 0));
@@ -657,9 +695,8 @@ public class Ventana extends JFrame{
 		chckbxEconomia1.setBackground(new Color(255, 190, 111));
 		chckbxEconomia1.setBounds(152, 183, 129, 23);
 		chckbxEconomia1.setEnabled(false);
-		panelCategoriasFavoritas.add(chckbxEconomia1); // [8] 
+		panelCategoriasFavoritas.add(chckbxEconomia1);
 		todosCheckboxes[0] = chckbxEconomia1;
-//		chckbxEconomia1.isSelected();
 
 		JCheckBox chckbxEconomia2 = new JCheckBox("Es radio");
 		chckbxEconomia2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -828,7 +865,7 @@ public class Ventana extends JFrame{
 		chckbxMedioambiente3.setBackground(new Color(255, 190, 111));
 		chckbxMedioambiente3.setBounds(468, 556, 129, 23);
 		chckbxMedioambiente3.setEnabled(false);
-		panelCategoriasFavoritas.add(chckbxMedioambiente3); // [25] 
+		panelCategoriasFavoritas.add(chckbxMedioambiente3);
 		todosCheckboxes[17] = chckbxMedioambiente3;
 
 		lblCategoriasIncorrectas = new JLabel("Por favor, seleccione al menos un periódico");
@@ -842,13 +879,7 @@ public class Ventana extends JFrame{
 	}
 
 	private void iniciar_sesion(Panel panelInicioSesion) {
-//		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
-//		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
-//		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
-//		setBounds(ancho, alto, 700, 700);
-//		setResizable(false);
-//		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
-		
+		// Título del panel
 		JLabel lblTituloIniciaSesion = new JLabel("Inicia sesión");
 		lblTituloIniciaSesion.setForeground(new Color(36, 31, 49));
 		lblTituloIniciaSesion.setFont(new Font("Noto Mono", Font.BOLD, 28));
@@ -869,19 +900,16 @@ public class Ventana extends JFrame{
 		lblContrasena.setBounds(193, 355, 137, 15);
 		panelInicioSesion.add(lblContrasena);
 		
+		// Necesito que el usuario me diga su nombre y su contraseña para poder iniciar sesión
 		txtNombre = new JTextField();
 		txtNombre.setBounds(368, 261, 137, 19);
-		panelInicioSesion.add(txtNombre);
 		txtNombre.setColumns(10);
+		panelInicioSesion.add(txtNombre);
+
 		pwdContrasenia = new JPasswordField();
 		pwdContrasenia.setBounds(368, 353, 137, 19);
 		panelInicioSesion.add(pwdContrasenia);
-		/*
-		txtContrasea = new JTextField();
-		txtContrasea.setBounds(368, 353, 137, 19);
-		panelInicioSesion.add(txtContrasea);
-		txtContrasea.setColumns(10);
-	*/
+
 		lblSesionIncorrecta = new JLabel("El nombre o la contraseña no es correcto");
 		lblSesionIncorrecta.setVisible(false);
 		lblSesionIncorrecta.setForeground(new Color(237, 51, 59));
@@ -889,12 +917,13 @@ public class Ventana extends JFrame{
 		lblSesionIncorrecta.setBounds(193, 427, 312, 15);
 		panelInicioSesion.add(lblSesionIncorrecta);
 		
+		// La contraseña se muestra con • así que tengo que poner un JRadioButton para poder leerla en claro
 		JRadioButton rdbtnMostrar = new JRadioButton("Mostrar");
 		rdbtnMostrar.setOpaque(false);
 		rdbtnMostrar.setBounds(513, 351, 153, 23);
 		rdbtnMostrar.setSelected(false);
 		panelInicioSesion.add(rdbtnMostrar);
-		Evento mostrarOcultarContraseña = new Evento("mostrar ocultar contraseña", rdbtnMostrar,pwdContrasenia);
+		Evento mostrarOcultarContraseña = new Evento("mostrar ocultar contraseña", rdbtnMostrar, pwdContrasenia);
 		rdbtnMostrar.addActionListener(mostrarOcultarContraseña);
 	}
 }

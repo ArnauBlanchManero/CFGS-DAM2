@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import txt.LeerTxt;
 
+/*
+ * Trabajo realizado por Arnau Blanch Manero
+ */
+
 public class Usuario {
 	private int id;
 	private String nombre;
@@ -64,16 +68,22 @@ public class Usuario {
 
 	public int comprobarCredenciales(ArrayList<Usuario> listaUsuarios) {
 		boolean inicioCorrecto = false;
+		
 		for (Usuario usuario : listaUsuarios) {
+			// Compruebo que el nombre y la contraseña introducidos coincida con alguno que exista
 			if (usuario.nombre.equals(this.nombre) && usuario.passwd.equals(this.passwd)) {
+				
+				// Al encontrar el usuario le asigno sus datos restantes
 				inicioCorrecto = true;
 				this.id = usuario.id;
 				this.correo = usuario.correo;
 				this.admin = usuario.admin;
 				this.categorias = LeerTxt.leerCategorias(usuario.id);
+				
 			}
 		}
 		if (inicioCorrecto) {
+			// Dependiendo de su cargo devuelvo un número u otro para mostrar un panel u otro
 			if (this.admin) {
 				return 1;
 			}

@@ -1,18 +1,23 @@
 https://elpais.com/economia/;h2.c_t a;3
 https://esradio.libertaddigital.com/economia-para-todos/;div.ultimos-audios ul li a strong;0
 https://www.eleconomista.es/economia/;div.articleHeadLine h2 a;0
+
 https://www.marca.com/otros-deportes;h2.ue-c-cover-content__headline;0
 https://elpais.com/deportes/;h2.c_t a;0
 https://www.mundodeportivo.com/;h2.title a;0
+
 https://www.miteco.gob.es/es/prensa/ultimas-noticias.html;div.search-results__text;0
 https://www.elmundo.es/espana.html;h2.ue-c-cover-content__headline;3
 https://www.eldiario.es/;h2.ni-title a;0
+
 https://www.telemundo.com/;span.tease-card__headline;0
 https://www.bbc.com/mundo;h3.bbc-14nw343 a;0
 https://www.dw.com/es/;h3.rzijqy1 a;0
+
 https://www.elmundo.es/cultura/musica.html;h2.ue-c-cover-content__headline;0
 https://elpais.com/noticias/musica/;h2.c_t a;0
 https://www.xataka.com/categoria/musica;h2.abstract-title a;0
+
 https://www.farodevigo.es/medio-ambiente/;h2.ft-org-cardHome__mainTitle a;0
 https://www.infolibre.es/medioambiente/;h2.ni-title  a;0
 https://www.elespanol.com/ciencia/medio-ambiente/;h2.art__title  a;0

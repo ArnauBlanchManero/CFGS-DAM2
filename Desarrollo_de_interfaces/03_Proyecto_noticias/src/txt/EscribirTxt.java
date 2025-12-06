@@ -10,73 +10,47 @@ import java.util.ArrayList;
 
 import usuarios.Usuario;
 
+/*
+ * Trabajo realizado por Arnau Blanch Manero
+ */
+
 public class EscribirTxt {
 	
 	public static boolean escribirCategorias(int id, boolean[] periodicosUsuario) {
-		boolean lecturaCorrecta = true;
+		// Guardo las categorçias vaforitas de un usuario en el fichero correspondiente
+		boolean escrituraCorrecta = true;
 		File fichero = new File("src/txt/noticiasUsuarios.txt");
+		
 		if (fichero.exists() && fichero.canWrite()) {
 			try {
+				// Pongo el parámetro true para escribir a continuación y no sobreesribir
 				FileWriter escribir = new FileWriter(fichero, true);
 				BufferedWriter buffer = new BufferedWriter(escribir);
+				
+				// Escribo el id en segunda posición y separado con : porque así es como luego lo leo
 				buffer.newLine();
 				buffer.write("#"+id+":");
+				
 				for (boolean b : periodicosUsuario) {
+					// Escribo 1 si ese periódico es su favorito y 0 si no
 					if (b) {
 						buffer.write("1");
 					} else {
 						buffer.write("0");
 					}
+					
 				}
+				
 				buffer.close();
+				
 			} catch (IOException e) {
-				lecturaCorrecta = false;
+				escrituraCorrecta = false;
 			}
+			
 		} else {
-			lecturaCorrecta = false;
+			escrituraCorrecta = false;
 		}
-		return lecturaCorrecta;
+		return escrituraCorrecta;
 	}
 
-	/*
-	public static boolean sumarVecesLogueado(int id, boolean[] cs) {
-		File fichero = new File("src/txt/credencialesUsuarios.txt");
-		boolean lecturaCorrecta = true;
-		if (fichero.exists() && fichero.canRead() && fichero.canWrite()) {
-			try {
-				int idLeer = 0;
-				String contenidoLinea;
-				FileReader lector;
-				BufferedReader br = new BufferedReader(lector);
-				do {
-					contenidoLinea = br.readLine();
-					if(contenidoLinea != null && !contenidoLinea.equals("")) {
-						idLeer = Integer.parseInt(contenidoLinea.charAt(0)+"");
-					} else {
-						System.out.println("ERROR. No he podido leer la línea: "+contenidoLinea+".");
-					}
-				} while(contenidoLinea!=null);
-				Integer cantidadAnterior = Integer.valueOf(contenidoLinea.split("·!·")[5]);
-				FileWriter escribir = new FileWriter(fichero, true);
-				BufferedWriter buffer = new BufferedWriter(escribir);
-				buffer.newLine();
-				buffer.write("#"+id+":");
-				for (boolean b : periodicosUsuario) {
-					if (b) {
-						buffer.write("1");
-					} else {
-						buffer.write("0");
-					}
-				}
-				buffer.close();
-			} catch (IOException e) {
-				lecturaCorrecta = false;
-			}
-		} else {
-			lecturaCorrecta = false;
-		}
-		return lecturaCorrecta;
-	}
-	*/
-	
 }
