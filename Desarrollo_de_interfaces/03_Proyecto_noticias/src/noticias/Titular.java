@@ -40,8 +40,6 @@ public class Titular {
 			titularDevolver = "ERROR. Titular no encontrado";
 			
 		}
-		//TODO eliminar este print
-		System.out.println(titularDevolver);
 		
 		return titularDevolver;
 	}

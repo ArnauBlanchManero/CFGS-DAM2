@@ -101,7 +101,6 @@ public class LeerTxt {
 		for (int i = 0; i < urlsParametrosPosicion.size(); i++) {
 			// Separamos por ; la url, el parametro y el selector
 			String infoTitular [] = urlsParametrosPosicion.get(i).split(";");
-			System.out.println(infoTitular.length);
 			
 			// Puede haber líneas vacías o mal formadas por lo que comprobamos que tenga longitud 3
 			if(infoTitular.length == 3) {
@@ -137,7 +136,6 @@ public class LeerTxt {
 				String contenidoLinea;
 				
 				while((contenidoLinea=br.readLine())!=null) {
-					System.out.println(contenidoLinea);
 					lineas.add(contenidoLinea);
 				}
 				

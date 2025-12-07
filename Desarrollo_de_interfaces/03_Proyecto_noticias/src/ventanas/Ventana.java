@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -56,8 +57,18 @@ public class Ventana extends JFrame{
 	private JPasswordField pwdContrasenia;
 	private JLabel lblSesionIncorrecta;
 	private JLabel lblCategoriasIncorrectas;
+	private JTextField txtNombreAñadir;
+	private JTextField txtContraseaAñadir;
+	private JTextField txtCorreoAñadir;
+	private JTextField txtNombreEliminar;
+	private JLabel lblDatosAñadirIncorrectos;
+	private JLabel lblNombreEliminarIncorrecto;
 	private Timer tiempo;
 	private JLayeredPane todosPaneles;
+	private JLabel lblNombreAñadir;
+	private JLabel lblContraseaaadir;
+	private JLabel lblCorreoaadir;
+	private JLabel lblNombreEliminar;
 	public static ArrayList<Usuario> usuarios;
 	public static ArrayList<String> titulares;
 	public static int rolUsuario = -1;
@@ -96,7 +107,6 @@ public class Ventana extends JFrame{
 					try {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						usuarios = LeerTxt.leerTodosUsuarios();
-						System.out.println(usuarios.size());
 						titulares = LeerTxt.leerTodasNoticias();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
@@ -193,13 +203,15 @@ public class Ventana extends JFrame{
 		todosPaneles.setLayout(null);
 		getContentPane().add(todosPaneles);
 		Panel panelInicioSesion = new Panel();
-		todosPaneles.setLayer(panelInicioSesion, 6);
+		todosPaneles.setLayer(panelInicioSesion, 5);
 		Panel panelCategoriasFavoritas = new Panel();
-		todosPaneles.setLayer(panelCategoriasFavoritas, 5);
-		Panel panelMostrarCategorias = new Panel();
 		todosPaneles.setLayer(panelCategoriasFavoritas, 4);
+		Panel panelMostrarCategorias = new Panel();
+		todosPaneles.setLayer(panelCategoriasFavoritas, 3);
 		Panel panelGeneralAdmin = new Panel();
-		todosPaneles.setLayer(panelGeneralAdmin, 3);
+		todosPaneles.setLayer(panelGeneralAdmin, 2);
+		Panel panelGestionUsuariosAdmin = new Panel();
+		todosPaneles.setLayer(panelGestionUsuariosAdmin, 1);
 
 		// Le pongo los componentes al panel de iniciar sesión
 		iniciar_sesion(panelInicioSesion);
@@ -213,6 +225,9 @@ public class Ventana extends JFrame{
 		// Le pongo los componentes al panel de administración
 		panel_administracion(panelGeneralAdmin);
 
+		// Le pongo los componentes al panel de gestión de usuarios
+		gestion_usuarios_admin(panelGestionUsuariosAdmin);
+		
 		// Organizo los botones de cada panel y los deshabilito para que no se puedan pulsar desde otros paneles
 		
 		// Este boton lo añado al panel de seleccionar las categorías favoritas
@@ -242,6 +257,70 @@ public class Ventana extends JFrame{
 		btnEnviarCategorias.setEnabled(false);
 		btnEnviarCategorias.setVisible(false);
 		
+		// Envía el correo electrónico con los titulares
+		Evento enviarCategorias = new Evento("enviar categorias", titulares);
+		btnEsconderCategorias.addActionListener(enviarCategorias);
+		
+		// Muestra los botones para gestionar a los usuarios
+		JButton btnGestionarusuarios = new JButton("Gestionar usuarios");
+		btnGestionarusuarios.setBounds(260, 300, 180, 75);
+		panelGeneralAdmin.add(btnGestionarusuarios);
+		btnGestionarusuarios.setEnabled(false);
+		
+		// Este evento cambia de panel para gestionar a los usuarios
+		Evento gestionarUsuarios = new Evento("gestion usuarios");
+		btnGestionarusuarios.addActionListener(gestionarUsuarios);
+
+		// Wnvia al admin todos los titulares
+		JButton btnEnviarCategoriasAdmin = new JButton("Enviar titulares");
+		btnEnviarCategoriasAdmin.setBounds(70, 300, 180, 75);
+		panelGeneralAdmin.add(btnEnviarCategoriasAdmin);
+		btnEnviarCategoriasAdmin.setEnabled(false);
+		// El evento de enviar al correo
+		btnEnviarCategorias.addActionListener(enviarCategorias);
+
+		// Muestra los botones para gestionar a los usuarios
+		JButton btnMostrarHora = new JButton("Ver hora de envío");
+		btnMostrarHora.setBounds(450, 300, 180, 75);
+		panelGeneralAdmin.add(btnMostrarHora);
+		btnMostrarHora.setEnabled(false);
+		
+		// Añadir o eliminar usuarios
+		JButton btnAadir = new JButton("Añadir");
+		btnAadir.setBounds(180, 231, 117, 45);
+		btnAadir.setEnabled(false);
+		panelGestionUsuariosAdmin.add(btnAadir);
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.setBounds(415, 231, 117, 45);
+		btnEliminar.setEnabled(false);
+		panelGestionUsuariosAdmin.add(btnEliminar);
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.setBounds(374, 589, 117, 25);
+		btnAceptar.setEnabled(false);
+		btnAceptar.setVisible(false);
+		panelGestionUsuariosAdmin.add(btnAceptar);
+		JButton btnAtras = new JButton("Atrás");
+		btnAtras.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnAtras.setBounds(58, 589, 117, 25);
+		btnAtras.setEnabled(false);
+		panelGestionUsuariosAdmin.add(btnAtras);
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(226, 589, 117, 25);
+		btnCancelar.setEnabled(false);
+		btnCancelar.setVisible(false);
+		panelGestionUsuariosAdmin.add(btnCancelar);
+		
+		Evento atrasAdmin = new Evento("atras admin");
+		btnAtras.addActionListener(atrasAdmin);
+		Evento aniadirUsuario = new Evento("añadir usuario", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir);
+		btnAadir.addActionListener(aniadirUsuario);
+		Evento eliminarUsuario = new Evento("eliminar usuario", txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		btnEliminar.addActionListener(eliminarUsuario);
+		Evento esconderAñadirEliminarUsuario = new Evento("esconder info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		btnCancelar.addActionListener(esconderAñadirEliminarUsuario);
+		Evento aceptarAñadirEliminarUsuario = new Evento("aceptar info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		btnAceptar.addActionListener(aceptarAñadirEliminarUsuario);
+		
 		// He creado un botón de cerrar sesión para cada panel pero que llama al mismo evento
 		JButton btnCerrarSesionMostrarCategorias = new JButton("Cerrar sesión");
 		btnCerrarSesionMostrarCategorias.setBounds(530, 630, 150, 25);
@@ -249,7 +328,7 @@ public class Ventana extends JFrame{
 		btnCerrarSesionMostrarCategorias.setVisible(true);
 		panelMostrarCategorias.add(btnCerrarSesionMostrarCategorias);
 		JButton btnCerrarSesionGeneralAdmin = new JButton("Cerrar sesión");
-		btnCerrarSesionGeneralAdmin.setBounds(450, 580, 150, 25);
+		btnCerrarSesionGeneralAdmin.setBounds(499, 589, 154, 25);
 		btnCerrarSesionGeneralAdmin.setEnabled(false);
 		btnCerrarSesionGeneralAdmin.setVisible(true);
 		panelGeneralAdmin.add(btnCerrarSesionGeneralAdmin);
@@ -258,30 +337,29 @@ public class Ventana extends JFrame{
 		btnCerrarSesionCategoriasFavoritas.setEnabled(false);
 		btnCerrarSesionCategoriasFavoritas.setVisible(true);
 		panelCategoriasFavoritas.add(btnCerrarSesionCategoriasFavoritas);
-		
+		JButton btnCerrarSesionGestionUsuarios = new JButton("Cerrar sesión");
+		btnCerrarSesionGestionUsuarios.setBounds(499, 589, 154, 25);
+		btnCerrarSesionGestionUsuarios.setEnabled(false);
+		panelGestionUsuariosAdmin.add(btnCerrarSesionGestionUsuarios);
+
+		// El evento de cerrar sesión que organiza los paneles para que se vea el de iniciar sesión
+		Evento cerrarSesion = new Evento("cerrar sesion");
+		btnCerrarSesionMostrarCategorias.addActionListener(cerrarSesion);
+		btnCerrarSesionCategoriasFavoritas.addActionListener(cerrarSesion);
+		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
+		btnCerrarSesionGestionUsuarios.addActionListener(cerrarSesion);
+
 		// Este evento muestra u oculta los titulares dependiendo del botón que lo pulsa
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
 		btnEsconderCategorias.addActionListener(mostrarCategorias);
-		// Envía el correo electrónico con los titulares
-		Evento enviarCategorias = new Evento("enviar categorias");
-		btnEsconderCategorias.addActionListener(enviarCategorias);
-		/*
-		// TODO eliminar esta parte de codigo
-		JButton btnEnviarCategorias = new JButton("Enviar");
-		btnEnviarCategorias.setBounds(314, 615, 117, 25);
-		panelGeneralAdmin.add(btnEnviarCategorias);
-		btnEnviarCategorias.setEnabled(false);
-		Evento enviarCategorias = new Evento("enviar categorias");
-		btnEnviarCategorias.addActionListener(enviarCategorias);
-		*/
 		
-		// El botón del inicio de sesión es el único habilitado 
+		// El botón del inicio de sesión es el único habilitado al principio
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
 		panelInicioSesion.add(btnEntrar);
 		panelInicioSesion.setEnabled(true);
-		
+
 		// Hago un array de botones para poder acceder a todos desde una variable
 		ArrayList<JButton> todosBotones = new ArrayList<JButton>();
 		todosBotones.add(btnEntrar); //0
@@ -292,12 +370,14 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnCerrarSesionMostrarCategorias); //5
 		todosBotones.add(btnCerrarSesionCategoriasFavoritas); //6
 		todosBotones.add(btnCerrarSesionGeneralAdmin); //7
+		todosBotones.add(btnGestionarusuarios); //8
+		todosBotones.add(btnCerrarSesionGestionUsuarios); //9
+		todosBotones.add(btnAtras); //10
+		todosBotones.add(btnAadir); //11
+		todosBotones.add(btnEliminar); //12
+		todosBotones.add(btnAceptar); //13
+		todosBotones.add(btnCancelar); //14
 
-		// El evento de cerrar sesión que organiza los paneles para que se vea el de iniciar sesión
-		Evento cerrarSesion = new Evento("cerrar sesion");
-		btnCerrarSesionMostrarCategorias.addActionListener(cerrarSesion);
-		btnCerrarSesionCategoriasFavoritas.addActionListener(cerrarSesion);
-		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
 		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, pwdContrasenia, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);
 		btnEntrar.addActionListener(comprobarSesion);
@@ -307,8 +387,91 @@ public class Ventana extends JFrame{
 		todosPaneles.add(panelCategoriasFavoritas);
 		todosPaneles.add(panelMostrarCategorias);
 		todosPaneles.add(panelGeneralAdmin);
+		todosPaneles.add(panelGestionUsuariosAdmin);
+		
+		// Les pongo nombre para poder identificarlos posteriormente
+		todosPaneles.getComponent(0).setName("Inicio");
+		todosPaneles.getComponent(1).setName("Favoritos");
+		todosPaneles.getComponent(2).setName("Titulares");
+		todosPaneles.getComponent(3).setName("Admin");
+		todosPaneles.getComponent(4).setName("Gestion");
 	}
 	
+	private void gestion_usuarios_admin(Panel panelGestionUsuariosAdmin) {
+		// El título del panel
+		JLabel lblCategoriasFavoritas = new JLabel("Gestionar usuarios");
+		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
+		lblCategoriasFavoritas.setFont(new Font("Noto Mono", Font.BOLD, 28));
+		lblCategoriasFavoritas.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(28, 113, 216), new Color(0, 0, 0)));
+		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
+		lblCategoriasFavoritas.setOpaque(true);
+		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCategoriasFavoritas.setBounds(180, 90, 352, 64);
+		panelGestionUsuariosAdmin.add(lblCategoriasFavoritas);
+
+		txtNombreAñadir = new JTextField();
+		txtNombreAñadir.setText("");
+		txtNombreAñadir.setBounds(156, 360, 187, 19);
+		txtNombreAñadir.setColumns(10);
+		txtNombreAñadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(txtNombreAñadir);
+		
+		txtContraseaAñadir = new JTextField();
+		txtContraseaAñadir.setText("");
+		txtContraseaAñadir.setBounds(156, 438, 187, 19);
+		txtContraseaAñadir.setColumns(10);
+		txtContraseaAñadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(txtContraseaAñadir);
+		
+		txtCorreoAñadir = new JTextField();
+		txtCorreoAñadir.setText("");
+		txtCorreoAñadir.setBounds(156, 514, 187, 19);
+		txtCorreoAñadir.setColumns(10);
+		txtCorreoAñadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(txtCorreoAñadir);
+		
+		txtNombreEliminar = new JTextField();
+		txtNombreEliminar.setText("");
+		txtNombreEliminar.setBounds(374, 360, 187, 19);
+		txtNombreEliminar.setColumns(10);
+		txtNombreEliminar.setVisible(false);
+		panelGestionUsuariosAdmin.add(txtNombreEliminar);
+		
+		lblDatosAñadirIncorrectos = new JLabel("Datos incorrectos");
+		lblDatosAñadirIncorrectos.setForeground(new Color(237, 51, 59));
+		lblDatosAñadirIncorrectos.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDatosAñadirIncorrectos.setBounds(142, 558, 215, 15);
+		lblDatosAñadirIncorrectos.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblDatosAñadirIncorrectos);
+		
+		lblNombreEliminarIncorrecto = new JLabel("Nombre incorrecto");
+		lblNombreEliminarIncorrecto.setForeground(new Color(237, 51, 59));
+		lblNombreEliminarIncorrecto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombreEliminarIncorrecto.setBounds(360, 558, 215, 15);
+		lblNombreEliminarIncorrecto.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblNombreEliminarIncorrecto);
+		
+		lblNombreAñadir = new JLabel("Nombre");
+		lblNombreAñadir.setBounds(156, 333, 187, 15);
+		lblNombreAñadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblNombreAñadir);
+		
+		lblContraseaaadir = new JLabel("Contraseña");
+		lblContraseaaadir.setBounds(156, 411, 187, 15);
+		lblContraseaaadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblContraseaaadir);
+		
+		lblCorreoaadir = new JLabel("Correo electrónico");
+		lblCorreoaadir.setBounds(156, 487, 187, 15);
+		lblCorreoaadir.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblCorreoaadir);
+		
+		lblNombreEliminar = new JLabel("Nombre");
+		lblNombreEliminar.setBounds(374, 333, 187, 15);
+		lblNombreEliminar.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblNombreEliminar);
+	}
+
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
 		// El título del panel
 		JLabel lblCategoriasFavoritas = new JLabel("Tus noticias");
