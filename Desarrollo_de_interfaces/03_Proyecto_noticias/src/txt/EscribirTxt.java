@@ -99,7 +99,7 @@ public class EscribirTxt {
 			try {
 				List<String> lineasUsuarios = Files.readAllLines(ficheroUsuarios);
 				List<String> lineasNoticias = Files.readAllLines(ficheroNoticias);
-				
+
 				lineasUsuarios.removeIf(linea -> {
 					// Elimino las líneas vacías
 					if(linea.trim().isEmpty()) return true;

@@ -296,6 +296,7 @@ public class Evento implements ActionListener{
 				// TODO Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
 				if(EscribirTxt.eliminarUsuario(usuarioBorrar.getId())) {
 					usuarios.remove(usuarioBorrar);
+					txtNombreEliminar.setText("");
 					lblNombreEliminarCorrecto.setVisible(true);
 				} else {
 					lblNombreEliminarIncorrecto.setText("Error en la eliminación del usuario");
