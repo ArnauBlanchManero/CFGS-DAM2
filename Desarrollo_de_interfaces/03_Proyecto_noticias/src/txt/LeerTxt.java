@@ -35,9 +35,15 @@ public class LeerTxt {
 			while((contenidoLinea=br.readLine())!=null) {
 				// Uso los caracteres ·!· para separar los datos para crear un usuario
 				String [] lineaSeparada = contenidoLinea.split("·!·");
-				// Si la línea está mal formada y no hay 5 campos, no se crea el usuario
-				if (lineaSeparada.length == 5)
-					usuarios.add(new Usuario(Integer.parseInt(lineaSeparada[0]), lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), leerCategorias(Integer.parseInt(lineaSeparada[0]))));
+				try {
+					// Si la línea está mal formada y no hay 5 campos, no se crea el usuario
+					if (lineaSeparada.length == 5) {
+						int id = Integer.parseInt(lineaSeparada[0]);
+						usuarios.add(new Usuario(id, lineaSeparada[1], lineaSeparada[2], lineaSeparada[3], lineaSeparada[4].equals("1"), leerCategorias(Integer.parseInt(lineaSeparada[0]))));
+					}
+				} catch (NumberFormatException e) {
+					usuarios = new ArrayList<Usuario>();
+				}
 			}
 		}
 

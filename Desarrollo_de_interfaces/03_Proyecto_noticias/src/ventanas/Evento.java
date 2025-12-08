@@ -45,6 +45,8 @@ public class Evento implements ActionListener{
 	private JTextField txtNombreEliminar;
 	private JLabel lblNombreEliminarIncorrecto;
 	private JLabel lblNombreEliminar;
+	private JLabel lblDatosAñadirCorrectos;
+	private JLabel lblNombreEliminarCorrecto;
 	
 	public Evento(String accion) {
 		// El evento para cerrar sesión desde cualquier panel
@@ -101,7 +103,7 @@ public class Evento implements ActionListener{
 		titulares = todosTitulares;
 	}
 
-	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir) {
+	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir, JLabel lblDatosAñadirCorrectos) {
 		// Añadir usuario
 		super();
 		this.accion = accion;
@@ -112,19 +114,21 @@ public class Evento implements ActionListener{
 		this.lblNombreAñadir = lblNombreAñadir;
 		this.lblContraseñaAñadir = lblContraseñaAñadir;
 		this.lblCorreoAñadir = lblCorreoAñadir;
+		this.lblDatosAñadirCorrectos = lblDatosAñadirCorrectos;
 		
 	}
 
-	public Evento(String accion, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar) {
+	public Evento(String accion, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblNombreEliminarCorrecto) {
 		// Elimiar usuario
 		super();
 		this.accion = accion;
 		this.txtNombreEliminar = txtNombreEliminar;
 		this.lblNombreEliminarIncorrecto = lblNombreEliminarIncorrecto;
 		this.lblNombreEliminar = lblNombreEliminar;
+		this.lblNombreEliminarCorrecto = lblNombreEliminarCorrecto;
 	}
 
-	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar) {
+	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblDatosAñadirCorrectos, JLabel lblNombreEliminarCorrecto) {
 		// Cancelar añadir/eliminar usuario
 		super();
 		this.accion = accion;
@@ -138,6 +142,8 @@ public class Evento implements ActionListener{
 		this.txtNombreEliminar = txtNombreEliminar;
 		this.lblNombreEliminarIncorrecto = lblNombreEliminarIncorrecto;
 		this.lblNombreEliminar = lblNombreEliminar;
+		this.lblDatosAñadirCorrectos = lblDatosAñadirCorrectos;
+		this.lblNombreEliminarCorrecto = lblNombreEliminarCorrecto;
 	}
 
 	@Override
@@ -186,7 +192,7 @@ public class Evento implements ActionListener{
 	}
 
 	private void aceptar_añadir_eliminar() {
-		// TODO Añado o elimino al usuario
+		// Añado o elimino al usuario
 		if(txtNombreAñadir.isVisible()) {
 			añadir_usuario(txtNombreAñadir.getText(), txtContraseñaAñadir.getText(), txtCorreoAñadir.getText());
 		} else if(txtNombreEliminar.isVisible()) {
@@ -195,21 +201,122 @@ public class Evento implements ActionListener{
 	}
 
 	private void añadir_usuario(String nombre, String contraseña, String correo) {
-		// TODO Comprobar que ningun atributo tenga el patrón que uso para dividirlos en el txt ·!·
-		// TODO Comprobar que el nombre no esté repetido
-		// TODO Comprobar que haya espacio para otro usuario
-		// TODO Buscar un id para el usuario
-		// TODO Escribir en el txt de usuarios
+		lblDatosAñadirCorrectos.setVisible(false);
+		lblDatosAñadirIncorrectos.setVisible(false);
+		// Comprobar que los campos no estén vacíos
+		if (nombre.isEmpty() || nombre.isBlank() || contraseña.isEmpty() || contraseña.isBlank() || correo.isEmpty() || correo.isBlank()) {
+			lblDatosAñadirIncorrectos.setText("Por favor, rellena los campos");
+			lblDatosAñadirIncorrectos.setVisible(true);
+		} else
+			// Comprobar que ningun atributo tenga el patrón que uso para dividirlos en el txt ·!·
+			if(nombre.contains("!") || contraseña.contains("!") || correo.contains("!")) {
+				lblDatosAñadirIncorrectos.setText("Ningún campo puede tener el caracter '!'");
+				lblDatosAñadirIncorrectos.setVisible(true);
+			} else
+				// Comprobar que el nombre no esté repetido
+				if(nombre_repetido(nombre)) {
+					lblDatosAñadirIncorrectos.setText("No puede usar ese nombre");
+					lblDatosAñadirIncorrectos.setVisible(true);
+				} else
+					// Comprobar que haya espacio para otro usuario
+					if (usuarios.size()>=10) {
+						lblDatosAñadirIncorrectos.setText("No puedes añadir más usuarios");
+						lblDatosAñadirIncorrectos.setVisible(true);
+					} else {
+						// Buscar un id para el usuario
+						int nuevoID = buscar_id();
+						// Escribir en el txt de usuarios
+						if (nuevoID != -1) {
+							if(EscribirTxt.guardarUsuario(nuevoID, nombre, contraseña, correo)) {
+								usuarios.add(new Usuario(nuevoID, nombre, correo, contraseña, false, null));
+								txtNombreAñadir.setText("");
+								txtContraseñaAñadir.setText("");
+								txtCorreoAñadir.setText("");
+								lblDatosAñadirCorrectos.setVisible(true);
+							} else {
+								lblDatosAñadirIncorrectos.setText("No se ha podido guardar el usuario");
+								lblDatosAñadirIncorrectos.setVisible(true);
+							}
+						} else {
+							lblDatosAñadirIncorrectos.setText("No se ha encontrado un id disponible");
+							lblDatosAñadirIncorrectos.setVisible(true);
+						}
+					}
+	}
+
+	private int buscar_id() {
+		int id = -1;
+		boolean existe = false;
+		for (int i = 9; i >= 0; i--) {
+			existe = false;
+			for (Usuario usuario : usuarios) {
+				if (usuario.getId() == i) {
+					existe = true;
+				}
+			}
+			if(!existe) {
+				id = i;
+			}
+		}
+		return id;
+	}
+
+	private boolean nombre_repetido(String nombre) {
+		boolean repetido = false;
+		for (Usuario usuario : usuarios) {
+			if(usuario.getNombre().equals(nombre)) {
+				repetido = true;
+			}
+		}
+		return repetido;
 	}
 
 	private void eliminar_usuario(String nombre) {
+		lblNombreEliminarIncorrecto.setVisible(false);
+		lblNombreEliminarCorrecto.setVisible(false);
 		// TODO Pillar el id del usuario con ese nombre
-		// TODO Comprobar que se pueda eliminar (al menos 1 admin y 3 usuarios)
-		// TODO Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
+		Usuario usuarioBorrar = null;
+		int cantidadAdmin = 0;
+		int cantidadUsuario = 0;
+		boolean idEncontrado = false;
+		for (Usuario u : usuarios) {
+			if (!u.isAdmin()) {
+				cantidadUsuario++;
+				if (u.getNombre().equals(nombre)) {
+					usuarioBorrar = u;
+					idEncontrado = true;
+				}
+			} else {
+				cantidadAdmin++;
+			}
+		}
+		if (idEncontrado && usuarioBorrar != null) {
+			// TODO Comprobar que se pueda eliminar (al menos 1 admin y 3 usuarios)
+			if(cantidadAdmin == 1 && cantidadUsuario > 3) {
+				// TODO Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
+				if(EscribirTxt.eliminarUsuario(usuarioBorrar.getId())) {
+					usuarios.remove(usuarioBorrar);
+					lblNombreEliminarCorrecto.setVisible(true);
+				} else {
+					lblNombreEliminarIncorrecto.setText("Error en la eliminación del usuario");
+					lblNombreEliminarIncorrecto.setVisible(true);
+				}
+			} else {
+				lblNombreEliminarIncorrecto.setText("No se pueden eliminar más usuarios");
+				lblNombreEliminarIncorrecto.setVisible(true);
+			}
+		} else {
+			lblNombreEliminarIncorrecto.setText("No se ha encontrado el usuario");
+			lblNombreEliminarIncorrecto.setVisible(true);
+		}
 	}
 
 	private void cancelar_añadir_eliminar() {
+		lblDatosAñadirCorrectos.setVisible(false);
+		lblNombreEliminarCorrecto.setVisible(false);
 		// Cancelar proceso de añadir o eliminar un usuario
+		lblNombreEliminarIncorrecto.setVisible(false);
+		lblDatosAñadirIncorrectos.setVisible(false);
 		
 		// Oculto todos los JTextField
 		txtNombreAñadir.setVisible(false);
@@ -242,6 +349,7 @@ public class Evento implements ActionListener{
 
 	private void preparar_eliminar_usuario() {
 		// Configuro el panel para eliminar un usuario
+		lblNombreEliminarIncorrecto.setVisible(false);
 		
 		// Muestro el JTextField y el JLabel del nombre
 		txtNombreEliminar.setVisible(true);
@@ -266,6 +374,7 @@ public class Evento implements ActionListener{
 
 	private void preparar_aniadir_usuario() {
 		// Configuro el panel para añadir un usuario
+		lblDatosAñadirIncorrectos.setVisible(false);
 		
 		// Muestro los JTextField y los JLabel 
 		txtNombreAñadir.setVisible(true);

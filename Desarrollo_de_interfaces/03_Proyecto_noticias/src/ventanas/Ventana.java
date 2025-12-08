@@ -69,6 +69,8 @@ public class Ventana extends JFrame{
 	private JLabel lblContraseaaadir;
 	private JLabel lblCorreoaadir;
 	private JLabel lblNombreEliminar;
+	private JLabel lblDatosAñadirCorrectos;
+	private JLabel lblNombreEliminarCorrecto;
 	public static ArrayList<Usuario> usuarios;
 	public static ArrayList<String> titulares;
 	public static int rolUsuario = -1;
@@ -312,13 +314,13 @@ public class Ventana extends JFrame{
 		
 		Evento atrasAdmin = new Evento("atras admin");
 		btnAtras.addActionListener(atrasAdmin);
-		Evento aniadirUsuario = new Evento("añadir usuario", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir);
+		Evento aniadirUsuario = new Evento("añadir usuario", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, lblDatosAñadirCorrectos);
 		btnAadir.addActionListener(aniadirUsuario);
-		Evento eliminarUsuario = new Evento("eliminar usuario", txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		Evento eliminarUsuario = new Evento("eliminar usuario", txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar, lblNombreEliminarCorrecto);
 		btnEliminar.addActionListener(eliminarUsuario);
-		Evento esconderAñadirEliminarUsuario = new Evento("esconder info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		Evento esconderAñadirEliminarUsuario = new Evento("esconder info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar, lblDatosAñadirCorrectos, lblNombreEliminarCorrecto);
 		btnCancelar.addActionListener(esconderAñadirEliminarUsuario);
-		Evento aceptarAñadirEliminarUsuario = new Evento("aceptar info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar);
+		Evento aceptarAñadirEliminarUsuario = new Evento("aceptar info", txtNombreAñadir, txtContraseaAñadir, txtCorreoAñadir, lblDatosAñadirIncorrectos, lblNombreAñadir, lblContraseaaadir, lblCorreoaadir, txtNombreEliminar, lblNombreEliminarIncorrecto, lblNombreEliminar, lblDatosAñadirCorrectos, lblNombreEliminarCorrecto);
 		btnAceptar.addActionListener(aceptarAñadirEliminarUsuario);
 		
 		// He creado un botón de cerrar sesión para cada panel pero que llama al mismo evento
@@ -440,16 +442,28 @@ public class Ventana extends JFrame{
 		lblDatosAñadirIncorrectos = new JLabel("Datos incorrectos");
 		lblDatosAñadirIncorrectos.setForeground(new Color(237, 51, 59));
 		lblDatosAñadirIncorrectos.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDatosAñadirIncorrectos.setBounds(142, 558, 215, 15);
+		lblDatosAñadirIncorrectos.setBounds(58, 558, 374, 15);
 		lblDatosAñadirIncorrectos.setVisible(false);
 		panelGestionUsuariosAdmin.add(lblDatosAñadirIncorrectos);
+		lblDatosAñadirCorrectos = new JLabel("Usuario añadido correctamente");
+		lblDatosAñadirCorrectos.setForeground(new Color(38, 162, 105));
+		lblDatosAñadirCorrectos.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDatosAñadirCorrectos.setBounds(58, 558, 374, 15);
+		lblDatosAñadirCorrectos.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblDatosAñadirCorrectos);
 		
 		lblNombreEliminarIncorrecto = new JLabel("Nombre incorrecto");
 		lblNombreEliminarIncorrecto.setForeground(new Color(237, 51, 59));
 		lblNombreEliminarIncorrecto.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNombreEliminarIncorrecto.setBounds(360, 558, 215, 15);
+		lblNombreEliminarIncorrecto.setBounds(279, 558, 374, 15);
 		lblNombreEliminarIncorrecto.setVisible(false);
 		panelGestionUsuariosAdmin.add(lblNombreEliminarIncorrecto);
+		lblNombreEliminarCorrecto = new JLabel("Usuario eliminado correctamente");
+		lblNombreEliminarCorrecto.setForeground(new Color(38, 162, 105));
+		lblNombreEliminarCorrecto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombreEliminarCorrecto.setBounds(279, 558, 374, 15);
+		lblNombreEliminarCorrecto.setVisible(false);
+		panelGestionUsuariosAdmin.add(lblNombreEliminarCorrecto);
 		
 		lblNombreAñadir = new JLabel("Nombre");
 		lblNombreAñadir.setBounds(156, 333, 187, 15);
