@@ -570,8 +570,8 @@ public class Evento implements ActionListener{
 		int j = 0; // El orden de las categorías del usuario
 		// Esta variable determina la altura en la que se coloca la información para que no haya huecos en blanco
 		int y = 20;
-		componentesCategorias[0].setVisible(!componentesCategorias[0].isVisible()); // El título "Tus noticias"
-		for (i = 1; i < componentesCategorias.length-5; i++) {
+		componentesCategorias[1].setVisible(!componentesCategorias[1].isVisible()); // El título "Tus noticias"
+		for (i = 2; i < componentesCategorias.length-6; i++) {
 			
 			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {

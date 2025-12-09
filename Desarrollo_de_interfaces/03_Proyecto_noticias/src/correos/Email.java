@@ -29,7 +29,7 @@ public class Email {
 	public boolean enviar() {
 		boolean enviadoCorrectamente = true;
 		final String fromEmail = "arnau.blanch.dosa@gmail.com"; //EMAIL DE SALIDA
-		final String password = "**** "; //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
+		final String password = "****"; //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
 		// https://myaccount.google.com/apppasswords
 		final String toEmail = correoDestino; // EMAIL DESTINATARIO
 				

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
@@ -118,16 +119,18 @@ public class Ventana extends JFrame{
 					if (usuarios.size() < 4 || !contarAdminsUsuarios(usuarios)) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
-						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
-						ventanaError.setVisible(true);
 						dispose();
+						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 2);
+//						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
+//						ventanaError.setVisible(true);
 					}
 					if (titulares == null || titulares.size()==0) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
-						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
-						ventanaError.setVisible(true);
 						dispose();
+						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 2);
+//						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
+//						ventanaError.setVisible(true);
 					}
 				}
 			}
@@ -158,7 +161,7 @@ public class Ventana extends JFrame{
 		try {
 			fondo = ImageIO.read(ruta);
 			Image foto = fondo;
-			panelConFondo=new Panel() {
+			panelConFondo=new Panel(true) {
 				@Override
 				protected void paintComponent(Graphics g) {
 					super.paintComponent(g);
@@ -204,15 +207,15 @@ public class Ventana extends JFrame{
 		todosPaneles.setSize(700, 700);
 		todosPaneles.setLayout(null);
 		getContentPane().add(todosPaneles);
-		Panel panelInicioSesion = new Panel();
+		Panel panelInicioSesion = new Panel(false);
 		todosPaneles.setLayer(panelInicioSesion, 5);
-		Panel panelCategoriasFavoritas = new Panel();
+		Panel panelCategoriasFavoritas = new Panel(false);
 		todosPaneles.setLayer(panelCategoriasFavoritas, 4);
-		Panel panelMostrarCategorias = new Panel();
+		Panel panelMostrarCategorias = new Panel(false);
 		todosPaneles.setLayer(panelCategoriasFavoritas, 3);
-		Panel panelGeneralAdmin = new Panel();
+		Panel panelGeneralAdmin = new Panel(false);
 		todosPaneles.setLayer(panelGeneralAdmin, 2);
-		Panel panelGestionUsuariosAdmin = new Panel();
+		Panel panelGestionUsuariosAdmin = new Panel(false);
 		todosPaneles.setLayer(panelGestionUsuariosAdmin, 1);
 		
 		// Le pongo los componentes al panel de iniciar sesión

@@ -2,6 +2,8 @@ package ventanas;
 
 import java.awt.EventQueue;
 
+import javax.swing.JOptionPane;
+
 /*
  * Trabajo realizado por Arnau Blanch Manero
  */
@@ -17,8 +19,9 @@ public class Main {
 					ventanaCarga.setVisible(true);
 				} catch (Exception e){
 					// Si ocurre cualquier problema se mostrará esta ventana con el mensaje de la excepción (no debería mostrarse nunca)
-					Ventana ventanaError = new Ventana(e.getMessage(), 450, 200);
-					ventanaError.setVisible(true);
+					JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", 2);
+//					Ventana ventanaError = new Ventana(e.getMessage(), 450, 200);
+//					ventanaError.setVisible(true);
 				}
 			}
 		});
