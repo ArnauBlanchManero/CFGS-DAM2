@@ -253,7 +253,7 @@ public class Ventana extends JFrame{
 		btnEsconderCategorias.setEnabled(false);
 		btnEsconderCategorias.setVisible(false);
 		// Este botón escribe en un txt los titulares actuales en forma de histórico para el usuario y le envía un correo con esos titulares
-		JButton btnEnviarCategorias = new JButton("Guardar");
+		JButton btnEnviarCategorias = new JButton("Enviar");
 		btnEnviarCategorias.setBounds(300, 630, 110, 25);
 		panelMostrarCategorias.add(btnEnviarCategorias);
 		btnEnviarCategorias.setEnabled(false);
@@ -274,12 +274,10 @@ public class Ventana extends JFrame{
 		btnGestionarusuarios.addActionListener(gestionarUsuarios);
 
 		// Wnvia al admin todos los titulares
-		JButton btnEnviarCategoriasAdmin = new JButton("Enviar titulares");
-		btnEnviarCategoriasAdmin.setBounds(70, 300, 180, 75);
-		panelGeneralAdmin.add(btnEnviarCategoriasAdmin);
-		btnEnviarCategoriasAdmin.setEnabled(false);
-		// El evento de enviar al correo
-		btnEnviarCategoriasAdmin.addActionListener(enviarCategorias);
+		JButton btnMostrarCategoriasAdmin = new JButton("Test titulares");
+		btnMostrarCategoriasAdmin.setBounds(70, 300, 180, 75);
+		panelGeneralAdmin.add(btnMostrarCategoriasAdmin);
+		btnMostrarCategoriasAdmin.setEnabled(false);
 
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnMostrarHora = new JButton("Ver hora de envío");
@@ -351,6 +349,17 @@ public class Ventana extends JFrame{
 		btnCerrarSesionGeneralAdmin.addActionListener(cerrarSesion);
 		btnCerrarSesionGestionUsuarios.addActionListener(cerrarSesion);
 
+		JButton btnAtrasAdmin = new JButton("Atrás");
+		btnAtrasAdmin.setBounds(70, 630, 110, 25);
+		panelMostrarCategorias.add(btnAtrasAdmin);
+		btnAtrasAdmin.setEnabled(false);
+		btnAtrasAdmin.setVisible(false);
+		
+		// El evento de testear si todos los titulares funcionan y se envian al correo
+		Evento mostrarCategoriasAdmin = new Evento("mostrar categorias admin", panelMostrarCategorias.getComponents());
+		btnMostrarCategoriasAdmin.addActionListener(mostrarCategoriasAdmin);
+		Evento atrasAdminTitulares = new Evento("atras admin titulares", panelMostrarCategorias.getComponents());
+		btnAtrasAdmin.addActionListener(atrasAdminTitulares);
 		// Este evento muestra u oculta los titulares dependiendo del botón que lo pulsa
 		Evento mostrarCategorias = new Evento("mostrar categorias", panelMostrarCategorias.getComponents());
 		btnMostrarCategorias.addActionListener(mostrarCategorias);
@@ -379,7 +388,8 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnEliminar); //12
 		todosBotones.add(btnAceptar); //13
 		todosBotones.add(btnCancelar); //14
-		todosBotones.add(btnEnviarCategoriasAdmin); //15
+		todosBotones.add(btnMostrarCategoriasAdmin); //15
+		todosBotones.add(btnAtrasAdmin); //16
 		
 
 		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas

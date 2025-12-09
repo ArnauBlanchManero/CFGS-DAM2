@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import correos.Email;
 import txt.EscribirTxt;
 import usuarios.Usuario;
 
@@ -186,9 +187,44 @@ public class Evento implements ActionListener{
 			case "aceptar info":
 				aceptar_añadir_eliminar();
 				break;
+			case "mostrar categorias admin":
+				mostrar_titlares_admin();
+				break;
+			case "atras admin titulares":
+				atras_titlares_admin();
+				break;
 			default:
 				break;
 		}
+	}
+
+	private void atras_titlares_admin() {
+		// TODO Auto-generated method stub
+		// Lo vuelvo a colocar detrás del panel del admin y del gestor de usuarios
+		todosPaneles.setLayer(todosPaneles.getComponent(0), 6);
+
+		todosBotones.get(15).setVisible(true);
+		todosBotones.get(15).setEnabled(true);
+		todosBotones.get(16).setVisible(false);
+		todosBotones.get(16).setEnabled(false);
+		todosBotones.get(3).setVisible(true);
+		todosBotones.get(3).setEnabled(true);
+		mostrar_categorias_seleccionadas();
+	}
+
+	private void mostrar_titlares_admin() {
+		// TODO Cambiar panel y mostrar titulares
+		// Pongo el panel de mostrar los titulares delante del todo
+		todosPaneles.setLayer(todosPaneles.getComponent(2), 10);
+
+		
+		todosBotones.get(15).setVisible(false);
+		todosBotones.get(15).setEnabled(false);
+		todosBotones.get(16).setVisible(true);
+		todosBotones.get(16).setEnabled(true);
+		mostrar_categorias_seleccionadas();
+		todosBotones.get(3).setVisible(false);
+		todosBotones.get(3).setEnabled(false);
 	}
 
 	private void aceptar_añadir_eliminar() {
@@ -405,7 +441,7 @@ public class Evento implements ActionListener{
 	}
 
 	private void atras_admin() {
-		todosPaneles.setLayer(todosPaneles.getComponent(0), 6); // Muevo el panel de gestion de usuarios hacia atrás para que se vea el panel de administrador
+		todosPaneles.setLayer(todosPaneles.getComponent(0), 7); // Muevo el panel de gestion de usuarios hacia atrás para que se vea el panel de administrador
 		todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(true); // Habilito el botón de gestionar usuarios
 		todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
@@ -417,7 +453,7 @@ public class Evento implements ActionListener{
 	}
 
 	private void gestionar_usuarios() {
-		todosPaneles.setLayer(todosPaneles.getComponent(1), 8); // Muevo el panel de gestion de usuarios arriba del todo
+		todosPaneles.setLayer(todosPaneles.getComponent(1), 9); // Muevo el panel de gestion de usuarios arriba del todo
 		todosBotones.get(7).setEnabled(false); // Deshabilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(false); // Deshabilito el botón de gestionar usuarios
 		todosBotones.get(15).setEnabled(false); // Deshabilito el botón de enviar correo
@@ -490,6 +526,8 @@ public class Evento implements ActionListener{
 
 	private void enviar_categorias_seleccionadas() {
 		// TODO Enviar correo con las categorías del usuario
+		Email email = new Email(usuarioLogueado.getCorreo(), accion);
+		email.enviar();
 	}
 
 	private void mostrar_categorias_seleccionadas() {
@@ -499,7 +537,7 @@ public class Evento implements ActionListener{
 		// Esta variable determina la altura en la que se coloca la información para que no haya huecos en blanco
 		int y = 20;
 		componentesCategorias[0].setVisible(!componentesCategorias[0].isVisible()); // El título "Tus noticias"
-		for (i = 1; i < componentesCategorias.length-4; i++) {
+		for (i = 1; i < componentesCategorias.length-5; i++) {
 			
 			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
@@ -624,8 +662,9 @@ public class Evento implements ActionListener{
 				}
 			} else if (cargo == 1){
 				// TODO poner los paneles del admin mas arriba y los del usuario mas abajo.
-				todosPaneles.setLayer(todosPaneles.getComponent(1), 7); // El panel principal del admin lo pongo arriba
-				todosPaneles.setLayer(todosPaneles.getComponent(2), 6); // El panel de gestionar usuarios justo debajo
+				todosPaneles.setLayer(todosPaneles.getComponent(1), 8); // El panel principal del admin lo pongo arriba
+				todosPaneles.setLayer(todosPaneles.getComponent(2), 7); // El panel de gestionar usuarios justo debajo
+				todosPaneles.setLayer(todosPaneles.getComponent(3), 6); // El panel de mostrar los titulares justo debajo
 				todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesión
 				todosBotones.get(8).setEnabled(true); // Habilito el botón de gestion de usuarios
 				todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
