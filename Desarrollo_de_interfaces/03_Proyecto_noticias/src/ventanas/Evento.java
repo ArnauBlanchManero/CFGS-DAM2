@@ -1,6 +1,7 @@
 package ventanas;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -526,8 +527,41 @@ public class Evento implements ActionListener{
 
 	private void enviar_categorias_seleccionadas() {
 		// TODO Enviar correo con las categorías del usuario
-		Email email = new Email(usuarioLogueado.getCorreo(), accion);
+		String mensaje = "";
+		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
+		int i; // El orden de las categorías del usuario
+		int j = 0; // El orden de todos los titulares
+		for (i = 0; i < categorias.length; i++) {
+			
+			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
+			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
+				mensaje += categorias[i];
+				mensaje += '\n';
+			}
+			
+			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += titulares.get(j);
+				mensaje += '\n';
+			}
+			
+			j++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += titulares.get(j);
+				mensaje += '\n';
+			}
+			
+			j++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += titulares.get(j);
+				mensaje += '\n';
+			}
+			j++; // Aumento para estar posicionado en la primera noticia de la siguiente categoría
+		}
+		
+		Email email = new Email(usuarioLogueado.getCorreo(), mensaje);
+		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		email.enviar();
+		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	private void mostrar_categorias_seleccionadas() {
