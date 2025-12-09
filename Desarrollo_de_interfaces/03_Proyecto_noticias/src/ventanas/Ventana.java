@@ -214,7 +214,7 @@ public class Ventana extends JFrame{
 		todosPaneles.setLayer(panelGeneralAdmin, 2);
 		Panel panelGestionUsuariosAdmin = new Panel();
 		todosPaneles.setLayer(panelGestionUsuariosAdmin, 1);
-
+		
 		// Le pongo los componentes al panel de iniciar sesión
 		iniciar_sesion(panelInicioSesion);
 
@@ -261,7 +261,7 @@ public class Ventana extends JFrame{
 		
 		// Envía el correo electrónico con los titulares
 		Evento enviarCategorias = new Evento("enviar categorias", titulares);
-		btnEsconderCategorias.addActionListener(enviarCategorias);
+		btnEnviarCategorias.addActionListener(enviarCategorias);
 		
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnGestionarusuarios = new JButton("Gestionar usuarios");
@@ -279,7 +279,7 @@ public class Ventana extends JFrame{
 		panelGeneralAdmin.add(btnEnviarCategoriasAdmin);
 		btnEnviarCategoriasAdmin.setEnabled(false);
 		// El evento de enviar al correo
-		btnEnviarCategorias.addActionListener(enviarCategorias);
+		btnEnviarCategoriasAdmin.addActionListener(enviarCategorias);
 
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnMostrarHora = new JButton("Ver hora de envío");
@@ -379,6 +379,8 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnEliminar); //12
 		todosBotones.add(btnAceptar); //13
 		todosBotones.add(btnCancelar); //14
+		todosBotones.add(btnEnviarCategoriasAdmin); //15
+		
 
 		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas
 		Evento comprobarSesion = new Evento("comprobar sesion", txtNombre, pwdContrasenia, lblSesionIncorrecta, usuarios, todosPaneles, todosBotones, todosCheckboxes);

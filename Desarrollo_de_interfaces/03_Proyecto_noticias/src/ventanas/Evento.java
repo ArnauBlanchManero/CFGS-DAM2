@@ -408,6 +408,7 @@ public class Evento implements ActionListener{
 		todosPaneles.setLayer(todosPaneles.getComponent(0), 6); // Muevo el panel de gestion de usuarios hacia atrás para que se vea el panel de administrador
 		todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(true); // Habilito el botón de gestionar usuarios
+		todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
 		todosBotones.get(9).setEnabled(false); // Deshabilito el botón de cerrar sesión del panel de gestion de usuarios
 		todosBotones.get(10).setEnabled(false); // Deshabilito el botón de Atrás
 		todosBotones.get(11).setEnabled(false); // Deshabilito el botón de Añadir usuarios
@@ -419,6 +420,7 @@ public class Evento implements ActionListener{
 		todosPaneles.setLayer(todosPaneles.getComponent(1), 8); // Muevo el panel de gestion de usuarios arriba del todo
 		todosBotones.get(7).setEnabled(false); // Deshabilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(false); // Deshabilito el botón de gestionar usuarios
+		todosBotones.get(15).setEnabled(false); // Deshabilito el botón de enviar correo
 		todosBotones.get(9).setEnabled(true); // Habilito el botón de cerrar sesión del panel de gestion de usuarios
 		todosBotones.get(10).setEnabled(true); // Habilito el botón de Atrás
 		todosBotones.get(11).setEnabled(true); // Habilito el botón de Añadir usuarios
@@ -488,7 +490,6 @@ public class Evento implements ActionListener{
 
 	private void enviar_categorias_seleccionadas() {
 		// TODO Enviar correo con las categorías del usuario
-		
 	}
 
 	private void mostrar_categorias_seleccionadas() {
@@ -627,6 +628,7 @@ public class Evento implements ActionListener{
 				todosPaneles.setLayer(todosPaneles.getComponent(2), 6); // El panel de gestionar usuarios justo debajo
 				todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesión
 				todosBotones.get(8).setEnabled(true); // Habilito el botón de gestion de usuarios
+				todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
 			}
 			
 			todosBotones.get(0).setEnabled(false); // Deshabilito el botón de iniciar sesión
