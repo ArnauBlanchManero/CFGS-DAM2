@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JOptionPane;
 
+import correos.Automatico;
+
 /*
  * Trabajo realizado por Arnau Blanch Manero
  */
@@ -11,6 +13,8 @@ import javax.swing.JOptionPane;
 public class Main {
 	
 	public static void main(String[] args) {
+		Automatico h = new Automatico();
+		h.imprimirHora();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -20,8 +24,7 @@ public class Main {
 				} catch (Exception e){
 					// Si ocurre cualquier problema se mostrará esta ventana con el mensaje de la excepción (no debería mostrarse nunca)
 					JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", 2);
-//					Ventana ventanaError = new Ventana(e.getMessage(), 450, 200);
-//					ventanaError.setVisible(true);
+					System.exit(3);
 				}
 			}
 		});

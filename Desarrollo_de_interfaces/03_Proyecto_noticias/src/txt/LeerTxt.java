@@ -147,8 +147,6 @@ public class LeerTxt {
 				
 			} catch (IOException e) {
 				lineas.add("");
-				// TODO eliminar esto
-				e.printStackTrace();
 			}
 			
 		} else {
@@ -156,5 +154,34 @@ public class LeerTxt {
 		}
 
 		return lineas;
+	}
+
+	public static String leerHora() {
+		File fichero = new File("src/txt/urlsNoticias.txt");
+		String hora = "";
+		
+		if (fichero.exists() && fichero.canRead()) {
+			FileReader lector;
+			try {
+				// Voy leyendo línea por línea y buscando la hora
+				lector = new FileReader(fichero);
+				BufferedReader br = new BufferedReader(lector);
+				String contenidoLinea;
+				while((contenidoLinea=br.readLine())!=null) {
+					String[] lineaSeparada = contenidoLinea.split("\\$");
+					if (lineaSeparada.length > 1) {
+						hora = lineaSeparada[1];
+					}
+				}
+				
+			} catch (IOException e) {
+				hora="hora no encontrada";
+			}
+			
+		} else {
+			hora="hora no encontrada";
+		}
+
+		return hora;
 	}
 }

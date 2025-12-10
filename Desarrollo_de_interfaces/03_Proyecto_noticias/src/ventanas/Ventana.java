@@ -123,16 +123,14 @@ public class Ventana extends JFrame{
 						barraProgreso.setValue(100);
 						dispose();
 						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 2);
-//						Ventana ventanaError = new Ventana("No se han cargado los usuarios correctamente", 450, 200);
-//						ventanaError.setVisible(true);
+						System.exit(1);
 					}
 					if (titulares == null || titulares.size()==0) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
 						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 2);
-//						Ventana ventanaError = new Ventana("No se he encontrado alguno de los titulares", 450, 200);
-//						ventanaError.setVisible(true);
+						System.exit(2);
 					}
 				}
 			}
@@ -177,19 +175,6 @@ public class Ventana extends JFrame{
 		return panelConFondo;
 	}
 	
-	public Ventana(String mensaje, int x, int y) {
-		super();
-		// La ventana que se muestra si ocurre algún error
-		setTitle("ERROR");
-		setSize(x, y);
-		setResizable(false);
-		setLocationRelativeTo(null);
-		Panel informacionError = new Panel(mensaje);
-		getContentPane().add(informacionError);
-		informacionError.setVisible(true);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("errorLogo.png")));
-	}
-
 	/**
 	 * @wbp.parser.constructor
 	 */

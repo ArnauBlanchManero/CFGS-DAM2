@@ -12,6 +12,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import usuarios.Usuario;
 
 /*
@@ -94,11 +96,13 @@ public class EscribirTxt {
 
 		Path ficheroUsuarios = Paths.get("src/txt/credencialesUsuarios.txt");
 		Path ficheroNoticias = Paths.get("src/txt/noticiasUsuarios.txt");
+		Path ficheroTitulares = Paths.get("src/txt/titularesGuardados.txt");
 		
 		if (Files.exists(ficheroUsuarios) && Files.isReadable(ficheroUsuarios) && Files.isWritable(ficheroUsuarios) && Files.exists(ficheroNoticias) && Files.isReadable(ficheroNoticias) && Files.isWritable(ficheroNoticias)) {
 			try {
 				List<String> lineasUsuarios = Files.readAllLines(ficheroUsuarios);
 				List<String> lineasNoticias = Files.readAllLines(ficheroNoticias);
+				List<String> lineasTitulares = Files.readAllLines(ficheroTitulares);
 
 				lineasUsuarios.removeIf(linea -> {
 					// Elimino las líneas vacías
@@ -126,9 +130,23 @@ public class EscribirTxt {
 					}
 					return false;
 				});
+				lineasTitulares.removeIf(linea -> {
+					// Elimino las líneas vacías
+					if(linea.trim().isEmpty()) return true;
+					try {
+						int id = Integer.parseInt(linea.substring(1).split("\\[")[0]);
+						// Elimino al usuario con el id buscado
+						if (id == idUsuarioBorrar)
+							return true;
+					} catch (NumberFormatException e) {
+						return false;
+					}
+					return false;
+				});
 				
 				Files.write(ficheroUsuarios, lineasUsuarios);
 				Files.write(ficheroNoticias, lineasNoticias);
+				Files.write(ficheroTitulares, lineasTitulares);
 				
 			} catch (IOException e) {
 				usuarioEliminado = false;
@@ -139,6 +157,29 @@ public class EscribirTxt {
 		}
 		
 		return usuarioEliminado;
+	}
+
+	public static void guardarTitulares(String texto) {
+		File fichero = new File("src/txt/titularesGuardados.txt");
+		
+		try {
+			if (!fichero.exists()) {
+				fichero.createNewFile();
+			}
+			if (fichero.canWrite()) {
+				// Pongo el parámetro true para escribir a continuación y no sobreesribir
+				FileWriter escribir = new FileWriter(fichero, true);
+				BufferedWriter buffer = new BufferedWriter(escribir);
+				
+				// Escribo en una nueva línea y el texto que contiene los titulares
+				buffer.newLine();
+				buffer.write(texto);
+				buffer.close();
+				
+			}
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "No se ha guardado el histórico de los titulares", "ERROR", 2);
+		}
 	}
 
 }

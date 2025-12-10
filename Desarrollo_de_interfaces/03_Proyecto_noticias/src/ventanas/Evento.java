@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 
 import correos.Email;
 import txt.EscribirTxt;
+import txt.LeerTxt;
 import usuarios.Usuario;
 
 /*
@@ -206,7 +207,7 @@ public class Evento implements ActionListener{
 
 	private void mostrar_hora() {
 		// TODO Auto-generated method stub
-		
+		JOptionPane.showMessageDialog(null, "La hora del envío automático es: "+LeerTxt.leerHora(), "HORA", 3);
 	}
 
 	private void atras_titlares_admin() {
@@ -544,7 +545,8 @@ public class Evento implements ActionListener{
 	private void enviar_categorias_seleccionadas() {
 		// TODO Enviar correo con las categorías del usuario
 		String mensaje = "<html>";
-		String [] categorias = {"<h2>Economía</h2>", "<h2>Deportes</h2>", "<h2>Nacional</h2>", "<h2>Internacional</h2>", "<h2>Música</h2>", "<h2>Medio Ambiente</h2>"};
+		String guardar = "#"+usuarioLogueado.getId();
+		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
 		int i; // El orden de las categorías del usuario
 		int j = 0; // El orden de todos los titulares
 		LocalDate fecha = LocalDate.now();
@@ -553,24 +555,22 @@ public class Evento implements ActionListener{
         int año = fecha.getYear();
         String fechaEntera = dia+"-"+mes+"-"+año;
         mensaje += "<p>Las noticias del <i>"+fechaEntera+"</i>.</p>";
+        guardar += "["+fechaEntera+"]";
 		for (i = 0; i < categorias.length; i++) {
 			
 			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
+				mensaje += "<h2>";
 				mensaje += categorias[i];
+				mensaje += "</h2>";
+				guardar += ".:"+categorias[i]+":.";
 			}
 			
 			if(usuarioLogueado.getCategorias()[j]) {
 				mensaje += "<p>";
 				mensaje += titulares.get(j);
 				mensaje += "</p>";
-			}
-			
-			j++;
-			if(usuarioLogueado.getCategorias()[j]) {
-				mensaje += "<p>";
-				mensaje += titulares.get(j);
-				mensaje += "</p>";
+				guardar += "::"+titulares.get(j) +"::";
 			}
 			
 			j++;
@@ -578,6 +578,15 @@ public class Evento implements ActionListener{
 				mensaje += "<p>";
 				mensaje += titulares.get(j);
 				mensaje += "</p>";
+				guardar += "::"+titulares.get(j) +"::";
+			}
+			
+			j++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += "<p>";
+				mensaje += titulares.get(j);
+				mensaje += "</p>";
+				guardar += "::"+titulares.get(j) +"::";
 			}
 			j++; // Aumento para estar posicionado en la primera noticia de la siguiente categoría
 		}
@@ -585,6 +594,7 @@ public class Evento implements ActionListener{
 		Email email = new Email(usuarioLogueado.getCorreo(), mensaje);
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		if(email.enviar()) { // TODO también tengo que guardarlo en un fichero
+			EscribirTxt.guardarTitulares(guardar);
 			JOptionPane.showMessageDialog(null, "Revisa tu correo con los titulares", "ENVIADO", 3);
 		} else {
 			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 2);

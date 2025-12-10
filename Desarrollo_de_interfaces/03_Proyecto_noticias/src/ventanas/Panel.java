@@ -21,7 +21,7 @@ public class Panel extends JPanel{
 		JLabel info = new JLabel();
 		info.setBounds(10, 10, 428, 278);
 		info.setText(mensaje);
-		info.setHorizontalAlignment(SwingConstants.CENTER);
+		info.setHorizontalAlignment(SwingConstants.LEFT);
 		info.setVerticalAlignment(SwingConstants.TOP);
 		add(info);
 	}
