@@ -69,7 +69,7 @@ public class LeerTxt {
 					String [] lineaSeparada = contenidoLinea.split(":");
 					// Uso el caracter : para separar entre el id y el array de categorías favoritas
 					if (lineaSeparada.length == 2) {
-						if (Integer.parseInt(lineaSeparada[0].charAt(1)+"") == id ){
+						if (Integer.parseInt(lineaSeparada[0].charAt(1)+""+lineaSeparada[0].charAt(2)) == id ){
 							
 							idEncontrado = true;
 							for (int i = 0; i < Ventana.CANTIDAD_CATEGORIAS; i++) {

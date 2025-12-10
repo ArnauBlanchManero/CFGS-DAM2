@@ -33,7 +33,7 @@ public class EscribirTxt {
 				
 				// Escribo el id en segunda posición y separado con : porque así es como luego lo leo
 				buffer.newLine();
-				buffer.write("#"+id+":");
+				buffer.write("#"+(id < 10 ? "0"+id : id )+":");
 				
 				for (boolean b : periodicosUsuario) {
 					// Escribo 1 si ese periódico es su favorito y 0 si no
@@ -70,7 +70,7 @@ public class EscribirTxt {
 				
 				// Escribo en una nueva línea los parámetros separados por ·!· y en orden
 				buffer.newLine();
-				buffer.write(nuevoID+"·!·");
+				buffer.write((nuevoID < 10 ? "0"+nuevoID : nuevoID )+"·!·");
 				buffer.write(nombre+"·!·");
 				buffer.write(correo+"·!·");
 				buffer.write(contraseña+"·!·");
@@ -104,7 +104,7 @@ public class EscribirTxt {
 					// Elimino las líneas vacías
 					if(linea.trim().isEmpty()) return true;
 					try {
-						int id = Integer.parseInt(linea.charAt(0)+"");
+						int id = Integer.parseInt(linea.charAt(0)+""+linea.charAt(1));
 						// Elimino al usuario con el id buscado
 						if (id == idUsuarioBorrar)
 							return true;
@@ -117,7 +117,7 @@ public class EscribirTxt {
 					// Elimino las líneas vacías
 					if(linea.trim().isEmpty()) return true;
 					try {
-						int id = Integer.parseInt(linea.charAt(1)+"");
+						int id = Integer.parseInt(linea.charAt(1)+""+linea.charAt(2));
 						// Elimino al usuario con el id buscado
 						if (id == idUsuarioBorrar)
 							return true;

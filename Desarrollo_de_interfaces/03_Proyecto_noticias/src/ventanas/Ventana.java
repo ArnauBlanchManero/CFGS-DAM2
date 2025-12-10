@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -149,7 +151,7 @@ public class Ventana extends JFrame{
 			}
 		}
 		// Compruebo que haya un admin y 3 o más usuarios 
-		return cantidadAdmin == 1 && cantidadUsuario >= 3;
+		return cantidadAdmin == 1 && cantidadUsuario >= 3 && cantidadUsuario <= 10;
 	}
 
 	private Panel buscarImagen() {
@@ -193,6 +195,18 @@ public class Ventana extends JFrame{
 	 */
 	public Ventana(String title) throws HeadlessException {
 		super();
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
+		addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres cerrar?", "SALIR", JOptionPane.YES_NO_OPTION);
+		        if (opcion == JOptionPane.YES_OPTION) {
+		            dispose();
+		            System.exit(0);
+		        }
+		    }
+		});
 		// La ventana principal
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
@@ -238,6 +252,7 @@ public class Ventana extends JFrame{
 		// Este boton lo añado al panel de seleccionar las categorías favoritas
 		JButton btnGuardarCategorias = new JButton("Guardar");
 		btnGuardarCategorias.setBounds(314, 615, 117, 25);
+		btnGuardarCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelCategoriasFavoritas.add(btnGuardarCategorias);
 		btnGuardarCategorias.setEnabled(false);
 		// Añado el evento del botón para guardar sus categorias favoritas en un txt
@@ -247,17 +262,20 @@ public class Ventana extends JFrame{
 		// Este botón muestra los titulares de las categorías favoriatas del usuario
 		JButton btnMostrarCategorias = new JButton("Mostrar");
 		btnMostrarCategorias.setBounds(250, 300, 180, 75);
+		btnMostrarCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelMostrarCategorias.add(btnMostrarCategorias);
 		btnMostrarCategorias.setEnabled(false);
 		// Este botón esconde los titulares y vuelve a mostrar el botón de Mostrar
 		JButton btnEsconderCategorias = new JButton("Atrás");
 		btnEsconderCategorias.setBounds(70, 630, 110, 25);
 		panelMostrarCategorias.add(btnEsconderCategorias);
+		btnEsconderCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnEsconderCategorias.setEnabled(false);
 		btnEsconderCategorias.setVisible(false);
 		// Este botón escribe en un txt los titulares actuales en forma de histórico para el usuario y le envía un correo con esos titulares
 		JButton btnEnviarCategorias = new JButton("Enviar");
 		btnEnviarCategorias.setBounds(300, 630, 110, 25);
+		btnEnviarCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelMostrarCategorias.add(btnEnviarCategorias);
 		btnEnviarCategorias.setEnabled(false);
 		btnEnviarCategorias.setVisible(false);
@@ -269,6 +287,7 @@ public class Ventana extends JFrame{
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnGestionarusuarios = new JButton("Gestionar usuarios");
 		btnGestionarusuarios.setBounds(260, 300, 180, 75);
+		btnGestionarusuarios.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelGeneralAdmin.add(btnGestionarusuarios);
 		btnGestionarusuarios.setEnabled(false);
 		
@@ -279,36 +298,42 @@ public class Ventana extends JFrame{
 		// Wnvia al admin todos los titulares
 		JButton btnMostrarCategoriasAdmin = new JButton("Test titulares");
 		btnMostrarCategoriasAdmin.setBounds(70, 300, 180, 75);
+		btnMostrarCategoriasAdmin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelGeneralAdmin.add(btnMostrarCategoriasAdmin);
 		btnMostrarCategoriasAdmin.setEnabled(false);
 
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnMostrarHora = new JButton("Ver hora de envío");
 		btnMostrarHora.setBounds(450, 300, 180, 75);
+		btnMostrarHora.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelGeneralAdmin.add(btnMostrarHora);
 		btnMostrarHora.setEnabled(false);
 		
 		// Añadir o eliminar usuarios
 		JButton btnAadir = new JButton("Añadir");
 		btnAadir.setBounds(180, 231, 117, 45);
+		btnAadir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAadir.setEnabled(false);
 		panelGestionUsuariosAdmin.add(btnAadir);
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.setBounds(415, 231, 117, 45);
+		btnEliminar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnEliminar.setEnabled(false);
 		panelGestionUsuariosAdmin.add(btnEliminar);
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.setBounds(374, 589, 117, 25);
+		btnAceptar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAceptar.setEnabled(false);
 		btnAceptar.setVisible(false);
 		panelGestionUsuariosAdmin.add(btnAceptar);
 		JButton btnAtras = new JButton("Atrás");
-		btnAtras.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAtras.setBounds(58, 589, 117, 25);
+		btnAtras.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnAtras.setEnabled(false);
 		panelGestionUsuariosAdmin.add(btnAtras);
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(226, 589, 117, 25);
+		btnCancelar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCancelar.setEnabled(false);
 		btnCancelar.setVisible(false);
 		panelGestionUsuariosAdmin.add(btnCancelar);
@@ -327,21 +352,25 @@ public class Ventana extends JFrame{
 		// He creado un botón de cerrar sesión para cada panel pero que llama al mismo evento
 		JButton btnCerrarSesionMostrarCategorias = new JButton("Cerrar sesión");
 		btnCerrarSesionMostrarCategorias.setBounds(530, 630, 150, 25);
+		btnCerrarSesionMostrarCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCerrarSesionMostrarCategorias.setEnabled(false);
 		btnCerrarSesionMostrarCategorias.setVisible(true);
 		panelMostrarCategorias.add(btnCerrarSesionMostrarCategorias);
 		JButton btnCerrarSesionGeneralAdmin = new JButton("Cerrar sesión");
 		btnCerrarSesionGeneralAdmin.setBounds(499, 589, 154, 25);
+		btnCerrarSesionGeneralAdmin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCerrarSesionGeneralAdmin.setEnabled(false);
 		btnCerrarSesionGeneralAdmin.setVisible(true);
 		panelGeneralAdmin.add(btnCerrarSesionGeneralAdmin);
 		JButton btnCerrarSesionCategoriasFavoritas = new JButton("Cerrar sesión");
 		btnCerrarSesionCategoriasFavoritas.setBounds(500, 615, 150, 25);
+		btnCerrarSesionCategoriasFavoritas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCerrarSesionCategoriasFavoritas.setEnabled(false);
 		btnCerrarSesionCategoriasFavoritas.setVisible(true);
 		panelCategoriasFavoritas.add(btnCerrarSesionCategoriasFavoritas);
 		JButton btnCerrarSesionGestionUsuarios = new JButton("Cerrar sesión");
 		btnCerrarSesionGestionUsuarios.setBounds(499, 589, 154, 25);
+		btnCerrarSesionGestionUsuarios.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCerrarSesionGestionUsuarios.setEnabled(false);
 		panelGestionUsuariosAdmin.add(btnCerrarSesionGestionUsuarios);
 
@@ -354,6 +383,7 @@ public class Ventana extends JFrame{
 
 		JButton btnAtrasAdmin = new JButton("Atrás");
 		btnAtrasAdmin.setBounds(70, 630, 110, 25);
+		btnAtrasAdmin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelMostrarCategorias.add(btnAtrasAdmin);
 		btnAtrasAdmin.setEnabled(false);
 		btnAtrasAdmin.setVisible(false);
@@ -371,6 +401,7 @@ public class Ventana extends JFrame{
 		// El botón del inicio de sesión es el único habilitado al principio
 		JButton btnEntrar = new JButton("Entrar");
 		btnEntrar.setBounds(294, 468, 117, 25);
+		btnEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelInicioSesion.add(btnEntrar);
 		panelInicioSesion.setEnabled(true);
 
@@ -393,6 +424,7 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnCancelar); //14
 		todosBotones.add(btnMostrarCategoriasAdmin); //15
 		todosBotones.add(btnAtrasAdmin); //16
+		todosBotones.add(btnMostrarHora); //17
 		
 
 		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas
@@ -837,7 +869,7 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
 		lblCategoriasFavoritas.setOpaque(true);
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCategoriasFavoritas.setBounds(193, 12, 312, 64);
+		lblCategoriasFavoritas.setBounds(193, 20, 312, 64);
 		panelCategoriasFavoritas.add(lblCategoriasFavoritas);
 
 		JLabel lblInfoseleccion = new JLabel("Selecciona los periódicos de las categorías que más te gusten.");

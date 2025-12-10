@@ -4,12 +4,14 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -256,7 +258,7 @@ public class Evento implements ActionListener{
 					lblDatosAñadirIncorrectos.setVisible(true);
 				} else
 					// Comprobar que haya espacio para otro usuario
-					if (usuarios.size()>=10) {
+					if (usuarios.size()>10) {
 						lblDatosAñadirIncorrectos.setText("No puedes añadir más usuarios");
 						lblDatosAñadirIncorrectos.setVisible(true);
 					} else {
@@ -284,7 +286,7 @@ public class Evento implements ActionListener{
 	private int buscar_id() {
 		int id = -1;
 		boolean existe = false;
-		for (int i = 9; i >= 0; i--) {
+		for (int i = 10; i >= 0; i--) {
 			existe = false;
 			for (Usuario usuario : usuarios) {
 				if (usuario.getId() == i) {
@@ -527,40 +529,52 @@ public class Evento implements ActionListener{
 
 	private void enviar_categorias_seleccionadas() {
 		// TODO Enviar correo con las categorías del usuario
-		String mensaje = "";
-		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
+		String mensaje = "<html>";
+		String [] categorias = {"<h2>Economía</h2>", "<h2>Deportes</h2>", "<h2>Nacional</h2>", "<h2>Internacional</h2>", "<h2>Música</h2>", "<h2>Medio Ambiente</h2>"};
 		int i; // El orden de las categorías del usuario
 		int j = 0; // El orden de todos los titulares
+		LocalDate fecha = LocalDate.now();
+        int dia = fecha.getDayOfMonth();
+        int mes = fecha.getMonthValue();
+        int año = fecha.getYear();
+        String fechaEntera = dia+"-"+mes+"-"+año;
+        mensaje += "<p>Las noticias del <i>"+fechaEntera+"</i>.</p>";
 		for (i = 0; i < categorias.length; i++) {
 			
 			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
 			if(usuarioLogueado.getCategorias()[j] || usuarioLogueado.getCategorias()[j+1] || usuarioLogueado.getCategorias()[j+2]) {
 				mensaje += categorias[i];
-				mensaje += '\n';
 			}
 			
 			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += "<p>";
 				mensaje += titulares.get(j);
-				mensaje += '\n';
-			}
-			
-			j++;
-			if(usuarioLogueado.getCategorias()[j]) {
-				mensaje += titulares.get(j);
-				mensaje += '\n';
+				mensaje += "</p>";
 			}
 			
 			j++;
 			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += "<p>";
 				mensaje += titulares.get(j);
-				mensaje += '\n';
+				mensaje += "</p>";
+			}
+			
+			j++;
+			if(usuarioLogueado.getCategorias()[j]) {
+				mensaje += "<p>";
+				mensaje += titulares.get(j);
+				mensaje += "</p>";
 			}
 			j++; // Aumento para estar posicionado en la primera noticia de la siguiente categoría
 		}
-		
+		mensaje += "</html>";
 		Email email = new Email(usuarioLogueado.getCorreo(), mensaje);
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		email.enviar();
+		if(email.enviar()) {
+			JOptionPane.showMessageDialog(null, "Revisa tu correo con los titulares", "ENVIADO", 3);
+		} else {
+			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 2);
+		}
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 

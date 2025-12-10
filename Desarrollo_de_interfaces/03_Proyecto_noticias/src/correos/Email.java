@@ -29,7 +29,7 @@ public class Email {
 	public boolean enviar() {
 		boolean enviadoCorrectamente = true;
 		final String fromEmail = "arnau.blanch.dosa@gmail.com"; //EMAIL DE SALIDA
-		final String password = "****"; //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
+		final String password = "ojtv oevq ypek oqod "; //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
 		// https://myaccount.google.com/apppasswords
 		final String toEmail = correoDestino; // EMAIL DESTINATARIO
 				
@@ -54,13 +54,13 @@ public class Email {
 		      msg.setFrom(new InternetAddress("arnau.blanch.dosa@gmail.com", "Arnau Blanch Manero"));    	      
 		      msg.setReplyTo(InternetAddress.parse("arnau.blanch.dosa@gmail.com", false));	      
 		      msg.setSubject("Noticias DAM", "UTF-8");
-		      msg.setText(mensaje, "UTF-8");
+		      msg.setContent(mensaje, "text/html; charset=utf-8");
 		      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));	   
 		      Transport.send(msg);
 		    }
 		    catch (Exception e) {
 		    	enviadoCorrectamente = false;
-		      e.printStackTrace();
+		     // e.printStackTrace(); // TODO quitaro
 		    }
 		
 		return enviadoCorrectamente;
