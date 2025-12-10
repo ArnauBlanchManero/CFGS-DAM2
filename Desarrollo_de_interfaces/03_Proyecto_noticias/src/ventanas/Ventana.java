@@ -308,6 +308,8 @@ public class Ventana extends JFrame{
 		btnMostrarHora.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panelGeneralAdmin.add(btnMostrarHora);
 		btnMostrarHora.setEnabled(false);
+		Evento mostrarHora = new Evento("mostrar hora");
+		btnMostrarHora.addActionListener(mostrarHora);
 		
 		// Añadir o eliminar usuarios
 		JButton btnAadir = new JButton("Añadir");

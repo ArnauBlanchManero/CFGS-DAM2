@@ -1,3 +1,5 @@
+Hora de envío automática: *$17:00$*
+
 https://elpais.com/economia/;h2.c_t a;3
 https://esradio.libertaddigital.com/economia-para-todos/;div.ultimos-audios ul li a strong;0
 https://www.eleconomista.es/economia/;div.articleHeadLine h2 a;0

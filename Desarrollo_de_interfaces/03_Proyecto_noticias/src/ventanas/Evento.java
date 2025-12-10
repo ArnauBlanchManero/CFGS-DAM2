@@ -196,9 +196,17 @@ public class Evento implements ActionListener{
 			case "atras admin titulares":
 				atras_titlares_admin();
 				break;
+			case "mostrar hora":
+				mostrar_hora();
+				break;
 			default:
 				break;
 		}
+	}
+
+	private void mostrar_hora() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void atras_titlares_admin() {
@@ -208,6 +216,8 @@ public class Evento implements ActionListener{
 
 		todosBotones.get(15).setVisible(true);
 		todosBotones.get(15).setEnabled(true);
+		todosBotones.get(17).setVisible(true);
+		todosBotones.get(17).setEnabled(true);
 		todosBotones.get(16).setVisible(false);
 		todosBotones.get(16).setEnabled(false);
 		todosBotones.get(3).setVisible(true);
@@ -220,9 +230,11 @@ public class Evento implements ActionListener{
 		// Pongo el panel de mostrar los titulares delante del todo
 		todosPaneles.setLayer(todosPaneles.getComponent(2), 10);
 
-		
+
 		todosBotones.get(15).setVisible(false);
 		todosBotones.get(15).setEnabled(false);
+		todosBotones.get(17).setVisible(false);
+		todosBotones.get(17).setEnabled(false);
 		todosBotones.get(16).setVisible(true);
 		todosBotones.get(16).setEnabled(true);
 		mostrar_categorias_seleccionadas();
@@ -448,6 +460,7 @@ public class Evento implements ActionListener{
 		todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(true); // Habilito el botón de gestionar usuarios
 		todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
+		todosBotones.get(17).setEnabled(true); // Habilito el botón de mirar la hora de envío
 		todosBotones.get(9).setEnabled(false); // Deshabilito el botón de cerrar sesión del panel de gestion de usuarios
 		todosBotones.get(10).setEnabled(false); // Deshabilito el botón de Atrás
 		todosBotones.get(11).setEnabled(false); // Deshabilito el botón de Añadir usuarios
@@ -460,6 +473,7 @@ public class Evento implements ActionListener{
 		todosBotones.get(7).setEnabled(false); // Deshabilito el botón de cerrar sesion
 		todosBotones.get(8).setEnabled(false); // Deshabilito el botón de gestionar usuarios
 		todosBotones.get(15).setEnabled(false); // Deshabilito el botón de enviar correo
+		todosBotones.get(17).setEnabled(false); // Deshabilito el botón de mirar la hora de envío
 		todosBotones.get(9).setEnabled(true); // Habilito el botón de cerrar sesión del panel de gestion de usuarios
 		todosBotones.get(10).setEnabled(true); // Habilito el botón de Atrás
 		todosBotones.get(11).setEnabled(true); // Habilito el botón de Añadir usuarios
@@ -570,7 +584,7 @@ public class Evento implements ActionListener{
 		mensaje += "</html>";
 		Email email = new Email(usuarioLogueado.getCorreo(), mensaje);
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		if(email.enviar()) {
+		if(email.enviar()) { // TODO también tengo que guardarlo en un fichero
 			JOptionPane.showMessageDialog(null, "Revisa tu correo con los titulares", "ENVIADO", 3);
 		} else {
 			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 2);
@@ -716,6 +730,7 @@ public class Evento implements ActionListener{
 				todosBotones.get(7).setEnabled(true); // Habilito el botón de cerrar sesión
 				todosBotones.get(8).setEnabled(true); // Habilito el botón de gestion de usuarios
 				todosBotones.get(15).setEnabled(true); // Habilito el botón de enviar correo
+				todosBotones.get(17).setEnabled(true); // Habilito el botón de mirar la hora de envío automático
 			}
 			
 			todosBotones.get(0).setEnabled(false); // Deshabilito el botón de iniciar sesión
