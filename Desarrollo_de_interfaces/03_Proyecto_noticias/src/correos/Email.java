@@ -10,6 +10,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import txt.LeerTxt;
+
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -28,8 +30,8 @@ public class Email {
 
 	public boolean enviar() {
 		boolean enviadoCorrectamente = true;
-		final String fromEmail = "arnau.blanch.dosa@gmail.com"; //EMAIL DE SALIDA
-		final String password = "ojtv oevq ypek oqod "; //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
+		final String fromEmail = LeerTxt.leerInfoCorreo(0); //EMAIL DE SALIDA
+		final String password = LeerTxt.leerInfoCorreo(1); //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
 		// https://myaccount.google.com/apppasswords
 		final String toEmail = correoDestino; // EMAIL DESTINATARIO
 				

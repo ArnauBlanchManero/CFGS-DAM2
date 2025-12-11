@@ -25,7 +25,7 @@ public class EscribirTxt {
 	public static boolean escribirCategorias(int id, boolean[] periodicosUsuario) {
 		// Guardo las categorías favoritas de un usuario en el fichero correspondiente
 		boolean escrituraCorrecta = true;
-		File fichero = new File("src/txt/noticiasUsuarios.txt");
+		File fichero = new File("src/txt/configuracion.txt");
 		
 		if (fichero.exists() && fichero.canWrite()) {
 			try {
@@ -35,7 +35,7 @@ public class EscribirTxt {
 				
 				// Escribo el id en segunda posición y separado con : porque así es como luego lo leo
 				buffer.newLine();
-				buffer.write("#"+(id < 10 ? "0"+id : id )+":");
+				buffer.write("#"+(id < 10 ? "0"+id : id )+"::");
 				
 				for (boolean b : periodicosUsuario) {
 					// Escribo 1 si ese periódico es su favorito y 0 si no
@@ -62,7 +62,7 @@ public class EscribirTxt {
 	public static boolean guardarUsuario(int nuevoID, String nombre, String contraseña, String correo) {
 		// Guardo la información del usuario en el fichero
 		boolean usuarioGuardado = true;
-		File fichero = new File("src/txt/credencialesUsuarios.txt");
+		File fichero = new File("src/txt/usuarios.txt");
 		
 		if (fichero.exists() && fichero.canWrite()) {
 			try {
@@ -94,11 +94,11 @@ public class EscribirTxt {
 		// TODO Eliminar datos usuario
 		boolean usuarioEliminado = true;
 
-		Path ficheroUsuarios = Paths.get("src/txt/credencialesUsuarios.txt");
-		Path ficheroNoticias = Paths.get("src/txt/noticiasUsuarios.txt");
-		Path ficheroTitulares = Paths.get("src/txt/titularesGuardados.txt");
+		Path ficheroUsuarios = Paths.get("src/txt/usuarios.txt");
+		Path ficheroNoticias = Paths.get("src/txt/configuracion.txt");
+		Path ficheroTitulares = Paths.get("src/txt/historico.txt");
 		
-		if (Files.exists(ficheroUsuarios) && Files.isReadable(ficheroUsuarios) && Files.isWritable(ficheroUsuarios) && Files.exists(ficheroNoticias) && Files.isReadable(ficheroNoticias) && Files.isWritable(ficheroNoticias)) {
+		if (Files.exists(ficheroUsuarios) && Files.isReadable(ficheroUsuarios) && Files.isWritable(ficheroUsuarios) && Files.exists(ficheroNoticias) && Files.isReadable(ficheroNoticias) && Files.isWritable(ficheroNoticias) && Files.exists(ficheroTitulares) && Files.isReadable(ficheroTitulares) && Files.isWritable(ficheroTitulares)) {
 			try {
 				List<String> lineasUsuarios = Files.readAllLines(ficheroUsuarios);
 				List<String> lineasNoticias = Files.readAllLines(ficheroNoticias);
@@ -160,7 +160,7 @@ public class EscribirTxt {
 	}
 
 	public static void guardarTitulares(String texto) {
-		File fichero = new File("src/txt/titularesGuardados.txt");
+		File fichero = new File("src/txt/historico.txt");
 		
 		try {
 			if (!fichero.exists()) {
@@ -175,7 +175,7 @@ public class EscribirTxt {
 				buffer.newLine();
 				buffer.write(texto);
 				buffer.close();
-				
+				JOptionPane.showMessageDialog(null, "Titulares guardados en el histórico", "GUARDADO", 1);
 			}
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "No se ha guardado el histórico de los titulares", "ERROR", 2);

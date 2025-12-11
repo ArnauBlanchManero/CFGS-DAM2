@@ -20,7 +20,7 @@ public class LeerTxt {
 	
 	public static ArrayList<Usuario> leerTodosUsuarios() throws IOException {
 		// Accedo al fichero donde se guardan los usuarios y los guardo en un array
-		File fichero = new File("src/txt/credencialesUsuarios.txt");
+		File fichero = new File("src/txt/usuarios.txt");
 		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 		
 		if (fichero.exists() && fichero.canRead()) {
@@ -53,7 +53,7 @@ public class LeerTxt {
 	public static boolean[] leerCategorias(int id) {
 		// Guardo las categorías en un array de buleanos
 		boolean[] categorias = new boolean[Ventana.CANTIDAD_CATEGORIAS];
-		File fichero = new File("src/txt/noticiasUsuarios.txt");
+		File fichero = new File("src/txt/configuracion.txt");
 		
 		if (fichero.exists() && fichero.canRead()) {
 			FileReader lector;
@@ -66,7 +66,7 @@ public class LeerTxt {
 				
 				// Voy leyendo línea por línea hasta que no haya más líneas
 				while((contenidoLinea=br.readLine())!=null) {
-					String [] lineaSeparada = contenidoLinea.split(":");
+					String [] lineaSeparada = contenidoLinea.split("::");
 					// Uso el caracter : para separar entre el id y el array de categorías favoritas
 					if (lineaSeparada.length == 2) {
 						if (Integer.parseInt(lineaSeparada[0].charAt(1)+""+lineaSeparada[0].charAt(2)) == id ){
@@ -130,7 +130,7 @@ public class LeerTxt {
 
 	private static ArrayList<String> leerUrlsParametrosPosicion() {
 		// En esta función leemos la información del fichero donde se guarda la url, el selector y el índice
-		File fichero = new File("src/txt/urlsNoticias.txt");
+		File fichero = new File("src/txt/configuracion.txt");
 		ArrayList<String> lineas = new ArrayList<String>();
 		
 		if (fichero.exists() && fichero.canRead()) {
@@ -157,7 +157,7 @@ public class LeerTxt {
 	}
 
 	public static String leerHora() {
-		File fichero = new File("src/txt/urlsNoticias.txt");
+		File fichero = new File("src/txt/configuracion.txt");
 		String hora = "";
 		
 		if (fichero.exists() && fichero.canRead()) {
@@ -183,5 +183,39 @@ public class LeerTxt {
 		}
 
 		return hora;
+	}
+
+	public static String leerInfoCorreo(int posicion) {
+		// TODO Auto-generated method stub
+		File fichero = new File("src/txt/configuracion.txt");
+		String info = "";
+		
+		if (fichero.exists() && fichero.canRead()) {
+			FileReader lector;
+			try {
+				// Voy leyendo línea por línea y buscando la hora
+				lector = new FileReader(fichero);
+				BufferedReader br = new BufferedReader(lector);
+				String contenidoLinea;
+				int vueltas = 0;
+				while((contenidoLinea=br.readLine())!=null) {
+					String[] lineaSeparada = contenidoLinea.split("=");
+					if (lineaSeparada.length > 1) {
+						if (vueltas == posicion){
+							info = lineaSeparada[1];
+						}
+						vueltas++;
+					}
+				}
+				
+			} catch (IOException e) {
+				info="ERROR";
+			}
+			
+		} else {
+			info="ERROR";
+		}
+
+		return info;
 	}
 }

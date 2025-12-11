@@ -19,7 +19,7 @@ public class Raton implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		JOptionPane.showMessageDialog(null, "Arnau", "v1.0", 1);
+		JOptionPane.showMessageDialog(null, "Desarrollador: Arnau Blanch\nDesde: 1/12/2025\nVersion: v1.0\nHoras dedicadas: más de las que me gustaría\nLenguaje utilizado: Java\nVersion de Java: JavaSE-21", "Noticias diarias", 1);
 	}
 
 	@Override

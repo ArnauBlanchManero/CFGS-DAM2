@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JOptionPane;
 
-import correos.Automatico;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -13,8 +12,6 @@ import correos.Automatico;
 public class Main {
 	
 	public static void main(String[] args) {
-		Automatico h = new Automatico();
-		h.imprimirHora();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

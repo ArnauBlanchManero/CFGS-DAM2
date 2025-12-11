@@ -29,6 +29,7 @@ import java.awt.Cursor;
 
 import javax.swing.border.SoftBevelBorder;
 
+import correos.Automatico;
 import txt.LeerTxt;
 import usuarios.Usuario;
 
@@ -179,6 +180,7 @@ public class Ventana extends JFrame{
 	 * @wbp.parser.constructor
 	 */
 	public Ventana(String title) throws HeadlessException {
+		// La ventana principal
 		super();
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
@@ -192,7 +194,15 @@ public class Ventana extends JFrame{
 		        }
 		    }
 		});
-		// La ventana principal
+		for (Usuario usuario : usuarios) {
+			try {
+				Automatico auto = new Automatico(usuario.getCorreo(), Evento.generarMensajeCorreo(usuario, titulares));
+				Thread hilo = new Thread(auto);
+				hilo.start();
+			} catch (NullPointerException e) {
+				
+			}
+		}
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
 		int ancho = (int) monitor.getWidth() / 2 - 700 / 2;
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
@@ -258,16 +268,16 @@ public class Ventana extends JFrame{
 		btnEsconderCategorias.setEnabled(false);
 		btnEsconderCategorias.setVisible(false);
 		// Este botón escribe en un txt los titulares actuales en forma de histórico para el usuario y le envía un correo con esos titulares
-		JButton btnEnviarCategorias = new JButton("Enviar");
-		btnEnviarCategorias.setBounds(300, 630, 110, 25);
-		btnEnviarCategorias.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		panelMostrarCategorias.add(btnEnviarCategorias);
-		btnEnviarCategorias.setEnabled(false);
-		btnEnviarCategorias.setVisible(false);
+		JButton btnGuardarTitulares = new JButton("Guardar");
+		btnGuardarTitulares.setBounds(300, 630, 110, 25);
+		btnGuardarTitulares.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panelMostrarCategorias.add(btnGuardarTitulares);
+		btnGuardarTitulares.setEnabled(false);
+		btnGuardarTitulares.setVisible(false);
 		
 		// Envía el correo electrónico con los titulares
-		Evento enviarCategorias = new Evento("enviar categorias", titulares);
-		btnEnviarCategorias.addActionListener(enviarCategorias);
+		Evento enviarCategorias = new Evento("guardar titulares", titulares);
+		btnGuardarTitulares.addActionListener(enviarCategorias);
 		
 		// Muestra los botones para gestionar a los usuarios
 		JButton btnGestionarusuarios = new JButton("Gestionar usuarios");
@@ -374,6 +384,14 @@ public class Ventana extends JFrame{
 		panelMostrarCategorias.add(btnAtrasAdmin);
 		btnAtrasAdmin.setEnabled(false);
 		btnAtrasAdmin.setVisible(false);
+		JButton btnEnviarTitulares = new JButton("Enviar");
+		btnEnviarTitulares.setBounds(300, 630, 110, 25);
+		btnEnviarTitulares.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panelMostrarCategorias.add(btnEnviarTitulares);
+		btnEnviarTitulares.setEnabled(false);
+		btnEnviarTitulares.setVisible(false);
+		Evento enviarTitulares = new Evento("enviar categorias", titulares);
+		btnEnviarTitulares.addActionListener(enviarTitulares);
 		
 		// El evento de testear si todos los titulares funcionan y se envian al correo
 		Evento mostrarCategoriasAdmin = new Evento("mostrar categorias admin", panelMostrarCategorias.getComponents());
@@ -398,7 +416,7 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnGuardarCategorias); //1
 		todosBotones.add(btnMostrarCategorias); //2
 		todosBotones.add(btnEsconderCategorias); //3
-		todosBotones.add(btnEnviarCategorias); //4
+		todosBotones.add(btnGuardarTitulares); //4
 		todosBotones.add(btnCerrarSesionMostrarCategorias); //5
 		todosBotones.add(btnCerrarSesionCategoriasFavoritas); //6
 		todosBotones.add(btnCerrarSesionGeneralAdmin); //7
@@ -412,6 +430,8 @@ public class Ventana extends JFrame{
 		todosBotones.add(btnMostrarCategoriasAdmin); //15
 		todosBotones.add(btnAtrasAdmin); //16
 		todosBotones.add(btnMostrarHora); //17
+		todosBotones.add(btnEnviarTitulares); //18
+		
 		
 
 		// El evento al iniciar sesión comprueba que el usuario exista y tenga categorías favoritas
