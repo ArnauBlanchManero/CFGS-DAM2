@@ -876,7 +876,7 @@ public class Ventana extends JFrame{
 		lblCategoriasFavoritas.setBackground(new Color(98, 160, 234));
 		lblCategoriasFavoritas.setOpaque(true);
 		lblCategoriasFavoritas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCategoriasFavoritas.setBounds(193, 20, 312, 64);
+		lblCategoriasFavoritas.setBounds(193, 30, 312, 64);
 		panelCategoriasFavoritas.add(lblCategoriasFavoritas);
 
 		JLabel lblInfoseleccion = new JLabel("Selecciona los periódicos de las categorías que más te gusten.");

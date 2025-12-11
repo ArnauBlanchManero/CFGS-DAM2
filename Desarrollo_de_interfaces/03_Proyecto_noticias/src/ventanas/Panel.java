@@ -6,6 +6,21 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.JMenuBar;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Insets;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
+import java.awt.ComponentOrientation;
+import java.awt.Cursor;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -26,29 +41,55 @@ public class Panel extends JPanel{
 		add(info);
 	}
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public Panel(boolean carga) {
 		// Todos mis paneles parten de esta configuración
 		super();
 		setBackground(new Color(133, 239, 237));
 		setLayout(null);
 		setBounds(0, 0, 700, 700);
+		
 		//TODO poner una barra de Menú con un “Acerca de” con los datos de la versión y	el desarrollador.
+		
 		if (!carga) {
-			JLabel lblAcercaDe = new JLabel("Acerca de");
-			lblAcercaDe.setBackground(new Color(28, 113, 216));
-			lblAcercaDe.setForeground(new Color(36, 31, 49));
-			lblAcercaDe.setHorizontalAlignment(SwingConstants.CENTER);
-			lblAcercaDe.setFont(new Font("Caladea", Font.BOLD | Font.ITALIC, 14));
-			lblAcercaDe.setOpaque(true);
-			lblAcercaDe.setBounds(0, 0, 700, 15);
-			Raton mostrarAcercaDe = new Raton(this);
-			lblAcercaDe.addMouseListener(mostrarAcercaDe);
-			add(lblAcercaDe);
+			// La barra de arriba del eclipse que pone Help y luego About y te salta una ventana con info
+			JMenuBar menuBar = new JMenuBar();
+			menuBar.setBackground(new Color(0, 128, 255));
+			menuBar.setBounds(621, 0, 79, 22);
+			add(menuBar);
+			
+			JMenu mnAyuda = new JMenu("Ayuda");
+			mnAyuda.setHorizontalTextPosition(SwingConstants.RIGHT);
+			mnAyuda.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			mnAyuda.setHorizontalAlignment(SwingConstants.RIGHT);
+			menuBar.add(mnAyuda);
+			
+			JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
+			mnAyuda.add(mntmAcercaDe);
+			mntmAcercaDe.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			Panel.addPopup(mntmAcercaDe, getComponentPopupMenu());
 		}
-		/*
-		 * La barra de arriba del eclipse que pone Help y luego About y te salta una ventana con info
-		 * 
-		 * */
+		
 	}
-
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+					
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				JOptionPane.showMessageDialog(null, "Desarrollador: Arnau Blanch\nDesde: 1/12/2025\nVersion: v1.0\nHoras dedicadas: más de las que me gustaría\nLenguaje utilizado: Java\nVersion de Java: JavaSE-21", "Noticias diarias", 1);
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }
