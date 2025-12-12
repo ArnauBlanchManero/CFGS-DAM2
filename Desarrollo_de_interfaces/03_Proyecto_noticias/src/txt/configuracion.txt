@@ -1,4 +1,4 @@
-Hora de envío automática: *$10:00$*
+Hora de envío automática: *$9:00$*
 --- Páginas Web ---
 https://elpais.com/economia/;h2.c_t a;3
 https://esradio.libertaddigital.com/economia-para-todos/;div.ultimos-audios ul li a strong;0
@@ -20,11 +20,6 @@ https://www.infolibre.es/medioambiente/;h2.ni-title  a;0
 https://www.elespanol.com/ciencia/medio-ambiente/;h2.art__title  a;0
 --- Información del correo de envío ---
 =arnau.blanch.dosa@gmail.com=
-=ojtv oevq ypek oqod =
+=****=
 --- Preferencias de los usuarios ---
 #00::111111111111111111
-#01::111111011111011111
-#02::100001000000000001
-#03::000000000000111000
-#07::000000000000110000
-#08::000100000000000000

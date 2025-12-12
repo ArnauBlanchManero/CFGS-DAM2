@@ -20,7 +20,7 @@ import txt.LeerTxt;
 public class Email {
 	// Enviar email
 	private String correoDestino;
-	private String mensaje;
+	protected String mensaje;
 	
 	public Email(String correoDestino, String mensaje) {
 		super();
@@ -31,7 +31,7 @@ public class Email {
 	public boolean enviar() {
 		boolean enviadoCorrectamente = true;
 		final String fromEmail = LeerTxt.leerInfoCorreo(0); //EMAIL DE SALIDA
-		final String password = LeerTxt.leerInfoCorreo(1); //TODO ELIMINAR CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
+		final String password = LeerTxt.leerInfoCorreo(1); // CONTRASEÑA DEL EMAIL DE SALIDA (aplicaciones de 3ros) Contraseñas de aplicación -- Verificación en 2 pasos 
 		// https://myaccount.google.com/apppasswords
 		final String toEmail = correoDestino; // EMAIL DESTINATARIO
 				
@@ -62,7 +62,6 @@ public class Email {
 		    }
 		    catch (Exception e) {
 		    	enviadoCorrectamente = false;
-		     // e.printStackTrace(); // TODO quitaro
 		    }
 		
 		return enviadoCorrectamente;

@@ -1,7 +1,6 @@
 package ventanas;
 
 import java.awt.Color;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,16 +10,11 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Insets;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import java.awt.ComponentOrientation;
 import java.awt.Cursor;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -51,13 +45,13 @@ public class Panel extends JPanel{
 		setLayout(null);
 		setBounds(0, 0, 700, 700);
 		
-		//TODO poner una barra de Menú con un “Acerca de” con los datos de la versión y	el desarrollador.
+		//Esta es una barra de Menú con un “Acerca de” con los datos de la versión y el desarrollador.
 		
 		if (!carga) {
-			// La barra de arriba del eclipse que pone Help y luego About y te salta una ventana con info
+			// Solo aparece si no es la pantalla de carga
 			JMenuBar menuBar = new JMenuBar();
 			menuBar.setBackground(new Color(0, 128, 255));
-			menuBar.setBounds(621, 0, 79, 22);
+			menuBar.setBounds(600, 0, 100, 22);
 			add(menuBar);
 			
 			JMenu mnAyuda = new JMenu("Ayuda");
@@ -82,7 +76,7 @@ public class Panel extends JPanel{
 				}
 			}
 			public void mouseReleased(MouseEvent e) {
-				JOptionPane.showMessageDialog(null, "Desarrollador: Arnau Blanch\nDesde: 1/12/2025\nVersion: v1.0\nHoras dedicadas: más de las que me gustaría\nLenguaje utilizado: Java\nVersion de Java: JavaSE-21", "Noticias diarias", 1);
+				JOptionPane.showMessageDialog(null, "Desarrollador: Arnau Blanch\nDesde: 1/12/2025\nVersion: v1.1\nHoras dedicadas: más de las que me gustaría\nLenguaje utilizado: Java\nVersion de Java: JavaSE-21", "Noticias diarias", 1);
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}

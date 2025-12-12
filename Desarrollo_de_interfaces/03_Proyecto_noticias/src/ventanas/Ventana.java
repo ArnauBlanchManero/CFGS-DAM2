@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -13,27 +12,24 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 
-import javax.swing.border.SoftBevelBorder;
 
 import correos.Automatico;
 import txt.LeerTxt;
 import usuarios.Usuario;
 
-import javax.swing.border.BevelBorder;
 import java.awt.Font;
 import java.awt.Graphics;
 
@@ -41,11 +37,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JTextField;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
-import java.awt.Checkbox;
 
 import javax.swing.JCheckBox;
-import javax.swing.border.MatteBorder;
 import javax.swing.JTextArea;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
@@ -78,6 +71,7 @@ public class Ventana extends JFrame{
 	public static ArrayList<Usuario> usuarios;
 	public static ArrayList<String> titulares;
 	public static int rolUsuario = -1;
+	static Semaphore semaforo = new Semaphore(0);
 	
 	public Ventana(int x, int y) {
 		// Este es el constructor de la ventana de carga
@@ -86,7 +80,11 @@ public class Ventana extends JFrame{
 		setSize(x, y);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		try {
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		} catch (NullPointerException e) {
+
+		}
 		// Es obligatorio poner una imagen en este panel
 		Panel panelCarga = buscarImagen();
 		getContentPane().add(panelCarga);
@@ -113,20 +111,20 @@ public class Ventana extends JFrame{
 					try {
 						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						usuarios = LeerTxt.leerTodosUsuarios();
-						titulares = LeerTxt.leerTodasNoticias();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
 						e1.printStackTrace();
 					}
 					// Si alguna de las dos lecturas falla, muestro una ventana de error.
-					if (usuarios.size() < 4 || !contarAdminsUsuarios(usuarios)) {
+					if (!contarAdminsUsuarios(usuarios)) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
 						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 2);
 						System.exit(1);
 					}
-					if (titulares == null || titulares.size()==0) {
+					File fichero = new File("src/txt/configuracion.txt");
+					if (!fichero.exists() && !fichero.canRead()) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
@@ -137,6 +135,9 @@ public class Ventana extends JFrame{
 			}
 		});
 		tiempo.start();
+		CargarTitulares cargar = new CargarTitulares();
+		Thread hilo = new Thread(cargar);
+		hilo.start();
 	}
 
 	protected boolean contarAdminsUsuarios(ArrayList<Usuario> usuarios) {
@@ -182,6 +183,8 @@ public class Ventana extends JFrame{
 	public Ventana(String title) throws HeadlessException {
 		// La ventana principal
 		super();
+		
+		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		addWindowListener(new WindowAdapter() {
@@ -208,7 +211,11 @@ public class Ventana extends JFrame{
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
 		setBounds(ancho, alto, 700, 700);
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		try {
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		} catch (NullPointerException e) {
+			
+		}
 		setTitle(title);
 		
 		// Organizo los paneles en un JLayeredPane
@@ -541,6 +548,16 @@ public class Ventana extends JFrame{
 	}
 
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
+		try {
+			semaforo.acquire();
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+		}
+		if (titulares == null || titulares.size()==0) {
+			dispose();
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			System.exit(2);
+		}
 		// El título del panel
 		JLabel lblCategoriasFavoritas = new JLabel("Tus noticias");
 		lblCategoriasFavoritas.setForeground(new Color(36, 31, 49));
@@ -1122,23 +1139,23 @@ public class Ventana extends JFrame{
 		panelInicioSesion.add(lblTituloIniciaSesion);
 		
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNombre.setBounds(193, 263, 137, 15);
+		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombre.setBounds(193, 264, 105, 15);
 		panelInicioSesion.add(lblNombre);
 		
 		JLabel lblContrasena = new JLabel("Contraseña");
-		lblContrasena.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblContrasena.setBounds(193, 355, 137, 15);
+		lblContrasena.setHorizontalAlignment(SwingConstants.CENTER);
+		lblContrasena.setBounds(193, 356, 105, 15);
 		panelInicioSesion.add(lblContrasena);
 		
 		// Necesito que el usuario me diga su nombre y su contraseña para poder iniciar sesión
 		txtNombre = new JTextField();
-		txtNombre.setBounds(368, 261, 137, 19);
+		txtNombre.setBounds(308, 261, 137, 19);
 		txtNombre.setColumns(10);
 		panelInicioSesion.add(txtNombre);
 
 		pwdContrasenia = new JPasswordField();
-		pwdContrasenia.setBounds(368, 353, 137, 19);
+		pwdContrasenia.setBounds(308, 353, 137, 19);
 		panelInicioSesion.add(pwdContrasenia);
 
 		lblSesionIncorrecta = new JLabel("El nombre o la contraseña no es correcto");
@@ -1151,7 +1168,7 @@ public class Ventana extends JFrame{
 		// La contraseña se muestra con • así que tengo que poner un JRadioButton para poder leerla en claro
 		JRadioButton rdbtnMostrar = new JRadioButton("Mostrar");
 		rdbtnMostrar.setOpaque(false);
-		rdbtnMostrar.setBounds(513, 351, 153, 23);
+		rdbtnMostrar.setBounds(451, 352, 153, 23);
 		rdbtnMostrar.setSelected(false);
 		panelInicioSesion.add(rdbtnMostrar);
 		Evento mostrarOcultarContraseña = new Evento("mostrar ocultar contraseña", rdbtnMostrar, pwdContrasenia);

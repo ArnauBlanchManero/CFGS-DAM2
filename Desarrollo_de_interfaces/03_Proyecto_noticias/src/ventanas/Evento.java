@@ -27,7 +27,7 @@ import usuarios.Usuario;
 
 public class Evento implements ActionListener{
 	private String accion;
-	static Usuario usuarioLogueado;
+	public static Usuario usuarioLogueado;
 	static ArrayList<Usuario> usuarios;
 	static JLayeredPane todosPaneles;
 	static JTextField nombreUsuario;
@@ -210,12 +210,12 @@ public class Evento implements ActionListener{
 
 
 	private void mostrar_hora() {
-		// TODO Auto-generated method stub
+		// Muestra la hora
 		JOptionPane.showMessageDialog(null, "La hora del envío automático es: "+LeerTxt.leerHora(), "HORA", 3);
 	}
 
 	private void atras_titlares_admin() {
-		// TODO Auto-generated method stub
+
 		// Lo vuelvo a colocar detrás del panel del admin y del gestor de usuarios
 		todosPaneles.setLayer(todosPaneles.getComponent(0), 6);
 
@@ -235,7 +235,7 @@ public class Evento implements ActionListener{
 	}
 
 	private void mostrar_titlares_admin() {
-		// TODO Cambiar panel y mostrar titulares
+
 		// Pongo el panel de mostrar los titulares delante del todo
 		todosPaneles.setLayer(todosPaneles.getComponent(2), 10);
 
@@ -338,7 +338,7 @@ public class Evento implements ActionListener{
 	private void eliminar_usuario(String nombre) {
 		lblNombreEliminarIncorrecto.setVisible(false);
 		lblNombreEliminarCorrecto.setVisible(false);
-		// TODO Pillar el id del usuario con ese nombre
+		// Busco el id del usuario con ese nombre
 		Usuario usuarioBorrar = null;
 		int cantidadAdmin = 0;
 		int cantidadUsuario = 0;
@@ -355,9 +355,9 @@ public class Evento implements ActionListener{
 			}
 		}
 		if (idEncontrado && usuarioBorrar != null) {
-			// TODO Comprobar que se pueda eliminar (al menos 1 admin y 3 usuarios)
+			// Compruebo que se pueda eliminar (al menos 1 admin y 3 usuarios)
 			if(cantidadAdmin == 1 && cantidadUsuario > 3) {
-				// TODO Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
+				// Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
 				if(EscribirTxt.eliminarUsuario(usuarioBorrar.getId())) {
 					usuarios.remove(usuarioBorrar);
 					txtNombreEliminar.setText("");
@@ -555,7 +555,7 @@ public class Evento implements ActionListener{
 	}
 
 	private void guardar_categorias_seleccionadas() {
-		// TODO Auto-generated method stub
+		// Muy parecido a cómo envío el email pero lo guardo en una misma línea y lo escribo en un txt
 		String guardar = "#"+usuarioLogueado.getId();
 		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
 		int i; // El orden de las categorías del usuario
@@ -598,12 +598,18 @@ public class Evento implements ActionListener{
 	}
 	
 	private void enviar_categorias_seleccionadas() {
-		// TODO Enviar correo con las categorías del usuario
+		titulares = LeerTxt.leerTodasNoticias();
+		if (titulares == null || titulares.size()==0) {
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			System.exit(2);
+		}
+		
+		// Envía correo con las categorías del usuario
 		String mensaje = generarMensajeCorreo(usuarioLogueado, titulares);
 		
 		Email email = new Email(usuarioLogueado.getCorreo(), mensaje);
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		if(email.enviar()) { // TODO también tengo que guardarlo en un fichero
+		if(email.enviar()) {
 			JOptionPane.showMessageDialog(null, "Revisa tu correo con los titulares", "ENVIADO", 1);
 		} else {
 			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 2);
@@ -751,6 +757,10 @@ public class Evento implements ActionListener{
 
 	private void comprobar_inicio_sesion() {
 		
+//		titulares = LeerTxt.leerTodasNoticias();
+		
+//		Ventana.titulares = titulares;
+		
 		// Creo un usuario con el nombre y la contraseña
 		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, null); // Es una mala práctica usar getText en la contraseña
 		
@@ -768,7 +778,6 @@ public class Evento implements ActionListener{
 			todosPaneles.setLayer(todosPaneles.getComponent(0), 0); // El panel de inicio de sesión lo pongo al fondo
 			if (cargo == 0){
 				if (sesion.getCategorias()==null) {
-					// TODO Esto del getComponent es inestable porque los valores van combiando xd
 					todosPaneles.setLayer(todosPaneles.getComponent(0), 6); // El panel donde el usuario elige sus categorías favoritas lo pongo arriba (ya es el primero)
 					todosBotones.get(1).setEnabled(true); // Habilito el botón de guardar las categorías
 					todosBotones.get(6).setEnabled(true); // Habilito el botón de cerrar sesión
@@ -787,7 +796,7 @@ public class Evento implements ActionListener{
 					
 				}
 			} else if (cargo == 1){
-				// TODO poner los paneles del admin mas arriba y los del usuario mas abajo.
+				// Pongo los paneles que usa el admin mas arriba
 				todosPaneles.setLayer(todosPaneles.getComponent(1), 8); // El panel principal del admin lo pongo arriba
 				todosPaneles.setLayer(todosPaneles.getComponent(2), 7); // El panel de gestionar usuarios justo debajo
 				todosPaneles.setLayer(todosPaneles.getComponent(3), 6); // El panel de mostrar los titulares justo debajo
