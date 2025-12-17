@@ -1,4 +1,4 @@
-package n04_EliminarNodo;
+package n05_ConsultaInfoNodo;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
@@ -7,7 +7,7 @@ import org.neo4j.driver.Session;
 import org.neo4j.driver.SessionConfig;
 import org.neo4j.driver.Values;
 
-public class Eliminar {
+public class Consulta {
 
 	public static void main(String[] args) {
 		System.out.println("Proyecto con Neo4j");
@@ -15,11 +15,11 @@ public class Eliminar {
 
 		try (Session session = driver.session(SessionConfig.forDatabase("nba"))) {
 			// Se usan variables con el caracter $ para evitar inyecciones
-			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "DETACH DELETE " + "ad";
+			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "RETURN " + "ad.height";
 
-			session.run(insertar, Values.parameters("name", "Carmelo Rios"));
+			session.run(insertar, Values.parameters("name", "Anthony Davis"));
 
-			System.out.println("Jugador eliminado correctamente.");
+			System.out.println("Jugador consultado correctamente.");
 		} finally {
 			driver.close();
 		}
