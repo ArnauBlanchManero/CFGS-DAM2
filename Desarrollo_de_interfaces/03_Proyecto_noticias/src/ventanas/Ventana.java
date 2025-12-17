@@ -86,7 +86,11 @@ public class Ventana extends JFrame{
 		setSize(x, y);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		try {
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		} catch (NullPointerException e) {
+
+		}
 		// Es obligatorio poner una imagen en este panel
 		Panel panelCarga = buscarImagen();
 		getContentPane().add(panelCarga);
@@ -208,7 +212,11 @@ public class Ventana extends JFrame{
 		int alto = (int) monitor.getHeight() / 2 - 700 / 2;
 		setBounds(ancho, alto, 700, 700);
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		try {
+			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
+		} catch (NullPointerException e) {
+
+		}
 		setTitle(title);
 		
 		// Organizo los paneles en un JLayeredPane
