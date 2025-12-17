@@ -2,10 +2,8 @@ package txt;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.ArrayList;
 
 import noticias.Titular;
@@ -45,6 +43,9 @@ public class LeerTxt {
 					usuarios = new ArrayList<Usuario>();
 				}
 			}
+
+			br.close();
+			lector.close();
 		}
 
 		return usuarios;
@@ -87,12 +88,11 @@ public class LeerTxt {
 				if(!idEncontrado) {
 					categorias = null;
 				}
-				
-			} catch (IOException | NumberFormatException e) {
+				br.close();
+				lector.close();
+			} catch (IOException | NumberFormatException | StringIndexOutOfBoundsException e) {
 				// Si ocurre algún error en la lectura no se guardan las categorías
 				categorias = null;
-				// TODO eliminar esto
-				e.printStackTrace();
 			}
 		}
 		return categorias;
@@ -145,6 +145,8 @@ public class LeerTxt {
 					lineas.add(contenidoLinea);
 				}
 				
+				br.close();
+				lector.close();
 			} catch (IOException e) {
 				lineas.add("");
 			}
@@ -174,6 +176,8 @@ public class LeerTxt {
 					}
 				}
 				
+				br.close();
+				lector.close();
 			} catch (IOException e) {
 				hora="hora no encontrada";
 			}
@@ -186,7 +190,6 @@ public class LeerTxt {
 	}
 
 	public static String leerInfoCorreo(int posicion) {
-		// TODO Auto-generated method stub
 		File fichero = new File("src/txt/configuracion.txt");
 		String info = "";
 		
@@ -208,6 +211,8 @@ public class LeerTxt {
 					}
 				}
 				
+				br.close();
+				lector.close();
 			} catch (IOException e) {
 				info="ERROR";
 			}

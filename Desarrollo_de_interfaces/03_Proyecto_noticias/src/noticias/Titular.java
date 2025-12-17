@@ -1,7 +1,6 @@
 package noticias;
 
 import java.io.IOException;
-import java.net.ConnectException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,7 +33,7 @@ public class Titular {
 				titularDevolver = titularesEncontrados.get(posicion).text();
 			}
 			
-		} catch (IOException e) {
+		} catch (IOException | IllegalArgumentException | IndexOutOfBoundsException e) {
 			
 			// Si ocurre algún error devuelvo este texto
 			titularDevolver = "ERROR. Titular no encontrado";

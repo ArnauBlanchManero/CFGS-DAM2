@@ -1,20 +1,16 @@
 package txt;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import usuarios.Usuario;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -91,7 +87,7 @@ public class EscribirTxt {
 	}
 
 	public static boolean eliminarUsuario(int idUsuarioBorrar) {
-		// TODO Eliminar datos usuario
+		// Elimino los datos del usuario
 		boolean usuarioEliminado = true;
 
 		Path ficheroUsuarios = Paths.get("src/txt/usuarios.txt");
