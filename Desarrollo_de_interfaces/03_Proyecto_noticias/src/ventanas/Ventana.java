@@ -184,6 +184,11 @@ public class Ventana extends JFrame{
 		// La ventana principal
 		super();
 		
+		try {
+			semaforo.acquire();
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+		}
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
@@ -199,11 +204,12 @@ public class Ventana extends JFrame{
 		});
 		for (Usuario usuario : usuarios) {
 			try {
+				System.out.println("Crenado hilo");// TODO borrar
 				Automatico auto = new Automatico(usuario);
 				Thread hilo = new Thread(auto);
 				hilo.start();
 			} catch (NullPointerException e) {
-				
+				System.out.println("No hay usuarios?");// TODO borrar
 			}
 		}
 		Dimension monitor = Toolkit.getDefaultToolkit().getScreenSize();
@@ -548,11 +554,7 @@ public class Ventana extends JFrame{
 	}
 
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
-		try {
-			semaforo.acquire();
-		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
-		}
+		
 		if (titulares == null || titulares.size()==0) {
 			dispose();
 			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);

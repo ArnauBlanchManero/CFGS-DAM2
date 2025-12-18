@@ -617,7 +617,7 @@ public class Evento implements ActionListener{
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	public static String generarMensajeCorreo(Usuario u, ArrayList<String> t) throws NullPointerException {
+	public static String generarMensajeCorreo(Usuario u, ArrayList<String> t) throws NullPointerException, IndexOutOfBoundsException {
 		String mensaje = "<html>";
 		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
 		int i; // El orden de las categorías del usuario
