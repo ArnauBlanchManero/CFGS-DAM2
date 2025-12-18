@@ -15,7 +15,7 @@ public class Actualizar {
 
 		try (Session session = driver.session(SessionConfig.forDatabase("nba"))) {
 			// Se usan variables con el caracter $ para evitar inyecciones
-			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "SET " + "ad.age = $age, ";
+			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "SET " + "ad.age = $age ";
 
 			session.run(insertar, Values.parameters("name", "Carmelo Rios", "age", 33));
 
