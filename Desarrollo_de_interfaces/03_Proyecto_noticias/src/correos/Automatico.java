@@ -15,14 +15,10 @@ import ventanas.Ventana;
 
 public class Automatico extends Email implements Runnable{
 	Usuario usuario;
-	public Automatico(String correoDestino, String mensaje) {
-		super(correoDestino, mensaje);
-		// Hereda los atributos y métodos de su padre
-	}
 	
 	public Automatico(Usuario usuario) {
 		super(usuario.getCorreo(), Evento.generarMensajeCorreo(usuario, Ventana.titulares));
-		// Pur usuario
+		// Por usuario
 		this.usuario = usuario;
 	}
 
@@ -41,7 +37,8 @@ public class Automatico extends Email implements Runnable{
 				} else {
 					try {
 						this.mensaje = Evento.generarMensajeCorreo(usuario, Ventana.titulares);
-						this.enviar();
+						if(!this.enviar())
+							JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 2);
 					} catch (NullPointerException e) {
 						JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 2);
 					}

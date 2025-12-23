@@ -1,4 +1,4 @@
-Hora de envío automática: *$12:29$*
+Hora de envío automática: *$15:41$*
 --- Páginas Web ---
 https://elpais.com/economia/;h2.c_t a;3
 https://esradio.libertaddigital.com/economia-para-todos/;div.ultimos-audios ul li a strong;0
@@ -24,3 +24,6 @@ https://www.elespanol.com/ciencia/medio-ambiente/;h2.art__title  a;0
 --- Preferencias de los usuarios ---
 #00::111111111111111111
 #01::000000111000000000
+#04::111000000000000111
+#05::010001001100000000
+#06::011000100000110000
