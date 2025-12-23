@@ -18,7 +18,7 @@ public class Crear {
         try (Session session = driver.session()) {
             Result result = session.run("MATCH (n) RETURN n");
             if(result.hasNext()) {
-            	System.out.println("Neo4j OK");
+            	System.out.println("Ya hay datos");
             } else {
             	System.out.println("No hay datos en la base de datos");
             	session.run("CREATE (russell:PLAYER{name:\"Russell Westbrook\", age: 33, number: 0, height: 1.91, weight: 91})");

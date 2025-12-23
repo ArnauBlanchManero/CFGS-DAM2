@@ -3,6 +3,7 @@ package n05_ConsultaInfoNodo;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.SessionConfig;
 import org.neo4j.driver.Values;
@@ -15,11 +16,12 @@ public class Consulta {
 
 		try (Session session = driver.session(SessionConfig.forDatabase("nba"))) {
 			// Se usan variables con el caracter $ para evitar inyecciones
-			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "RETURN " + "ad.height";
+			String insertar = "MATCH (ad:PLAYER {name: $name}) " + "RETURN " + "ad.height " + "AS h";
 
-			session.run(insertar, Values.parameters("name", "Anthony Davis"));
+			Result result = session.run(insertar, Values.parameters("name", "Anthony Davis"));
 
 			System.out.println("Jugador consultado correctamente.");
+			System.out.println("Altura del jugador: "+result.next().get("h").asDouble());
 		} finally {
 			driver.close();
 		}
