@@ -3,6 +3,10 @@
 03·!·Sol·!·arnau.blanch.dosa@gmail.com·!·aAbBcC·!·0
 02·!·Mar·!·arnau.blanch.dosa@gmail.com·!·h7*Ojn_31Q?r·!·0
 
+<<<<<<< HEAD
 04·!·a·!·arnau.blanch.dosa@gmail.com·!·a·!·0
 05·!·b·!·arnau.blanch.dosa@gmail.com·!·b·!·0
 06·!·c·!·arnau.blanch.dosa@gmail.com·!·c·!·0
+=======
+04·!·c·!·c·!·c·!·0
+>>>>>>> 39ffd6fdf81871b179c01ced5db86e475166fd83
