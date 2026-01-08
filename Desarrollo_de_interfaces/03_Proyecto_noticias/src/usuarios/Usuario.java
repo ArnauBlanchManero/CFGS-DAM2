@@ -3,6 +3,7 @@ package usuarios;
 import java.util.ArrayList;
 
 import txt.LeerTxt;
+import ventanas.Ventana;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -90,5 +91,13 @@ public class Usuario {
 			return 0;
 		}
 		return -1;
+	}
+
+	public static String[] devolvernombresUsuarios() {
+		String[] listaUsuarios = new String[Ventana.usuarios.size()];
+		for (int i = 0 ; i< Ventana.usuarios.size(); i++) {
+			listaUsuarios[i] = Ventana.usuarios.get(i).getNombre();
+		}
+		return listaUsuarios;
 	}
 }
