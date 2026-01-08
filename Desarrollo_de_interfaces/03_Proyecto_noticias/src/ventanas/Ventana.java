@@ -83,7 +83,7 @@ public class Ventana extends JFrame{
 		try {
 			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		} catch (NullPointerException e) {
-
+			JOptionPane.showMessageDialog(null, "No se ha encontrado una imagen", "INFO", 1);
 		}
 		// Es obligatorio poner una imagen en este panel
 		Panel panelCarga = buscarImagen();
@@ -120,7 +120,7 @@ public class Ventana extends JFrame{
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
-						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 2);
+						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 0);
 						System.exit(1);
 					}
 					File fichero = new File("src/txt/configuracion.txt");
@@ -128,7 +128,7 @@ public class Ventana extends JFrame{
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
-						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 2);
+						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 0);
 						System.exit(2);
 					}
 				}
@@ -186,7 +186,7 @@ public class Ventana extends JFrame{
 		try {
 			semaforo.acquire();
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 		}
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -219,7 +219,7 @@ public class Ventana extends JFrame{
 		try {
 			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		} catch (NullPointerException e) {
-
+			JOptionPane.showMessageDialog(null, "No se ha encontrado una imagen", "INFO", 1);
 		}
 		setTitle(title);
 		
@@ -555,7 +555,7 @@ public class Ventana extends JFrame{
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
 		if (titulares == null || titulares.size()==0) {
 			dispose();
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 			System.exit(2);
 		}
 		// El título del panel

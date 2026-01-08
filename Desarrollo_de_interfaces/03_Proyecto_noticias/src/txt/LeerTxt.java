@@ -107,7 +107,6 @@ public class LeerTxt {
 		for (int i = 0; i < urlsParametrosPosicion.size(); i++) {
 			// Separamos por ; la url, el parametro y el selector
 			String infoTitular [] = urlsParametrosPosicion.get(i).split(";");
-			
 			// Puede haber líneas vacías o mal formadas por lo que comprobamos que tenga longitud 3
 			if(infoTitular.length == 3) {
 				Titular titular = new Titular(infoTitular[0], infoTitular[1]);
