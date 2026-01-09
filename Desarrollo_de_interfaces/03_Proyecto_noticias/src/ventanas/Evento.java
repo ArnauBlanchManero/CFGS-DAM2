@@ -773,17 +773,13 @@ public class Evento implements ActionListener{
 					chck.setSelected(false);
 				}
 				// Cambio al panel del usuario para mostrar los titulares
-				todosPaneles.setLayer(todosPaneles.getComponent(3), 7); // Ni idea de lo que hago con los paneles
+				todosPaneles.setLayer(todosPaneles.getComponent(3), 7);
 			}
 		}
 		
 	}
 
 	private void comprobar_inicio_sesion() {
-		
-//		titulares = LeerTxt.leerTodasNoticias();
-		
-//		Ventana.titulares = titulares;
 		
 		// Creo un usuario con el nombre y la contraseña
 		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, null); // Es una mala práctica usar getText en la contraseña
