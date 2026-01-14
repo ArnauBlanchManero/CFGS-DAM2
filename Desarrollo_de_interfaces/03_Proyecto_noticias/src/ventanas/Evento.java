@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -622,12 +623,15 @@ public class Evento implements ActionListener{
 		String [] categorias = {"Economía", "Deportes", "Nacional", "Internacional", "Música", "Medio Ambiente"};
 		int i; // El orden de las categorías del usuario
 		int j = 0; // El orden de todos los titulares
-		LocalDate fecha = LocalDate.now();
-        int dia = fecha.getDayOfMonth();
-        int mes = fecha.getMonthValue();
-        int año = fecha.getYear();
-        String fechaEntera = dia+"-"+mes+"-"+año;
-        mensaje += "<p>Las noticias del <i>"+fechaEntera+"</i>.</p>";
+		LocalDateTime fecha = LocalDateTime.now();
+		int dia = fecha.getDayOfMonth();
+		int mes = fecha.getMonthValue();
+		int año = fecha.getYear();
+		int hora = fecha.getHour();
+		int minuto = fecha.getMinute();
+		String fechaEntera = dia + "-" + mes + "-" + año + " " + hora + ":" + minuto;
+		mensaje += "<p>Las noticias del <i>" + fechaEntera + "</i>.</p>";
+
 		for (i = 0; i < categorias.length; i++) {
 			
 			// Si el usuario tiene alguna de las tres noticias, se muestra su titular
