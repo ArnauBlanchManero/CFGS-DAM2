@@ -42,6 +42,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
 
 /*
  * Trabajo realizado por Arnau Blanch Manero
@@ -57,7 +60,7 @@ public class Ventana extends JFrame{
 	private JTextField txtNombreAñadir;
 	private JTextField txtContraseaAñadir;
 	private JTextField txtCorreoAñadir;
-	private JTextField txtNombreEliminar;
+	private JList txtNombreEliminar;
 	private JLabel lblDatosAñadirIncorrectos;
 	private JLabel lblNombreEliminarIncorrecto;
 	private Timer tiempo;
@@ -83,7 +86,7 @@ public class Ventana extends JFrame{
 		try {
 			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		} catch (NullPointerException e) {
-
+			JOptionPane.showMessageDialog(null, "No se ha encontrado una imagen", "INFO", 1);
 		}
 		// Es obligatorio poner una imagen en este panel
 		Panel panelCarga = buscarImagen();
@@ -113,22 +116,23 @@ public class Ventana extends JFrame{
 						usuarios = LeerTxt.leerTodosUsuarios();
 					} catch (IOException e1) {
 						usuarios = new ArrayList<Usuario>();
-						e1.printStackTrace();
+//						e1.printStackTrace();
 					}
 					// Si alguna de las dos lecturas falla, muestro una ventana de error.
 					if (!contarAdminsUsuarios(usuarios)) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
-						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 2);
+						JOptionPane.showMessageDialog(null, "No se han cargado los usuarios correctamente", "ERROR", 0);
 						System.exit(1);
 					}
-					File fichero = new File("src/txt/configuracion.txt");
-					if (!fichero.exists() && !fichero.canRead()) {
+					File ficheroConfig = new File("src/txt/configuracion.txt");
+					File ficheroHistorico = new File("src/txt/historico.txt");
+					if (!ficheroConfig.exists() && !ficheroConfig.canRead() && !ficheroHistorico.exists() && !ficheroHistorico.canRead()) {
 						tiempo.stop();
 						barraProgreso.setValue(100);
 						dispose();
-						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 2);
+						JOptionPane.showMessageDialog(null, "No se he encontrado alguno de los titulares", "ERROR", 0);
 						System.exit(2);
 					}
 				}
@@ -186,7 +190,7 @@ public class Ventana extends JFrame{
 		try {
 			semaforo.acquire();
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 		}
 		
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -219,7 +223,7 @@ public class Ventana extends JFrame{
 		try {
 			setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("newsLogo.png")));
 		} catch (NullPointerException e) {
-
+			JOptionPane.showMessageDialog(null, "No se ha encontrado una imagen", "INFO", 1);
 		}
 		setTitle(title);
 		
@@ -498,13 +502,24 @@ public class Ventana extends JFrame{
 		txtCorreoAñadir.setVisible(false);
 		panelGestionUsuariosAdmin.add(txtCorreoAñadir);
 		
-		txtNombreEliminar = new JTextField();
-		txtNombreEliminar.setText("");
-		txtNombreEliminar.setBounds(374, 360, 187, 19);
-		txtNombreEliminar.setColumns(10);
+		
+		txtNombreEliminar = new JList();
+		txtNombreEliminar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		txtNombreEliminar.setModel(new AbstractListModel() {
+			String[] values = Usuario.devolvernombresUsuarios();
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		txtNombreEliminar.setBounds(374, 360, 187, (19 * usuarios.size()));
+		txtNombreEliminar.setBackground(new Color(98, 160, 234));
+		txtNombreEliminar.setSelectionBackground(new Color(133, 239, 237));
 		txtNombreEliminar.setVisible(false);
 		panelGestionUsuariosAdmin.add(txtNombreEliminar);
-		
+
 		lblDatosAñadirIncorrectos = new JLabel("Datos incorrectos");
 		lblDatosAñadirIncorrectos.setForeground(new Color(237, 51, 59));
 		lblDatosAñadirIncorrectos.setHorizontalAlignment(SwingConstants.CENTER);
@@ -555,7 +570,7 @@ public class Ventana extends JFrame{
 	private void mostrar_categorias_usuario(Panel panelMostrarCategorias) {
 		if (titulares == null || titulares.size()==0) {
 			dispose();
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 			System.exit(2);
 		}
 		// El título del panel

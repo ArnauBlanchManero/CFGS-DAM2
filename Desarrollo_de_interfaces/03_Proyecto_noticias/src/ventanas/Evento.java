@@ -8,10 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
@@ -48,7 +50,7 @@ public class Evento implements ActionListener{
 	private JLabel lblNombreAñadir;
 	private JLabel lblContraseñaAñadir;
 	private JLabel lblCorreoAñadir;
-	private JTextField txtNombreEliminar;
+	private JList txtNombreEliminar;
 	private JLabel lblNombreEliminarIncorrecto;
 	private JLabel lblNombreEliminar;
 	private JLabel lblDatosAñadirCorrectos;
@@ -124,7 +126,7 @@ public class Evento implements ActionListener{
 		
 	}
 
-	public Evento(String accion, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblNombreEliminarCorrecto) {
+	public Evento(String accion, JList txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblNombreEliminarCorrecto) {
 		// Elimiar usuario
 		super();
 		this.accion = accion;
@@ -134,7 +136,7 @@ public class Evento implements ActionListener{
 		this.lblNombreEliminarCorrecto = lblNombreEliminarCorrecto;
 	}
 
-	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir, JTextField txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblDatosAñadirCorrectos, JLabel lblNombreEliminarCorrecto) {
+	public Evento(String accion, JTextField txtNombreAñadir, JTextField txtContraseaAñadir, JTextField txtCorreoAñadir, JLabel lblDatosAñadirIncorrectos, JLabel lblNombreAñadir, JLabel lblContraseñaAñadir, JLabel lblCorreoAñadir, JList txtNombreEliminar, JLabel lblNombreEliminarIncorrecto, JLabel lblNombreEliminar, JLabel lblDatosAñadirCorrectos, JLabel lblNombreEliminarCorrecto) {
 		// Cancelar añadir/eliminar usuario
 		super();
 		this.accion = accion;
@@ -260,8 +262,8 @@ public class Evento implements ActionListener{
 		// Añado o elimino al usuario
 		if(txtNombreAñadir.isVisible()) {
 			añadir_usuario(txtNombreAñadir.getText(), txtContraseñaAñadir.getText(), txtCorreoAñadir.getText());
-		} else if(txtNombreEliminar.isVisible()) {
-			eliminar_usuario(txtNombreEliminar.getText());
+		} else if(txtNombreEliminar.isVisible() && !txtNombreEliminar.isSelectionEmpty()) {
+			eliminar_usuario(txtNombreEliminar.getSelectedValue().toString());
 		}
 	}
 
@@ -294,9 +296,20 @@ public class Evento implements ActionListener{
 						if (nuevoID != -1) {
 							if(EscribirTxt.guardarUsuario(nuevoID, nombre, contraseña, correo)) {
 								usuarios.add(new Usuario(nuevoID, nombre, correo, contraseña, false, null));
+//								Ventana.usuarios.add(new Usuario(nuevoID, nombre, correo, contraseña, false, null));
 								txtNombreAñadir.setText("");
 								txtContraseñaAñadir.setText("");
 								txtCorreoAñadir.setText("");
+								txtNombreEliminar.setModel(new AbstractListModel() {
+									String[] values = Usuario.devolvernombresUsuarios();
+									public int getSize() {
+										return values.length;
+									}
+									public Object getElementAt(int index) {
+										return values[index];
+									}
+								});
+								txtNombreEliminar.setBounds(374, 360, 187, (19 * usuarios.size()));
 								lblDatosAñadirCorrectos.setVisible(true);
 							} else {
 								lblDatosAñadirIncorrectos.setText("No se ha podido guardar el usuario");
@@ -361,7 +374,18 @@ public class Evento implements ActionListener{
 				// Eliminar el usuario con ese id en el fichero de usuarios y en el de categorías favoritas
 				if(EscribirTxt.eliminarUsuario(usuarioBorrar.getId())) {
 					usuarios.remove(usuarioBorrar);
-					txtNombreEliminar.setText("");
+					Ventana.usuarios.remove(usuarioBorrar);
+					txtNombreEliminar.clearSelection();
+					txtNombreEliminar.setModel(new AbstractListModel() {
+						String[] values = Usuario.devolvernombresUsuarios();
+						public int getSize() {
+							return values.length;
+						}
+						public Object getElementAt(int index) {
+							return values[index];
+						}
+					});
+					txtNombreEliminar.setBounds(374, 360, 187, (19 * usuarios.size()));
 					lblNombreEliminarCorrecto.setVisible(true);
 				} else {
 					lblNombreEliminarIncorrecto.setText("Error en la eliminación del usuario");
@@ -419,7 +443,7 @@ public class Evento implements ActionListener{
 		
 		// Muestro el JTextField y el JLabel del nombre
 		txtNombreEliminar.setVisible(true);
-		txtNombreEliminar.setText("");
+		txtNombreEliminar.clearSelection();
 		
 		lblNombreEliminar.setVisible(true);
 		
@@ -753,17 +777,13 @@ public class Evento implements ActionListener{
 					chck.setSelected(false);
 				}
 				// Cambio al panel del usuario para mostrar los titulares
-				todosPaneles.setLayer(todosPaneles.getComponent(3), 7); // Ni idea de lo que hago con los paneles
+				todosPaneles.setLayer(todosPaneles.getComponent(3), 7);
 			}
 		}
 		
 	}
 
 	private void comprobar_inicio_sesion() {
-		
-//		titulares = LeerTxt.leerTodasNoticias();
-		
-//		Ventana.titulares = titulares;
 		
 		// Creo un usuario con el nombre y la contraseña
 		Usuario sesion = new Usuario(-1, nombreUsuario.getText(), null, contraseñaUsuario.getText(), false, null); // Es una mala práctica usar getText en la contraseña

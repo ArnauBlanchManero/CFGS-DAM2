@@ -33,14 +33,14 @@ public class Automatico extends Email implements Runnable{
 			if(horaActual.equals(horaEnvio)) {
 				Ventana.titulares = LeerTxt.leerTodasNoticias();
 				if (Ventana.titulares == null || Ventana.titulares.size()==0) {
-					JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+					JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 				} else {
 					try {
 						this.mensaje = Evento.generarMensajeCorreo(usuario, Ventana.titulares);
 						if(!this.enviar())
-							JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 2);
+							JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 0);
 					} catch (NullPointerException | IndexOutOfBoundsException e) {
-						JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 2);
+						JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 0);
 					}
 				}
 			}
