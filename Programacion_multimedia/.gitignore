@@ -1,0 +1,56 @@
+# Android/Studio specific
+.idea/
+*.iml
+.gradle/
+local.properties
+/.cxx/
+captures/
+.externalNativeBuild/
+
+# Build output
+/build/
+*/build/
+
+# Gradle
+.gradle/
+*/build/
+
+# Android specific
+*.apk
+*.ap_
+*.aab
+*.keystore
+*.jks
+*.dex
+
+# Signing files (if any)
+*.keystore
+*.jks
+
+# Files for crash reporting
+crashlytics.properties
+crashlytics-build.properties
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# NDK
+obj/
+*.so
+
+# Proguard
+/proguard/
+
+# IntelliJ
+out/
+
+# Misc
+*.class
+*.jar
+*.war
+*.ear
+
