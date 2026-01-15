@@ -40,7 +40,7 @@ public class Automatico extends Email implements Runnable{
 						if(!this.enviar())
 							JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático a "+usuario.getNombre(), "ERROR", 0);
 					} catch (NullPointerException | IndexOutOfBoundsException e) {
-						JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático a "+usuario.getNombre(), "ERROR", 0);
+						JOptionPane.showMessageDialog(null, "No se ha enviado el correo automático", "ERROR", 0);
 					}
 				}
 			}

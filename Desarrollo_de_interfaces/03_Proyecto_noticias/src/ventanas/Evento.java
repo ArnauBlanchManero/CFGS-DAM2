@@ -625,7 +625,7 @@ public class Evento implements ActionListener{
 	private void enviar_categorias_seleccionadas() {
 		titulares = LeerTxt.leerTodasNoticias();
 		if (titulares == null || titulares.size()==0) {
-			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se han encontrado alguno de los titulares", "ERROR", 0);
 			System.exit(2);
 		}
 		
@@ -637,7 +637,7 @@ public class Evento implements ActionListener{
 		if(email.enviar()) {
 			JOptionPane.showMessageDialog(null, "Revisa tu correo con los titulares", "ENVIADO", 1);
 		} else {
-			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "El correo no se ha enviado correctamente", "ERROR", 0);
 		}
 		todosPaneles.getComponent(0).setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}

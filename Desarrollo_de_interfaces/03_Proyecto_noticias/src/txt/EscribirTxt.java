@@ -174,7 +174,7 @@ public class EscribirTxt {
 				JOptionPane.showMessageDialog(null, "Titulares guardados en el histórico", "GUARDADO", 1);
 			}
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "No se ha guardado el histórico de los titulares", "ERROR", 2);
+			JOptionPane.showMessageDialog(null, "No se ha guardado el histórico de los titulares", "ERROR", 0);
 		}
 	}
 

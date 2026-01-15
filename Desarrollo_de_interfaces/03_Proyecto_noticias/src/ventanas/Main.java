@@ -20,7 +20,7 @@ public class Main {
 					ventanaCarga.setVisible(true);
 				} catch (Exception e){
 					// Si ocurre cualquier problema se mostrará esta ventana con el mensaje de la excepción (no debería mostrarse nunca)
-					JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", 2);
+					JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", 0);
 					System.exit(3);
 				}
 			}
