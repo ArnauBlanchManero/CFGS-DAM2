@@ -16,13 +16,35 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        />-->
     <TextView
+        android:id="@+id/texto_central"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/texto_central"
-        android:text="Hello World!"
+        android:text="Botones"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <TextView
+        android:id="@+id/texto_caos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/texto_modo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/texto_central"
+        app:layout_constraintVertical_bias="0.7"/>
+    <TextView
+        android:id="@+id/texto_modo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Claro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/texto_caos"
+        app:layout_constraintTop_toBottomOf="@+id/texto_central"
+        app:layout_constraintVertical_bias="0.7"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
