@@ -13,3 +13,13 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Archivos de credenciales (IMPORTANTE: nunca subir a GitHub)
+.env
+.env.local
+.env.*.local
+app/src/main/res/raw/env
+app/src/main/res/raw/.env
+
+# Otros archivos de configuración sensible
+secrets.properties

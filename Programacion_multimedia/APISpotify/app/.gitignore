@@ -1,1 +1,12 @@
 /build
+
+# Archivos de credenciales (IMPORTANTE: nunca subir a GitHub)
+.env
+.env.local
+.env.*.local
+src/main/res/raw/env
+src/main/res/raw/.env
+
+# Otros archivos de configuración sensible
+secrets.properties
+local.properties

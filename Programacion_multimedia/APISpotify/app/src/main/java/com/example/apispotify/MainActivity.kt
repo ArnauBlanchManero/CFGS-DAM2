@@ -1,7 +1,6 @@
 package com.example.apispotify
 
 import android.os.Bundle
-import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -32,9 +31,9 @@ class MainActivity : AppCompatActivity() {
     private val authService = authRetrofit.create(SpotifyAuthService::class.java)
     private val searchService = apiRetrofit.create(SpotifyService::class.java)
 
-    // Tus credenciales de Spotify (obtenidas en https://developer.spotify.com/dashboard)
-    private val clientId = "TU_CLIENT_ID_AQUI"
-    private val clientSecret = "TU_CLIENT_SECRET_AQUI"
+    // Las credenciales se cargarán desde el archivo .env
+    private lateinit var clientId: String
+    private lateinit var clientSecret: String
 
     private var currentToken: String? = null
 
@@ -47,6 +46,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Cargar credenciales desde .env
+        EnvConfig.loadEnv(this)
+        clientId = EnvConfig.getClientId()
+        clientSecret = EnvConfig.getClientSecret()
 
         // Obtener referencias a los elementos de la UI
         val searchInput = findViewById<EditText>(R.id.searchInput)
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 if (currentToken != null) {
                     searchSong(songName, resultSong)
                 } else {
-                    resultSong.text = "Error: No se pudo obtener autenticación.\nVerifica tu Client ID y Client Secret"
+                    resultSong.text = "Error: No se pudo obtener autenticación.\nVerifica tu archivo .env"
                 }
             } else {
                 resultSong.text = "Por favor escribe el nombre de una canción"
@@ -74,22 +78,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAccessToken(resultTextView: TextView) {
-        if (clientId == "TU_CLIENT_ID_AQUI" || clientSecret == "TU_CLIENT_SECRET_AQUI") {
+        if (clientId.isEmpty() || clientSecret.isEmpty() ||
+            clientId == "tu_client_id_aqui" || clientSecret == "tu_client_secret_aqui") {
             resultTextView.text = """
                 ❌ ERROR: Credenciales no configuradas
                 
-                1. Ve a https://developer.spotify.com/dashboard
-                2. Crea una app o usa una existente
-                3. Copia tu Client ID y Client Secret
-                4. Reemplaza en MainActivity.kt:
-                   - clientId = "TU_CLIENT_ID_AQUI"
-                   - clientSecret = "TU_CLIENT_SECRET_AQUI"
+                1. Edita app/src/main/res/raw/env
+                2. Ve a https://developer.spotify.com/dashboard
+                3. Obtén tu Client ID y Client Secret
+                4. Rellena el archivo con tus valores
+                5. Reconstruye la app (Clean + Rebuild)
             """.trimIndent()
             return
         }
-
-        val credentials = "$clientId:$clientSecret"
-        val encodedCredentials = Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
 
         val call = authService.getToken(clientId = clientId, clientSecret = clientSecret)
 
